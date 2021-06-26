@@ -25,4 +25,4 @@ Users can create creatures and sets of encounters as part of an entire campaign.
 <h2> Chapter</h2>
 Users can create semi-permanent objects that are related to only a section of the capaign. e.g collections of encounters tied to certain events/ares, area or arc specific characters or anything that would only be interacted with in a section of the campaign.
 <h2> Session </h2>
-Users can create objects that only exist in the context of a single session. E.g. Encounters, short-term characters ect.
+Users can create objects that only exist in the context of a single session. E.g. Encounters, short-term characters ect
