@@ -17,7 +17,7 @@ Includes information about the characters name, occupation, class, abilities, st
 Descriptions of important characters should be stored at a chapter or campaign scope basis so the character is consistant with players.
 
 <h4> TODO </h4> 
-A general Description of all of the character ojects that are included in the operation of the application and what it does
+<i>A general Description of all of the character ojects that are included in the operation of the application and what it does</i>
 
 <h1> Scope-Wise management </h1>
 <h2> Campaign </h2>
