@@ -92,16 +92,22 @@ public interface Creature {
     String[] getResistances();
 
     /**
-     * todo - make enum
+     * todo - make condition object with enums
      * @return a list of the condition immunities that the creature has
      */
     String[] getConditionImmunity();
 
     /**
-     * todo - make enum
+     * todo - make condition object with enums
      * @return a list of the condition that the creature is resistant to
      */
     String[] getConditionResistance();
+
+    /**
+     * todo - make condition object with enums
+     * @return a list of the conditions the creature is currently experiencing
+     */
+    String[] getCondition();
 
 
 }
