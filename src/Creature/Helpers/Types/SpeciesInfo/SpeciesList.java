@@ -11,22 +11,28 @@ import java.util.HashMap;
  * Serializable ArrayList of species types that includes the standard types for 5e, but can be expanded to include others
  */
 public class SpeciesList implements Serializable {
-    private ArrayList<Species> speciesList;
+    private ArrayList<Species> speciesArrayList;
+    public void initializeList() throws IOException, ClassNotFoundException {
+            speciesArrayList = new ArrayList<>();
+            Species newSpecies;
+            for (int i = 0; i < baseHumanoidSpecies.length; i++) {
+                newSpecies = new Species(baseHumanoidSpecies[i], baseHumanoidDescriptions[i], Species.Role.HUMANOID);
+                speciesArrayList.add(newSpecies);
+            }
+            for (int i = 0; i < baseMonsterSpecies.length; i++) {
+                newSpecies = new Species(baseMonsterSpecies[i], baseMonsterDescriptions[i], Species.Role.MONSTER);
+                speciesArrayList.add(newSpecies);
+            }
 
-    private void editListFile() throws IOException, ClassNotFoundException {
-        FileReadWrite.writeObject("src/Creature/Helpers/Types/SpeciesInfo/SpeciesListFile", this);
-    }
-
-    public static SpeciesList getListFile() throws IOException, ClassNotFoundException {
-        return (SpeciesList) FileReadWrite.readObject("src/Creature/Helpers/Types/SpeciesInfo/SpeciesListFile");
     }
 
     public SpeciesList() throws IOException, ClassNotFoundException {
+            initializeList();
     }
 
     //We don't want these to be enums. Users should be able to add more types if they require
-    String[] baseHumanoidSpecies = {"Dragonborn", "Dwarf", "Elf", "Gnome", "Half-Elf", "Halfling", "Half-Orc", "Human", "Tiefling"};
-    String[] baseHumanoidDescriptions = {
+    private String[] baseHumanoidSpecies = {"Dragonborn", "Dwarf", "Elf", "Gnome", "Half-Elf", "Halfling", "Half-Orc", "Human", "Tiefling"};
+    private String[] baseHumanoidDescriptions = {
             "Dragonborn look very much like dragons standing erect in humanoid form, though they lack wings or a tail.",
             "Bold and hardy, dwarves are known as skilled warriors, miners, and workers of stone and metal.",
             "Elves are a magical people of otherworldly grace, living in the world but not entirely part of it.",
@@ -37,9 +43,9 @@ public class SpeciesList implements Serializable {
             "Humans are the most adaptable and ambitious people among the common races. Whatever drives them, humans are the innovators, the achievers, and the pioneers of the worlds.",
             "To be greeted with stares and whispers, to suffer violence and insult on the street, to see mistrust and fear in every eye: this is the lot of the tiefling."
     };
-    String[] baseMonsterSpecies = {"Abberation", "Beast", "Celestial", "Construct", "Dragon", "Elemental", "Fey", "Fiend", "Giant",
+    private String[] baseMonsterSpecies = {"Abberation", "Beast", "Celestial", "Construct", "Dragon", "Elemental", "Fey", "Fiend", "Giant",
             "Humanoid", "Ooze", "Plant", "Undead"};
-    String[] baseMonsterDescriptions = {
+    private String[] baseMonsterDescriptions = {
             "Aberrations are alien entities, often with powers drawn from their minds. Examples include aboleths, beholders, mind flayers, and slaadi.",
             "Beasts are nonhumanoid creatures that are part of the natural world. Some beasts have magical powers, but are generally low in intelligence. Ordinary animals, dinosaurs, and giant animals are included in this type. Other examples include quippers and stirges.",
             "Celestials are creatures native to the Upper Planes, and good by nature. Examples include angels, couatls, and pegasi.",
@@ -55,4 +61,23 @@ public class SpeciesList implements Serializable {
             "Plants include both vegetable and fungal creatures. Examples include shambling mounds and myconids.",
             "Undead creatures were once alive, but reanimated by unnatural forces. Examples include ghosts, specters, vampires, and zombies.",
     };
+
+    /**
+     * Creates a new species object and stores it in the species arraylist
+     * @param name The name of a species
+     * @param description General information about the species\race
+     * @param role A filtering component that defines if the creature is intended for playable races or monsters
+     */
+    public void addSpecies(String name, String description, Species.Role role) {
+        Species newSpecies = new Species(name,description,role);
+        speciesArrayList.add(newSpecies);
+    }
+
+    /**
+     *
+     * @return speciesArrayList - The arraylist of species objects
+     */
+    public ArrayList<Species> getSpeciesArrayList(){
+        return speciesArrayList;
+    }
 }
