@@ -10,23 +10,23 @@ import java.util.HashMap;
 /**
  * Serializable ArrayList of species types that includes the standard types for 5e, but can be expanded to include others
  */
-public class SpeciesList implements Serializable {
-    private ArrayList<Species> speciesArrayList;
+public class SpeciesMap implements Serializable {
+    private HashMap<String,Species> speciesHashMap;
     public void initializeList() throws IOException, ClassNotFoundException {
-            speciesArrayList = new ArrayList<>();
+        speciesHashMap = new HashMap<>();
             Species newSpecies;
             for (int i = 0; i < baseHumanoidSpecies.length; i++) {
                 newSpecies = new Species(baseHumanoidSpecies[i], baseHumanoidDescriptions[i], Species.Role.HUMANOID);
-                speciesArrayList.add(newSpecies);
+                speciesHashMap.put(baseHumanoidSpecies[i],newSpecies);
             }
             for (int i = 0; i < baseMonsterSpecies.length; i++) {
                 newSpecies = new Species(baseMonsterSpecies[i], baseMonsterDescriptions[i], Species.Role.MONSTER);
-                speciesArrayList.add(newSpecies);
+                speciesHashMap.put(baseMonsterSpecies[i],newSpecies);
             }
 
     }
 
-    public SpeciesList() throws IOException, ClassNotFoundException {
+    public SpeciesMap() throws IOException, ClassNotFoundException {
             initializeList();
     }
 
@@ -63,21 +63,21 @@ public class SpeciesList implements Serializable {
     };
 
     /**
-     * Creates a new species object and stores it in the species arraylist
+     * Creates a new species object and stores it in the species hashmap
      * @param name The name of a species
      * @param description General information about the species\race
      * @param role A filtering component that defines if the creature is intended for playable races or monsters
      */
     public void addSpecies(String name, String description, Species.Role role) {
         Species newSpecies = new Species(name,description,role);
-        speciesArrayList.add(newSpecies);
+        speciesHashMap.put(name, newSpecies);
     }
 
     /**
      *
      * @return speciesArrayList - The arraylist of species objects
      */
-    public ArrayList<Species> getSpeciesArrayList(){
-        return speciesArrayList;
+    public HashMap<String, Species> getSpeciesHashMap(){
+        return speciesHashMap;
     }
 }

@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 public class CreatureTesting {
     int health = 13, aC = 13, speed = 30;
     String name = "Clink", description = "A shambling undead skeleton wearing scraps of old armour", creatureClass = "Skeleton";
@@ -16,14 +18,17 @@ public class CreatureTesting {
     Monster monster;
 
     Size size = Size.MEDIUM;
-    Species species = new Species("undead","Reanimated corpses.", Species.Role.MONSTER);
-    CreatureType creatureType = new CreatureType(size,species);
+    CreatureType creatureType = new CreatureType(size,"Undead");
+
+    public CreatureTesting() throws IOException, ClassNotFoundException {
+    }
+
     @BeforeEach
     public void createCreature(){
         monster = new Monster(name,alignment,description,creatureClass,health,aC,speed);
         System.out.println("Created a "+alignment+" " +creatureClass +" named "+name+" it is "+description);
         System.out.println("it has "+health+" health, "+speed+" feet-per-turn movement speed, and "+aC+" armor class");
-        monster.setType(size,species);
+        monster.setType(size,"Undead");
         System.out.println("This creature is a "+creatureType.getSize() + " "+ creatureType.getSpecies().getName());
     }
     @Test
@@ -37,6 +42,7 @@ public class CreatureTesting {
 
     @Test
     public void monsterCorrectType(){
+        Assertions.assertEquals(creatureType.getSpecies().getName(), monster.getType().getSpecies().getName());
         Assertions.assertEquals(creatureType, monster.getType());
     }
 }

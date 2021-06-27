@@ -1,33 +1,27 @@
 package Creature.Helpers.Types.SpeciesInfo;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SpeciesListTesting {
-    private SpeciesList speciesList;
-    ArrayList<Species> speciesArrayList;
-    SpeciesListHandler speciesListHandler;
+    private SpeciesMap speciesMap;
+    HashMap<String, Species> speciesHashMap;
+    SpeciesMapHandler speciesMapHandler;
     @BeforeEach
     void setup() throws IOException, ClassNotFoundException {
-        speciesListHandler = new SpeciesListHandler();
-        speciesArrayList = speciesListHandler.speciesList.getSpeciesArrayList();
+        speciesMapHandler = new SpeciesMapHandler();
+         speciesHashMap = speciesMapHandler.speciesMap.getSpeciesHashMap();
     }
     @Test
     void addASpecies() throws IOException, ClassNotFoundException {
-        speciesListHandler.addSpecies("Aasimar","A Humanoid bird player creature",Species.Role.HUMANOID);
-        ArrayList<Species> listFromFile = SpeciesListHandler.getListFile().getSpeciesArrayList();
-        boolean containsNewSpecies = false;
-        for(Species entry : listFromFile){
-            if(entry.getName().equals("Aasimar")){
-                containsNewSpecies = true;
-            }
-        }
-        Assertions.assertTrue(containsNewSpecies);
+        speciesMapHandler.addSpecies("Aasimar","A Humanoid bird player creature",Species.Role.HUMANOID);
+        HashMap<String,Species> listFromFile = SpeciesMapHandler.getMapFile().getSpeciesHashMap();
+        Assertions.assertTrue(listFromFile.containsKey("Aasimar"));
         sameSpecies();
     }
     @Test
@@ -37,12 +31,15 @@ public class SpeciesListTesting {
 
     @Test
     void sameSpecies() throws IOException, ClassNotFoundException {
-        ArrayList<Species> listFromFile = SpeciesListHandler.getListFile().getSpeciesArrayList();
-        for(int i = 0; i< listFromFile.size();i++){
-            Assertions.assertEquals(listFromFile.get(i).getName(),speciesArrayList.get(i).getName());
-            Assertions.assertEquals(listFromFile.get(i).getRole(),speciesArrayList.get(i).getRole());
-            Assertions.assertEquals(listFromFile.get(i).getDescription(),speciesArrayList.get(i).getDescription());
+        HashMap<String, Species> listFromFile = SpeciesMapHandler.getMapFile().getSpeciesHashMap();
+        Assertions.assertEquals(listFromFile.keySet(),speciesHashMap.keySet());
+        for(String name : listFromFile.keySet()){
+            Assertions.assertEquals(listFromFile.get(name).getName(),speciesHashMap.get(name).getName());
+            Assertions.assertEquals(listFromFile.get(name).getRole(),speciesHashMap.get(name).getRole());
+            Assertions.assertEquals(listFromFile.get(name).getDescription(),speciesHashMap.get(name).getDescription());
+
         }
+
     }
 
 }

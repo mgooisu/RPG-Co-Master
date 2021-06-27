@@ -5,6 +5,7 @@ import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Types.CreatureType;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -43,9 +44,13 @@ public class BaseCreature implements Creature, Serializable {
     }
 
     @Override
-    public void setType(Size size, Species species){
+    public void setType(Size size, String speciesName){
         //todo - find creature type from typeList instead of generating a new one
-        this.creatureType = new CreatureType(size,species);
+        try {
+            this.creatureType = new CreatureType(size,speciesName);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

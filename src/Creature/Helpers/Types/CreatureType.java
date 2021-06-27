@@ -3,15 +3,17 @@ package Creature.Helpers.Types;
 import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Types.SpeciesInfo.*;
 
+import java.io.IOException;
+
 /**
- * Combination of size and species, as well as default stats, randomization factors and customization handlers
+ * Association of creatures to size and species, as well as default stats, randomization factors and customization handlers
  */
 public class CreatureType{
     private Size size;
-    private Species thisSpecies;
-    public CreatureType(Size size, Species species){
+    private Species species;
+    public CreatureType(Size size, String speciesName) throws IOException, ClassNotFoundException {
         this.size = size;
-        thisSpecies = species;
+        this.species = SpeciesMapHandler.getMapFile().getSpeciesHashMap().get(speciesName);
     }
 
     public Size getSize() {
@@ -19,6 +21,6 @@ public class CreatureType{
     }
 
     public Species getSpecies() {
-        return thisSpecies;
+        return species;
     }
 }

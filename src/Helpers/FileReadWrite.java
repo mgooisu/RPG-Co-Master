@@ -31,4 +31,5 @@ public class FileReadWrite {
         File file = new File(directory);
         return file.exists();
     }
+    //TODO - create comparision method that converts two objects to byte arrays and then compares them
 }

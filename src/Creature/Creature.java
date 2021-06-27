@@ -21,7 +21,7 @@ public interface Creature {
      * Assigns a creature type to the creature
      */
 
-    void setType(Size size, Species species);
+    void setType(Size size, String speciesName);
 
 
     /**
