@@ -1,5 +1,7 @@
 package Creature;
 
+import Helpers.Alignment;
+
 import java.util.HashMap;
 
 public class BaseCreature implements Creature{
@@ -7,9 +9,15 @@ public class BaseCreature implements Creature{
     private HashMap<String, Integer> stats;
     private String description, name,creatureClass;
     private String[] senses, languages, vulnerabilities, immunities, resistances,
-            conditionResists, conditionImmunities, conditions, alignment;
+            conditionResists, conditionImmunities, conditions;
+    private Alignment alignment;
 
-    public BaseCreature(String name, String[] alignment, String description, String creatureClass, int health, int aC, int speed){
+
+
+
+
+
+    public BaseCreature(String name, Alignment.CombinedAlignment combinedAlignment, String description, String creatureClass, int health, int aC, int speed){
         this. description = description;
         this.creatureClass = creatureClass;
         this.health = health;
@@ -17,7 +25,7 @@ public class BaseCreature implements Creature{
         this.speed = speed;
         this.name = name;
         //todo - make alignment object
-        this.alignment = alignment;
+        this.alignment = new Alignment(combinedAlignment);
     }
 
     @Override
@@ -26,7 +34,7 @@ public class BaseCreature implements Creature{
     }
 
     @Override
-    public String[] getAlignment() {
+    public Alignment getAlignment() {
         return alignment;
     }
 

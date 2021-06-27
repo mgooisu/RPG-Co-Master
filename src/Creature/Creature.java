@@ -1,5 +1,7 @@
 package Creature;
 
+import Helpers.Alignment;
+
 import java.util.HashMap;
 
 /**
@@ -17,7 +19,7 @@ public interface Creature {
      * todo - make enum
      * @return Enum array of length 2: [MORAL:{good|evil}, ETHIC:{Chaos|Order}]
      */
-    String[] getAlignment();
+    Alignment getAlignment();
 
     /**
      *
