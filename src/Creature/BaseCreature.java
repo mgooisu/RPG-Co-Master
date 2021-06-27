@@ -1,16 +1,25 @@
 package Creature;
 
-import Helpers.Alignment;
+import Creature.Helpers.Alignment;
+import Creature.Helpers.Enums.Size;
+import Creature.Helpers.Types.CreatureType;
+import Creature.Helpers.Types.SpeciesInfo.Species;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class BaseCreature implements Creature{
+/**
+ * Parent class of all creatures to be used in the game. Contains base information like health and armor that all
+ * creatures will have some representation of.
+ */
+public class BaseCreature implements Creature, Serializable {
     private int health, aC, speed;
     private HashMap<String, Integer> stats;
     private String description, name,creatureClass;
     private String[] senses, languages, vulnerabilities, immunities, resistances,
             conditionResists, conditionImmunities, conditions;
     private Alignment alignment;
+    private CreatureType creatureType;
 
 
 
@@ -29,8 +38,14 @@ public class BaseCreature implements Creature{
     }
 
     @Override
-    public String getType() {
-        return null;
+    public CreatureType getType() {
+        return creatureType;
+    }
+
+    @Override
+    public void setType(Size size, Species species){
+        //todo - find creature type from typeList instead of generating a new one
+        this.creatureType = new CreatureType(size,species);
     }
 
     @Override

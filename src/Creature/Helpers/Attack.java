@@ -1,4 +1,7 @@
-package Helpers;
+package Creature.Helpers;
+
+import Creature.Creature;
+import Helpers.DiceObject;
 
 public class Attack {
     private DiceObject diceObject;

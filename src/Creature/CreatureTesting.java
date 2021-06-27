@@ -1,23 +1,30 @@
 package Creature;
 
 
-import Helpers.Alignment;
+import Creature.Helpers.Alignment;
+import Creature.Helpers.Enums.Size;
+import Creature.Helpers.Types.CreatureType;
+import Creature.Helpers.Types.SpeciesInfo.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 public class CreatureTesting {
-    int health = 10, aC = 8, speed = 25;
-    String name = "Blerg", description = "A disgusting red demon", creatureClass = "Kobald";
-    Alignment.CombinedAlignment alignment = Alignment.CombinedAlignment.Chaotic_Evil;
+    int health = 13, aC = 13, speed = 30;
+    String name = "Clink", description = "A shambling undead skeleton wearing scraps of old armour", creatureClass = "Skeleton";
+    Alignment.CombinedAlignment alignment = Alignment.CombinedAlignment.Lawful_Evil;
     Monster monster;
+
+    Size size = Size.MEDIUM;
+    Species species = new Species("undead","Reanimated corpses.", Species.Role.MONSTER);
+    CreatureType creatureType = new CreatureType(size,species);
     @BeforeEach
     public void createCreature(){
         monster = new Monster(name,alignment,description,creatureClass,health,aC,speed);
         System.out.println("Created a "+alignment+" " +creatureClass +" named "+name+" it is "+description);
         System.out.println("it has "+health+" health, "+speed+" feet-per-turn movement speed, and "+aC+" armor class");
+        monster.setType(size,species);
+        System.out.println("This creature is a "+creatureType.getSize() + " "+ creatureType.getSpecies().getName());
     }
     @Test
     public void monsterCorrectInfo(){
@@ -26,5 +33,10 @@ public class CreatureTesting {
                 monster.getAlignment().getMoral().equals(testAlign.getMoral()) && monster.getAlignment().getEthic().equals(testAlign.getEthic())
                 && monster.getName().equals(name) && monster.getDescription().equals(description)&&
                 monster.getCreatureClass().equals(creatureClass));
+    }
+
+    @Test
+    public void monsterCorrectType(){
+        Assertions.assertEquals(creatureType, monster.getType());
     }
 }

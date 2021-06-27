@@ -1,4 +1,6 @@
-package Helpers;
+package Creature.Helpers;
+
+import Creature.Creature;
 
 public class Alignment {
     public Ethic getEthic() {
@@ -14,6 +16,9 @@ public class Alignment {
     private Ethic ethic;
     private Moral moral;
 
+    /**
+     * The Combination of Ethical viewpoint and personal morality that broadly defines a creatures identity
+     */
     public enum CombinedAlignment {
         Lawful_Good,
         Lawful_Neutral,

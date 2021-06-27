@@ -1,8 +1,6 @@
 package Creature;
 
-import Helpers.Alignment;
-
-import java.util.HashMap;
+import Creature.Helpers.Alignment;
 
 public class Monster extends BaseCreature{
 

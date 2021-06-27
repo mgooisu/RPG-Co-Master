@@ -1,6 +1,9 @@
 package Creature;
 
-import Helpers.Alignment;
+import Creature.Helpers.Alignment;
+import Creature.Helpers.Enums.Size;
+import Creature.Helpers.Types.CreatureType;
+import Creature.Helpers.Types.SpeciesInfo.Species;
 
 import java.util.HashMap;
 
@@ -12,7 +15,14 @@ public interface Creature {
      * @return the creature type
      * Todo- make enum
      */
-    String getType();
+    CreatureType getType();
+
+    /**
+     * Assigns a creature type to the creature
+     */
+
+    void setType(Size size, Species species);
+
 
     /**
      * Alignment is the measure of this creature's alignment towards good or evil and chaos or order

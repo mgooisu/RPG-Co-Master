@@ -1,6 +1,6 @@
 package Creature;
 
-import Helpers.Attack;
+import Creature.Helpers.Attack;
 import Helpers.DiceObject;
 
 /**
