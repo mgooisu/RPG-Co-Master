@@ -4,7 +4,6 @@ import Helpers.FileReadWrite;
 import Helpers.SerializedObjectHandler;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SpeciesMapHandler implements SerializedObjectHandler {
@@ -26,7 +25,7 @@ public class SpeciesMapHandler implements SerializedObjectHandler {
     }
 
     private void editListFile() throws IOException, ClassNotFoundException {
-        FileReadWrite.writeObject(sListDirectory, speciesMap);
+        FileReadWrite.writeObjectBytes(sListDirectory, speciesMap);
         speciesMap = getMapFile();
     }
 

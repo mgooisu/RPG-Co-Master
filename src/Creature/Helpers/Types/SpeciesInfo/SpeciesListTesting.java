@@ -1,5 +1,7 @@
 package Creature.Helpers.Types.SpeciesInfo;
 
+import Helpers.FileReadWrite;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -8,12 +10,16 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class SpeciesListTesting {
+    private static SpeciesMap fileBackup;
+
     private static SpeciesMapHandler speciesMapHandler;
     static HashMap<String, Species> speciesHashMap;
     @BeforeAll
     static void setup() throws IOException, ClassNotFoundException {
         speciesMapHandler = new SpeciesMapHandler();
-         speciesHashMap = speciesMapHandler.speciesMap.getSpeciesHashMap();
+        fileBackup = speciesMapHandler.speciesMap;
+        speciesHashMap = speciesMapHandler.speciesMap.getSpeciesHashMap();
+
 
     }
     @Test
@@ -38,6 +44,11 @@ public class SpeciesListTesting {
         Assertions.assertTrue(speciesMapHandler.compareData());
 
 
+    }
+
+    @AfterAll
+    static void restoreOriginalFile() throws IOException {
+        FileReadWrite.writeObjectBytes("src/Creature/Helpers/Types/SpeciesInfo/SpeciesListFile.dnd",fileBackup);
     }
 
 }

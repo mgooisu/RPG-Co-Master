@@ -1,46 +1,52 @@
 package Helpers;
 
+import javax.tools.JavaFileManager;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Handles the reading and writing operations of objects for the application
+ * Utility classes for the reading and writing of objects to the disk
  */
 public class FileReadWrite {
-    public static Object readObject(String directory) throws IOException, ClassNotFoundException {
-        File file = new File(directory);
-        FileInputStream fis = new FileInputStream(file);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        Object output = ois.readObject();
-        ois.close();
-        fis.close();
-        return output;
-
-    }
-    public static void writeObject(String directory, Object object) throws IOException {
-        if(checkFileExists(directory)){
-            deleteFile(directory);
-        }
-        File file = new File(directory);
+    /**
+     * Writes an object to file as a generic java object
+     * @param path the directory and filename of the file
+     * @param object the data to be saved
+     * @throws IOException - throws a standard Java IO exception
+     */
+    public static void writeObjectToFile(String path, Object object) throws IOException {
+        File file = new File(path);
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
-
         oos.writeObject(object);
         oos.close();
         fos.close();
+    }
 
+    /**
+     * Reads an object from file and returns it to be cast to the appropriate object type
+     * @param path the directory and filenameof the file
+     * @return The generic Object interpretation of the saved data
+     * @throws IOException -Throws a standard Java Io exception
+     * @throws ClassNotFoundException - Throws if the data can't be interpreted as a java object
+     */
+    public static Object readObjectFromFile(String path) throws IOException, ClassNotFoundException {
+        File file = new File(path);
+        FileInputStream fis = new FileInputStream(file);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Object object = ois.readObject();
+        fis.close();
+        ois.close();
+        return object;
+    }
 
+    /**
+     * Deletes the file at a given path
+     * @param path the location of the file
+     * @throws IOException - throws an IO exception if something goes wrong.
+     */
+    public static void deleteObjectFile(String path) throws IOException {
+        Files.deleteIfExists(Path.of(path));
     }
-    public static boolean checkFileExists(String directory){
-        File file = new File(directory);
-        return file.exists();
-    }
-    public static void deleteFile(String directory) throws IOException {
-        Files.deleteIfExists(Path.of(directory));
-    }
-    //TODO - create comparision method that converts two objects to byte arrays and then compares them
-    //should hopefully produce more reliable results than casting a saved object to an array and then comparing.
-    //Additionally, we may need to revert the read-write capabilites of this class to byte-arrays, should we take that approach.
-    //it could simplify things
 }
