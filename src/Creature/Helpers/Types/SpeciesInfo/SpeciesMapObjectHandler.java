@@ -4,6 +4,7 @@ import Helpers.FileReadWrite;
 import Helpers.SerializedObjectHandler;
 import Helpers.UTest_FileReadWrite;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -28,7 +29,7 @@ public class SpeciesMapObjectHandler implements SerializedObjectHandler {
 
     /**
      * Takes a new species object, updates the hashmap and writes it to file
-     * @param species
+     * @param species The species to be added
      * @throws IOException
      */
     public void addASpecies(Species species) throws IOException {
@@ -41,6 +42,14 @@ public class SpeciesMapObjectHandler implements SerializedObjectHandler {
         writeObject();
     }
 
+    public void updateASpecies(String speciesName, String newDescription, Species.Role newRole) throws IOException {
+        if(localSpecies.getSpeciesHashMap().containsKey(speciesName)){
+            localSpecies.addSpecies(speciesName,newDescription,newRole);
+            writeObject();
+        }else{
+            throw new FileNotFoundException("Species does not exist");
+        }
+    }
     //Inherited General Methods
 
     @Override

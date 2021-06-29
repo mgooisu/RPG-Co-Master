@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class SpeciesMapTesting {
@@ -41,6 +42,27 @@ public class SpeciesMapTesting {
         Assertions.assertTrue(!handler.localSpecies.getSpeciesHashMap().containsKey("Aasimar")&&
                 handler.compareData());
 
+    }
+    @Test
+    void updateASpecies() throws IOException, ClassNotFoundException{
+        addASpecies();
+        String speciesName = "Aasimar", newDescription = "A winged Menace";
+        Species.Role newRole = Species.Role.MONSTER;
+        handler.updateASpecies(speciesName,newDescription,newRole);
+        Species updatedSpecies = handler.localSpecies.getSpeciesHashMap().get("Aasimar");
+        Assertions.assertTrue(
+                updatedSpecies.getName().equals(speciesName)&&
+                        updatedSpecies.getDescription().equals(newDescription)&&
+                        updatedSpecies.getRole().equals(newRole)
+        );
+    }
+
+    @Test
+    void updateANonExistentSpecies() throws IOException,ClassNotFoundException{
+        String speciesName = "Aardvark", newDescription = "Some animal, I don't know";
+        Species.Role newRole = Species.Role.MONSTER;
+        Assertions.assertThrows(FileNotFoundException.class,()->
+                handler.updateASpecies(speciesName,newDescription,newRole));
     }
 
     @AfterAll
