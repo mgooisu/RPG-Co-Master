@@ -49,4 +49,13 @@ public class FileReadWrite {
     public static void deleteObjectFile(String path) throws IOException {
         Files.deleteIfExists(Path.of(path));
     }
+
+    /**
+     * Defines whether a file at the provided path exists
+     * @param path the location of the file
+     * @return boolean - true if the file exists, false otherwise
+     */
+    public static boolean FileExists(String path){
+        return Files.exists(Path.of(path));
+    }
 }

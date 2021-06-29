@@ -10,6 +10,11 @@ public interface SerializedObjectHandler {
 
 
     /**
+     * defines whether or not the file exists
+     */
+    boolean fileExists();
+
+    /**
      * Reads the Serializable object
      */
     Object readObject() throws IOException, ClassNotFoundException;

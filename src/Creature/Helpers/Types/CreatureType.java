@@ -13,7 +13,8 @@ public class CreatureType{
     private Species species;
     public CreatureType(Size size, String speciesName) throws IOException, ClassNotFoundException {
         this.size = size;
-        this.species = SpeciesMapHandler.getMapFile().getSpeciesHashMap().get(speciesName);
+      //  this.species = SpeciesMapHandler.getMapFile().getSpeciesHashMap().get(speciesName);
+        this.species = new Species(speciesName,"Description", Species.Role.MONSTER);
     }
 
     public Size getSize() {

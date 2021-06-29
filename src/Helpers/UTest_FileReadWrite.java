@@ -62,6 +62,11 @@ public class UTest_FileReadWrite {
         }
 
         @Override
+        public boolean fileExists() {
+            return FileReadWrite.FileExists(path);
+        }
+
+        @Override
         public SerializableObject readObject() throws IOException, ClassNotFoundException {
             storedObject = (SerializableObject) FileReadWrite.readObjectFromFile(path);
             return storedObject;
