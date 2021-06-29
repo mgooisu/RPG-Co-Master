@@ -2,12 +2,12 @@ package Creature;
 
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Size;
-import Creature.Helpers.Types.CreatureType;
+import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Parent class of all creatures to be used in the game. Contains base information like health and armor that all
@@ -15,43 +15,36 @@ import java.util.HashMap;
  */
 public class BaseCreature implements Creature, Serializable {
     private int health, aC, speed;
-    private HashMap<String, Integer> stats;
+    private Stats stats;
     private String description, name,creatureClass;
+    //Todo - create creature information objects: Senses, languages, Damage, Conditions, resistance, immunity
     private String[] senses, languages, vulnerabilities, immunities, resistances,
-            conditionResists, conditionImmunities, conditions;
+            conditionResists, conditionImmunities;
+    private ArrayList<String> conditions;
     private Alignment alignment;
-    private CreatureType creatureType;
+    private Size size;
+    private Species species;
 
 
 
 
 
 
-    public BaseCreature(String name, Alignment.CombinedAlignment combinedAlignment, String description, String creatureClass, int health, int aC, int speed){
+    public BaseCreature(String name, Alignment.CombinedAlignment combinedAlignment, String description,
+                        String creatureClass, int health, int aC, int speed, Size size, Species species,Stats stats){
         this. description = description;
         this.creatureClass = creatureClass;
         this.health = health;
         this.aC = aC;
         this.speed = speed;
         this.name = name;
-        //todo - make alignment object
         this.alignment = new Alignment(combinedAlignment);
+        this.size = size;
+        this.species = species;
+        this.stats =stats;
     }
 
-    @Override
-    public CreatureType getType() {
-        return creatureType;
-    }
 
-    @Override
-    public void setType(Size size, String speciesName){
-        //todo - find creature type from typeList instead of generating a new one
-        try {
-            this.creatureType = new CreatureType(size,speciesName);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public Alignment getAlignment() {
@@ -84,7 +77,7 @@ public class BaseCreature implements Creature, Serializable {
     }
 
     @Override
-    public HashMap<String, Integer> getStats() {
+    public Stats getStats() {
         return stats;
     }
 
@@ -129,7 +122,7 @@ public class BaseCreature implements Creature, Serializable {
     }
 
     @Override
-    public String[] getCondition() {
+    public List<String> getCondition() {
         return conditions;
     }
 }

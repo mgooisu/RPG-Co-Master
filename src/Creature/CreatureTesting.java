@@ -1,48 +1,65 @@
 package Creature;
 
-
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Size;
-import Creature.Helpers.Types.CreatureType;
-import Creature.Helpers.Types.SpeciesInfo.*;
+import Creature.Helpers.Stats;
+import Creature.Helpers.Types.SpeciesInfo.Species;
+import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CreatureTesting {
-    int health = 13, aC = 13, speed = 30;
-    String name = "Clink", description = "A shambling undead skeleton wearing scraps of old armour", creatureClass = "Skeleton";
-    Alignment.CombinedAlignment alignment = Alignment.CombinedAlignment.Lawful_Evil;
-    Monster monster;
+    SpeciesMapObjectHandler speciesMapObjectHandler;
+    private static Species species;
 
-    Size size = Size.MEDIUM;
-    CreatureType creatureType = new CreatureType(size,"Undead");
-
-    public CreatureTesting() throws IOException, ClassNotFoundException {
+    {
+        try {
+            speciesMapObjectHandler = new SpeciesMapObjectHandler();
+            species = speciesMapObjectHandler.readObject().getSpeciesHashMap().get("Undead");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    @BeforeEach
-    public void createCreature(){
-        monster = new Monster(name,alignment,description,creatureClass,health,aC,speed);
-        System.out.println("Created a "+alignment+" " +creatureClass +" named "+name+" it is "+description);
-        System.out.println("it has "+health+" health, "+speed+" feet-per-turn movement speed, and "+aC+" armor class");
-        monster.setType(size,"Undead");
-        System.out.println("This creature is a "+creatureType.getSize() + " "+ creatureType.getSpecies().getName());
+    static BaseCreature skeleton;
+    private static final int health = 13, aC = 13, speed = 30;
+    private static final Stats stats =
+            new Stats(10,14,15,6,8,5);
+    private final static String description ="A shambling, rattling warrior of bone",
+            name = null, creatureClass ="Skeleton";
+
+
+    private static final Alignment.CombinedAlignment alignment = Alignment.CombinedAlignment.Lawful_Evil;
+    private static final Size size = Size.MEDIUM;
+    static String[]
+            senses = {"Darkvision 60ft","Passive perception 9"},
+            languages ={"Understands all languages it knew in life, but can't speak"},
+            vulnerabilities ={"Bludgeoning"},
+            immunities ={"poison"},
+            resistances ={},
+            conditionResists ={},
+            conditionImmunities = {"Exhaustion","Poisoned"};
+
+    @BeforeAll
+    static void setup(){
+        ArrayList<String> conditions = new ArrayList<>();
+
+        skeleton = new BaseCreature(null, alignment,description,creatureClass,health,aC,speed,size,species,stats);
+
     }
     @Test
-    public void monsterCorrectInfo(){
-        Alignment testAlign = new Alignment(alignment);
-        Assertions.assertTrue(monster.getAC() == aC && monster.getSpeed() == speed && monster.getHealth() == health &&
-                monster.getAlignment().getMoral().equals(testAlign.getMoral()) && monster.getAlignment().getEthic().equals(testAlign.getEthic())
-                && monster.getName().equals(name) && monster.getDescription().equals(description)&&
-                monster.getCreatureClass().equals(creatureClass));
+    void checkStats(){
+        Stats myStats = skeleton.getStats();
+        int[] myStatsArray = {myStats.getStrength(), myStats.getDexterity(),myStats.getConstitution(),
+                myStats.getIntelligence(),myStats.getWisdom(),myStats.getCharisma()};
+        int[] expectedArray = {10,14,15,6,8,5};
+        Assertions.assertArrayEquals(expectedArray,myStatsArray);
+
     }
 
-    @Test
-    public void monsterCorrectType(){
-        Assertions.assertEquals(creatureType.getSpecies().getName(), monster.getType().getSpecies().getName());
-        Assertions.assertEquals(creatureType, monster.getType());
-    }
 }

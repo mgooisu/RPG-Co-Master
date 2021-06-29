@@ -1,28 +1,14 @@
 package Creature;
 
 import Creature.Helpers.Alignment;
-import Creature.Helpers.Enums.Size;
-import Creature.Helpers.Types.CreatureType;
-import Creature.Helpers.Types.SpeciesInfo.Species;
+import Creature.Helpers.Stats;
 
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * Interface for the generic Creature object.
  */
 public interface Creature {
-    /**
-     * @return the creature type
-     * Todo- make enum
-     */
-    CreatureType getType();
-
-    /**
-     * Assigns a creature type to the creature
-     */
-
-    void setType(Size size, String speciesName);
-
 
     /**
      * Alignment is the measure of this creature's alignment towards good or evil and chaos or order
@@ -65,7 +51,7 @@ public interface Creature {
      * be general
      * @return a hashmap with key - string for stat type, value - int for value
      */
-    HashMap<String, Integer> getStats();
+    Stats getStats();
 
     /**
      *
@@ -119,7 +105,7 @@ public interface Creature {
      * todo - make condition object with enums
      * @return a list of the conditions the creature is currently experiencing
      */
-    String[] getCondition();
+    List<String> getCondition();
 
 
 }

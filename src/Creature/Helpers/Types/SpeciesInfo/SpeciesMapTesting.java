@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SpeciesMapTesting {
     static SpeciesMapObjectHandler handler;
@@ -63,6 +65,25 @@ public class SpeciesMapTesting {
         Species.Role newRole = Species.Role.MONSTER;
         Assertions.assertThrows(FileNotFoundException.class,()->
                 handler.updateASpecies(speciesName,newDescription,newRole));
+    }
+
+    @Test
+    void readSpecies() throws IOException, ClassNotFoundException {
+        HashMap<String, Species> speciesHashMap = handler.readObject().getSpeciesHashMap();
+        for (Map.Entry<String, Species> entry: speciesHashMap.entrySet()){
+            Species species = entry.getValue();
+            System.out.println(species.getName()+": "+species.getDescription());
+        }
+    }
+
+    @Test
+    void readMonsters() throws IOException, ClassNotFoundException {
+        HashMap<String, Species> speciesHashMap = handler.readFilteredMap(Species.Role.MONSTER);
+        for (Map.Entry<String, Species> entry: speciesHashMap.entrySet()){
+            Species species = entry.getValue();
+            System.out.println(species.getName()+": "+species.getDescription());
+            Assertions.assertEquals(Species.Role.MONSTER, species.getRole());
+        }
     }
 
     @AfterAll

@@ -15,7 +15,7 @@ public class SpeciesMapObjectHandler implements SerializedObjectHandler {
 
     public SpeciesMapObjectHandler() throws IOException, ClassNotFoundException {
         if(fileExists()){
-            storedSpecies = (SpeciesMap) readObject();
+            storedSpecies = readObject();
             localSpecies = storedSpecies;
         }
         else{
@@ -50,6 +50,20 @@ public class SpeciesMapObjectHandler implements SerializedObjectHandler {
             throw new FileNotFoundException("Species does not exist");
         }
     }
+
+    public HashMap<String ,Species>  readFilteredMap(Species.Role role) throws IOException, ClassNotFoundException {
+        SpeciesMap speciesMap = readObject();
+        HashMap<String ,Species> speciesHashMap = speciesMap.getSpeciesHashMap();
+        HashMap<String ,Species> updatedHashMap = new HashMap<>();
+        for(String key: speciesHashMap.keySet()){
+            if(speciesHashMap.get(key).getRole().equals(role)){
+                updatedHashMap.put(key,speciesHashMap.get(key));
+            }
+        }
+        return updatedHashMap;
+
+    }
+
     //Inherited General Methods
 
     @Override
@@ -58,9 +72,9 @@ public class SpeciesMapObjectHandler implements SerializedObjectHandler {
     }
 
     @Override
-    public Object readObject() throws IOException, ClassNotFoundException {
-        storedSpecies = (SpeciesMap) FileReadWrite.readObjectFromFile(path);
-        return storedSpecies;
+    public SpeciesMap readObject() throws IOException, ClassNotFoundException {
+        return  (SpeciesMap) FileReadWrite.readObjectFromFile(path);
+
     }
 
     @Override
