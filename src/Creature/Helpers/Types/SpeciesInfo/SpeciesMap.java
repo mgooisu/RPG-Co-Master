@@ -31,8 +31,8 @@ public class SpeciesMap implements Serializable {
     }
 
     //We don't want these to be enums. Users should be able to add more types if they require
-    private String[] baseHumanoidSpecies = {"Dragonborn", "Dwarf", "Elf", "Gnome", "Half-Elf", "Halfling", "Half-Orc", "Human", "Tiefling"};
-    private String[] baseHumanoidDescriptions = {
+    private final String[] baseHumanoidSpecies = {"Dragonborn", "Dwarf", "Elf", "Gnome", "Half-Elf", "Halfling", "Half-Orc", "Human", "Tiefling"};
+    private final String[] baseHumanoidDescriptions = {
             "Dragonborn look very much like dragons standing erect in humanoid form, though they lack wings or a tail.",
             "Bold and hardy, dwarves are known as skilled warriors, miners, and workers of stone and metal.",
             "Elves are a magical people of otherworldly grace, living in the world but not entirely part of it.",
@@ -43,9 +43,9 @@ public class SpeciesMap implements Serializable {
             "Humans are the most adaptable and ambitious people among the common races. Whatever drives them, humans are the innovators, the achievers, and the pioneers of the worlds.",
             "To be greeted with stares and whispers, to suffer violence and insult on the street, to see mistrust and fear in every eye: this is the lot of the tiefling."
     };
-    private String[] baseMonsterSpecies = {"Abberation", "Beast", "Celestial", "Construct", "Dragon", "Elemental", "Fey", "Fiend", "Giant",
+    private final String[] baseMonsterSpecies = {"Abberation", "Beast", "Celestial", "Construct", "Dragon", "Elemental", "Fey", "Fiend", "Giant",
             "Humanoid", "Ooze", "Plant", "Undead"};
-    private String[] baseMonsterDescriptions = {
+    private final String[] baseMonsterDescriptions = {
             "Aberrations are alien entities, often with powers drawn from their minds. Examples include aboleths, beholders, mind flayers, and slaadi.",
             "Beasts are nonhumanoid creatures that are part of the natural world. Some beasts have magical powers, but are generally low in intelligence. Ordinary animals, dinosaurs, and giant animals are included in this type. Other examples include quippers and stirges.",
             "Celestials are creatures native to the Upper Planes, and good by nature. Examples include angels, couatls, and pegasi.",
@@ -74,10 +74,20 @@ public class SpeciesMap implements Serializable {
     }
 
     /**
+     * Removes a species from the hashmap
+     * @param name the unique name of the species to be removed
+     */
+    public void deleteSpecies(String name){
+        speciesHashMap.remove(name);
+    }
+
+    /**
      *
      * @return speciesArrayList - The arraylist of species objects
      */
     public HashMap<String, Species> getSpeciesHashMap(){
         return speciesHashMap;
     }
+
+
 }
