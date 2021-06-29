@@ -30,6 +30,11 @@ public interface Creature {
     String getCreatureClass();
 
     /**
+     * Gets the maximum health of the character
+     * @return maximum HP
+     */
+    int getMaxHP();
+    /**
      * Gets the health of the Creature
      * @return health int
      */
@@ -107,5 +112,39 @@ public interface Creature {
      */
     List<String> getCondition();
 
+    //Setters
 
+
+    void setAlignment(Alignment.CombinedAlignment alignment);
+    void setName(String name);
+    void setCreatureClass(String creatureClass);
+    void setMaxHP(int HP);
+    void setAc(int AC);
+    void setSpeed(int speed);
+    void setStats(Stats stats);
+    void setDescription(String description);
+    void setSenses(String[] senses);
+    void setLanguages(String[] languages);
+    void setImmunity(String[] immunities);
+    void setResistances(String[] resistances);
+    void setConditionImmunity(String[] conditionImmunity);
+    void setConditionResistance(String[] conditionResistance);
+    //Modifiers
+
+    /**
+     * Damages the creature for a certain number; subtracts an integer amount from health
+     * @param dmgNumber The amount of damage the creature takes
+     */
+    void healthDamage(int dmgNumber);
+
+    /**
+     * heals the creature for a certain number; adds an integer amount to health
+     * @param healingNumber The amount the creature heals by
+     */
+    void healthHealing(int healingNumber);
+
+    //Todo - create condition object
+    void addCondition(String condition, int durationTurns);
+
+    void removeCondition(String condition);
 }

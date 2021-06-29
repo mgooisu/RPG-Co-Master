@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CreatureTesting {
     SpeciesMapObjectHandler speciesMapObjectHandler;
@@ -27,7 +26,7 @@ public class CreatureTesting {
     }
 
     static BaseCreature skeleton;
-    private static final int health = 13, aC = 13, speed = 30;
+    private static final int maxHP = 13, aC = 13, speed = 30;
     private static final Stats stats =
             new Stats(10,14,15,6,8,5);
     private final static String description ="A shambling, rattling warrior of bone",
@@ -49,7 +48,7 @@ public class CreatureTesting {
     static void setup(){
         ArrayList<String> conditions = new ArrayList<>();
 
-        skeleton = new BaseCreature(null, alignment,description,creatureClass,health,aC,speed,size,species,stats);
+        skeleton = new BaseCreature(null, alignment,description,creatureClass, maxHP,aC,speed,size,species,stats);
 
     }
     @Test
@@ -60,6 +59,10 @@ public class CreatureTesting {
         int[] expectedArray = {10,14,15,6,8,5};
         Assertions.assertArrayEquals(expectedArray,myStatsArray);
 
+    }
+    @Test
+    void checkHP(){
+        Assertions.assertEquals(skeleton.getHealth(),13);
     }
 
 }
