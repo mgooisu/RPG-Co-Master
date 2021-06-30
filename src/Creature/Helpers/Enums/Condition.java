@@ -56,7 +56,7 @@ public enum Condition {
             "The creature has disadvantage on attack rolls.",
             "An attack roll against the creature has disadvantage attack rolls.",
             "An attack roll against the creature has advantage if the attacker is within 5 feet of the creature." +
-                    "Otherwise, the attack roll has disadvantage"
+                    " Otherwise, the attack roll has disadvantage"
     }),
     RESTRAINED(new String[]{
             "A restrained creature's speed becomes 0, and it can't benefit from any bonus to speed.",
@@ -75,7 +75,17 @@ public enum Condition {
             "The creature automatically fails Strength and Dexterity saving throws.",
             "Attack rolls against this creature have advantage.",
             "Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature."
+    }),
+    EXHAUSTION(new String[]{
+            "Level one: Disadvantage on ability checks.",
+            "Level two: Speed halved.",
+            "Level three: Disadvantage on attack rolls and saving throws.",
+            "Level four: Hit point maximum halved.",
+            "Level five: Speed reduced to 0.",
+            "Level six: Death."
+
     });
+
     private String[] effects;
     Condition(String[] effects){
         this.effects = effects;
@@ -83,5 +93,4 @@ public enum Condition {
     public String[] getEffects(){
         return effects;
     }
-
 }

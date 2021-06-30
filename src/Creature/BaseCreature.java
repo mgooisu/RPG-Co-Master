@@ -1,26 +1,27 @@
 package Creature;
 
 import Creature.Helpers.Alignment;
+import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
+import Exceptions.CreatureException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Parent class of all creatures to be used in the game. Contains base information like health and armor that all
  * creatures will have some representation of.
  */
 public class BaseCreature implements Creature, Serializable {
-    private int health,maxHP,tempHP, AC, speed;
+    private int health,maxHP,tempHP, AC, speed, exhaustionLevel;
     private Stats stats;
     private String description, name,creatureClass;
     //Todo - create creature information objects: Senses, languages, Damage, Conditions, resistance, immunity
-    private String[] senses, languages, vulnerabilities, immunities, resistances,
-            conditionResists, conditionImmunities;
-    private ArrayList<String> conditions;
+    private String[] senses, languages, vulnerabilities, immunities, resistances;
+    private Condition[]  conditionResists, conditionImmunities;
+    private ArrayList<Condition> conditions;
     private Alignment alignment;
     private Size size;
     private final Species species;
@@ -30,8 +31,10 @@ public class BaseCreature implements Creature, Serializable {
 
 
 
+
     public BaseCreature(String name, Alignment.CombinedAlignment combinedAlignment, String description,
-                        String creatureClass, int maxHP, int AC, int speed, Size size, Species species, Stats stats){
+                        String creatureClass, int maxHP, int AC, int speed, Size size, Species species, Stats stats,
+                        Condition[] conditionImmunities, Condition[] conditionResists){
         this. description = description;
         this.creatureClass = creatureClass;
         this.maxHP= maxHP;
@@ -43,6 +46,11 @@ public class BaseCreature implements Creature, Serializable {
         this.size = size;
         this.species = species;
         this.stats =stats;
+        this.conditions = new ArrayList<>();
+        this.exhaustionLevel = 0;
+        this.conditionImmunities = conditionImmunities;
+        this.conditionResists = conditionResists;
+
     }
 
 
@@ -118,23 +126,31 @@ public class BaseCreature implements Creature, Serializable {
 
     @Override
     public String[] getResistances() {
+        return new String[0];
+    }
+
+    @Override
+    public Condition[] getConditionResistances() {
         return conditionResists;
     }
 
     @Override
-    public String[] getConditionImmunity() {
+    public Condition[] getConditionImmunity() {
         return conditionImmunities;
     }
 
+
+
+
     @Override
-    public String[] getConditionResistance() {
-        return conditionResists;
+    public ArrayList<Condition> getConditions() {
+        return conditions;
     }
 
     @Override
-    public List<String> getCondition() {
-        return conditions;
-    }
+    public int getExhaustionLevel(){ return exhaustionLevel;}
+
+    //Setters
 
     @Override
     public void setAlignment(Alignment.CombinedAlignment combinedAlignment) {
@@ -210,13 +226,18 @@ public class BaseCreature implements Creature, Serializable {
     }
 
     @Override
-    public void setConditionImmunity(String[] conditionImmunities) {
+    public void setConditionImmunities(Condition[] conditionImmunities) {
         this.conditionImmunities = conditionImmunities;
     }
 
     @Override
-    public void setConditionResistance(String[] conditionResistance) {
+    public void setConditionResistances(Condition[] conditionResistance) {
         this.conditionImmunities = conditionResistance;
+    }
+
+    @Override
+    public void setExhaustionLevel(int exhaustionLevel){
+        this.exhaustionLevel = exhaustionLevel;
     }
 
 
@@ -245,13 +266,32 @@ public class BaseCreature implements Creature, Serializable {
 
 
     @Override
-    public void addCondition(String condition, int durationTurns) {
+    public void addCondition(Condition condition, int durationTurns) throws CreatureException {
+        //todo add method to remove condition after the certain amount of turns
+        for(Condition conditionImmunity: conditionImmunities){
+            if(conditionImmunity.name().equals(condition.name())){
+                throw new CreatureException("Creature is immune to "+condition.name()+"!");
+            }
+        }
+        this.conditions.add(condition);
+
 
 
     }
 
     @Override
-    public void removeCondition(String condition) {
+    public void removeCondition(Condition condition) {
+        this.conditions.remove(condition);
 
+    }
+
+    @Override
+    public void increaseExhaustion(int exhaustionIncreaseAmount) {
+        this.exhaustionLevel+=this.exhaustionLevel+exhaustionIncreaseAmount;
+    }
+
+    @Override
+    public void decreaseExhaustion(int exhaustionDecreaseAmount) {
+        this.exhaustionLevel-=this.exhaustionLevel+exhaustionDecreaseAmount;
     }
 }

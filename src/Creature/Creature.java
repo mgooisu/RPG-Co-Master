@@ -1,7 +1,9 @@
 package Creature;
 
 import Creature.Helpers.Alignment;
+import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Stats;
+import Exceptions.CreatureException;
 
 import java.util.List;
 
@@ -105,21 +107,28 @@ public interface Creature {
      * todo - make condition object with enums
      * @return a list of the condition immunities that the creature has
      */
-    String[] getConditionImmunity();
+    Condition[] getConditionImmunity();
 
     /**
      * todo - make condition object with enums
-     * @return a list of the condition that the creature is resistant to
+     * @return a list of the conditions that the creature is resistant to
      */
-    String[] getConditionResistance();
+    Condition[] getConditionResistances();
 
     /**
      * todo - make condition object with enums
      * @return a list of the conditions the creature is currently experiencing
      */
-    List<String> getCondition();
+    List<Condition> getConditions();
 
+    /**
+     *
+     * @return the current exhaustion level of the creature
+     */
+    int getExhaustionLevel();
     //Setters
+
+
 
 
     void setAlignment(Alignment.CombinedAlignment alignment);
@@ -135,8 +144,9 @@ public interface Creature {
     void setLanguages(String[] languages);
     void setImmunity(String[] immunities);
     void setResistances(String[] resistances);
-    void setConditionImmunity(String[] conditionImmunity);
-    void setConditionResistance(String[] conditionResistance);
+    void setConditionImmunities(Condition[] conditionImmunity);
+    void setConditionResistances(Condition[] conditionResistance);
+    void setExhaustionLevel(int exhaustionLevel);
     //Modifiers
 
     /**
@@ -151,8 +161,24 @@ public interface Creature {
      */
     void healthHealing(int healingNumber);
 
-    //Todo - create condition object
-    void addCondition(String condition, int durationTurns);
+    /**
+     * Inflicts the creature with a condition
+     * @param condition the condition the creature has been inflicted with
+     * @param durationTurns How long, in turns the creature should be inflicted with the condition(0 if undefined).
+     */
+    void addCondition(Condition condition, int durationTurns) throws CreatureException;
 
-    void removeCondition(String condition);
+    void removeCondition(Condition condition);
+
+    /**
+     * Increases the level of exhaustion of the character, perhaps from starvation, overexertion or magic
+     * @param exhaustionIncreaseAmount the integer amount by which the exhaustion increases, usually 1
+     */
+    void increaseExhaustion(int exhaustionIncreaseAmount);
+
+    /**
+     * Decreases the level of exhaustion of the character, perhaps from rest or magic
+     * @param exhaustionDecreaseAmount the integer amount by which the exhaustion decreases, usually 1
+     */
+    void decreaseExhaustion(int exhaustionDecreaseAmount);
 }

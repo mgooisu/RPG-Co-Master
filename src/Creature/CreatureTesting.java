@@ -6,12 +6,14 @@ import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
+import Exceptions.CreatureException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CreatureTesting {
     SpeciesMapObjectHandler speciesMapObjectHandler;
@@ -41,15 +43,17 @@ public class CreatureTesting {
             languages ={"Understands all languages it knew in life, but can't speak"},
             vulnerabilities ={"Bludgeoning"},
             immunities ={"poison"},
-            resistances ={},
+            resistances ={};
+    static Condition[]
             conditionResists ={},
-            conditionImmunities = {"Exhaustion","Poisoned"};
+            conditionImmunities = {Condition.EXHAUSTION,Condition.POISONED};
 
     @BeforeAll
     static void setup(){
         ArrayList<String> conditions = new ArrayList<>();
 
-        skeleton = new BaseCreature(null, alignment,description,creatureClass, maxHP,aC,speed,size,species,stats);
+        skeleton = new BaseCreature(null, alignment,description,creatureClass,
+                maxHP,aC,speed,size,species,stats,conditionImmunities,conditionResists);
 
     }
     @Test
@@ -69,10 +73,6 @@ public class CreatureTesting {
                 myStats.getIntelligence(),myStats.getWisdom(),myStats.getCharisma()};
         Assertions.assertArrayEquals(expectedArray,myStatsArray);
 
-    }
-    @Test
-    void checkHP(){
-        Assertions.assertEquals(skeleton.getHealth(),13);
     }
     @Test
     void damageAndHeal(){
@@ -134,8 +134,19 @@ public class CreatureTesting {
     }
 
     @Test
-    void addCondition(){
+    void addConditionTesting() throws CreatureException {
+        skeleton.addCondition(Condition.PRONE,3);
+        skeleton.removeCondition(Condition.CHARMED);
+        ArrayList<Condition> conditions = skeleton.getConditions();
+        for(Condition entry: conditions){
+            System.out.println(entry.name());
+            for(String effect: entry.getEffects()){
+                System.out.println(effect);
+            }
+        }
 
+        //The skeleton creature is immune to poison, so an attempt to poison should throw a creature exception
+        Assertions.assertThrows(Exception.class,()->skeleton.addCondition(Condition.POISONED,3));
     }
 
 
