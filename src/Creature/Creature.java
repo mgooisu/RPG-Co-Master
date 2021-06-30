@@ -12,8 +12,7 @@ public interface Creature {
 
     /**
      * Alignment is the measure of this creature's alignment towards good or evil and chaos or order
-     * todo - make enum
-     * @return Enum array of length 2: [MORAL:{good|evil}, ETHIC:{Chaos|Order}]
+     * @return Enum alignment object containing moral and ethic enums [MORAL:{good|evil}, ETHIC:{Chaos|Order}]
      */
     Alignment getAlignment();
 
@@ -39,6 +38,14 @@ public interface Creature {
      * @return health int
      */
     int getHealth();
+
+    /**
+     * Gets the temporary HP of a character - a measure of how much damage the character can take before
+     * their HP is affected. It is usually conferred by magic
+     * note - it is not accumulative, it can only be replaced. It also cannot be negative
+     * @return temporary HP integer
+     */
+    int getTempHP();
 
     /**
      * @return The armor class of the Creature
@@ -119,7 +126,8 @@ public interface Creature {
     void setName(String name);
     void setCreatureClass(String creatureClass);
     void setMaxHP(int HP);
-    void setAc(int AC);
+    void setTempHP(int tempHP);
+    void setAC(int AC);
     void setSpeed(int speed);
     void setStats(Stats stats);
     void setDescription(String description);

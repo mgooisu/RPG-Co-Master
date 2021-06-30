@@ -14,7 +14,7 @@ import java.util.List;
  * creatures will have some representation of.
  */
 public class BaseCreature implements Creature, Serializable {
-    private int health,maxHP, aC, speed;
+    private int health,maxHP,tempHP, AC, speed;
     private Stats stats;
     private String description, name,creatureClass;
     //Todo - create creature information objects: Senses, languages, Damage, Conditions, resistance, immunity
@@ -31,12 +31,12 @@ public class BaseCreature implements Creature, Serializable {
 
 
     public BaseCreature(String name, Alignment.CombinedAlignment combinedAlignment, String description,
-                        String creatureClass, int maxHP, int aC, int speed, Size size, Species species,Stats stats){
+                        String creatureClass, int maxHP, int AC, int speed, Size size, Species species, Stats stats){
         this. description = description;
         this.creatureClass = creatureClass;
         this.maxHP= maxHP;
         this.health = maxHP;
-        this.aC = aC;
+        this.AC = AC;
         this.speed = speed;
         this.name = name;
         this.alignment = new Alignment(combinedAlignment);
@@ -74,8 +74,11 @@ public class BaseCreature implements Creature, Serializable {
     }
 
     @Override
+    public int getTempHP(){return tempHP;}
+
+    @Override
     public int getAC() {
-        return aC;
+        return AC;
     }
 
     @Override
@@ -134,17 +137,19 @@ public class BaseCreature implements Creature, Serializable {
     }
 
     @Override
-    public void setAlignment(Alignment.CombinedAlignment alignment) {
+    public void setAlignment(Alignment.CombinedAlignment combinedAlignment) {
+        this.alignment = new Alignment(combinedAlignment);
 
     }
 
     @Override
     public void setName(String name) {
-
+        this.name = name;
     }
 
     @Override
     public void setCreatureClass(String creatureClass) {
+        this.creatureClass = creatureClass;
 
     }
 
@@ -154,69 +159,94 @@ public class BaseCreature implements Creature, Serializable {
     }
 
     @Override
-    public void setAc(int AC) {
+    public void setTempHP(int tempHP){
+        this.tempHP = tempHP;
+    }
 
+
+    @Override
+    public void setAC(int AC) {
+        this.AC = AC;
     }
 
     @Override
     public void setSpeed(int speed) {
-
+        this.speed = speed;
     }
 
     @Override
     public void setStats(Stats stats) {
+        this.stats = stats;
 
     }
 
     @Override
     public void setDescription(String description) {
+        this.description = description;
 
     }
 
     @Override
     public void setSenses(String[] senses) {
+        this.senses = senses;
 
     }
 
     @Override
     public void setLanguages(String[] languages) {
+        this.languages = languages;
 
     }
 
     @Override
     public void setImmunity(String[] immunities) {
+        this.immunities = immunities;
 
     }
 
     @Override
     public void setResistances(String[] resistances) {
-
+        this.resistances = resistances;
     }
 
     @Override
-    public void setConditionImmunity(String[] conditionImmunity) {
-
+    public void setConditionImmunity(String[] conditionImmunities) {
+        this.conditionImmunities = conditionImmunities;
     }
 
     @Override
     public void setConditionResistance(String[] conditionResistance) {
-
+        this.conditionImmunities = conditionResistance;
     }
 
 
     //Modifiers
     @Override
     public void healthDamage(int dmgNumber){
+        if(tempHP<=dmgNumber){
+            dmgNumber -=tempHP;
+            tempHP = 0;
+        }
+        else{
+            tempHP-=dmgNumber;
+            dmgNumber = 0;
+        }
         health-=dmgNumber;
     }
 
     @Override
     public void healthHealing(int healingNumber) {
+        if(health+healingNumber<maxHP)
+        health+=healingNumber;
+        else
+            health = maxHP;
 
     }
 
+
     @Override
     public void addCondition(String condition, int durationTurns) {
+
 
     }
 
