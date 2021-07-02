@@ -50,7 +50,7 @@ public class EncounterTesting {
 
         HashMap<String,BaseCreature> newMap = creatureMap.getCreatureHashMap();
         newMap.put("Skeleton 1",skeleton);
-        newMap.put("Skeleton 3",skeleton);
+        newMap.put("Skeleton 2",skeleton);
         newMap.put("Cultist 1",cultist);
         creatureMap.setCreatureHashMap(newMap);
         for(String key: creatureMap.getCreatureHashMap().keySet()){
