@@ -140,6 +140,7 @@ public class CreatureTesting {
     void addConditionTesting() throws CreatureException {
         skeleton.addCondition(Condition.PRONE,3);
         skeleton.removeCondition(Condition.CHARMED);
+        skeleton.removeCondition(Condition.EXHAUSTION);
         ArrayList<Condition> conditions = skeleton.getConditions();
         for(Condition entry: conditions){
             System.out.println(entry.name());

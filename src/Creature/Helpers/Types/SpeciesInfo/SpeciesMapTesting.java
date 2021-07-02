@@ -96,7 +96,5 @@ public class SpeciesMapTesting {
         handler.localSpecies = (SpeciesMap) originalFile;
         handler.writeObject();
 
-        FileReadWrite.deleteObjectFile(path);
-
     }
 }
