@@ -1,5 +1,6 @@
 package Creature.Helpers.Types.SpeciesInfo;
 
+import Helpers.FileReadWrite;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,7 +28,9 @@ public class SpeciesMapTesting {
 
     @Test
     void localMatchesStored() throws IOException, ClassNotFoundException {
+
         Assertions.assertTrue(handler.compareData());
+
     }
     @Test
     void addASpecies() throws IOException, ClassNotFoundException {
@@ -87,8 +90,13 @@ public class SpeciesMapTesting {
     }
 
     @AfterAll
-    static void restoreOriginalFile() throws IOException {
+    static void restoreOriginalFile() throws IOException, ClassNotFoundException {
+        final String path = "src/Creature/Helpers/Types/SpeciesListFile.dnd";
+
         handler.localSpecies = (SpeciesMap) originalFile;
         handler.writeObject();
+
+        FileReadWrite.deleteObjectFile(path);
+
     }
 }

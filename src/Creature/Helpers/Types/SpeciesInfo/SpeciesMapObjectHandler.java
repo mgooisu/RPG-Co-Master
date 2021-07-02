@@ -21,6 +21,7 @@ public class SpeciesMapObjectHandler implements SerializedObjectHandler {
         else{
             localSpecies = new SpeciesMap();
             writeObject();
+            storedSpecies = readObject();
         }
 
     }
@@ -80,6 +81,11 @@ public class SpeciesMapObjectHandler implements SerializedObjectHandler {
     @Override
     public void writeObject() throws IOException {
         FileReadWrite.writeObjectToFile(path, localSpecies);
+        try {
+            storedSpecies = readObject();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -89,6 +95,8 @@ public class SpeciesMapObjectHandler implements SerializedObjectHandler {
                                  storedHash = storedSpecies.getSpeciesHashMap();
 
         if(localHash.keySet().size()!=storedHash.keySet().size()){
+            System.out.println(localHash.keySet());
+            System.out.println(storedHash.keySet());
             return false;
         }
 
