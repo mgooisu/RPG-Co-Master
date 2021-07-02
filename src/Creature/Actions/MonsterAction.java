@@ -9,8 +9,6 @@ import Helpers.DiceObject;
  * Information pertaining to a given monster action such as attack type\damage, effects, duration, range ect.
  */
 public class MonsterAction extends Actions {
-    //TODO change string definitions to enums
-    private final String type;
     private Attack attack;
 
     /**
@@ -19,9 +17,8 @@ public class MonsterAction extends Actions {
      * @param description What the action does
      * @param type the type of the action - e.g meleeAttack, rangedAttack, Magic, etc.
      */
-    public MonsterAction(String name, String type, String description){
-        super(name,description);
-        this.type = type;
+    public MonsterAction(String name, ActionType type, String description){
+        super(name,description,type);
     }
 
     /**
@@ -37,15 +34,14 @@ public class MonsterAction extends Actions {
      * @param diceType what type of dice for damage
      * @param diceMod constant to add to roll for damage
      */
-    public MonsterAction(String name, String type, String description,
+    public MonsterAction(String name, ActionType type, String description,
                          String saveType, int saveThreshold,
                          int reach, int addToHit, int target,
-                         int diceAmount, int diceType, int diceMod, Attack.Range range
+                         int diceAmount, int diceType, int diceMod
     ){
-        super(name,description);
-        this.type = type;
-        this.attack = new Attack(name,description,new DiceObject(diceType,diceAmount,diceMod), reach, target,
-                saveType,saveThreshold, addToHit, range);
+        super(name,description,type);
+        DiceObject attackDice = new DiceObject(diceType,diceAmount,diceMod);
+        this.attack = new Attack(name, description,type,attackDice,reach,target,saveType,saveThreshold,addToHit);
     }
 
     public Attack getAttack() {
