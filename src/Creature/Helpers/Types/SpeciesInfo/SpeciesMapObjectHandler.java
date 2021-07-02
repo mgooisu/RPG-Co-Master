@@ -90,13 +90,11 @@ public class SpeciesMapObjectHandler implements SerializedObjectHandler {
 
     @Override
     public boolean compareData() throws IOException, ClassNotFoundException {
-        readObject();
+        storedSpecies = readObject();
         HashMap<String, Species> localHash = localSpecies.getSpeciesHashMap(),
                                  storedHash = storedSpecies.getSpeciesHashMap();
 
         if(localHash.keySet().size()!=storedHash.keySet().size()){
-            System.out.println(localHash.keySet());
-            System.out.println(storedHash.keySet());
             return false;
         }
 

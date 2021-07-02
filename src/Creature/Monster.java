@@ -11,8 +11,8 @@ import Creature.Helpers.Types.SpeciesInfo.Species;
 
 
 public class Monster extends BaseCreature{
+//todo - add skills like deception and acrobatics
 
-    private MonsterAction[] actions;
 
     public Monster(String name, Alignment.CombinedAlignment alignment, String description,
                    String creatureClass, int health, int aC, int speed, Size size,
@@ -23,8 +23,11 @@ public class Monster extends BaseCreature{
     }
 
 
-
     //Monster/enemy specific methods
+    private MonsterAction[] actions;
+
+    private String[] abilities;
+
 
     public MonsterAction[] getActions() {
         return actions;
@@ -35,6 +38,11 @@ public class Monster extends BaseCreature{
     }
 
 
+    public String[] getAbilities() {
+        return abilities;
+    }
 
-
+    public void setAbilities(String[] abilities) {
+        this.abilities = abilities;
+    }
 }

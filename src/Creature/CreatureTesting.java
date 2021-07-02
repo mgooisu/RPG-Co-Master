@@ -1,5 +1,8 @@
 package Creature;
 
+import Creature.Actions.Actions;
+import Creature.Actions.Attack;
+import Creature.Actions.MonsterAction;
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Damage;
@@ -178,6 +181,18 @@ public class CreatureTesting {
     }
 
 
+    @Test
+    void addAttacks(){
+        MonsterAction[] actions = new MonsterAction[]{new MonsterAction("Shortsword", Actions.ActionType.MELEE_ATTACK,"An attack with a shortsword",
+                null,0,5,4,1,1,6,2),
+                new MonsterAction("Shortbow", Actions.ActionType.RANGED_ATTACK,"An attack with a shortbow",
+                        null,0,80,4,1,1,6,2)
+        };
+        skeleton.setActions(actions);
+        for (MonsterAction action: actions){
+            System.out.println("the "+skeleton.getCreatureClass()+" has the following actions:");
+            System.out.println(action.getName()+": "+action.getDescription());        }
+    }
 
 
 
