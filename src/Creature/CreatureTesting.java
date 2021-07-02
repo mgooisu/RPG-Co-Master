@@ -2,6 +2,7 @@ package Creature;
 
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
+import Creature.Helpers.Enums.Damage;
 import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
@@ -28,7 +29,7 @@ public class CreatureTesting {
         }
     }
 
-    static BaseCreature skeleton;
+    static Monster skeleton;
     private static final int maxHP = 13, aC = 13, speed = 30;
     private static final Stats stats =
             new Stats(10,14,15,6,8,5);
@@ -40,9 +41,10 @@ public class CreatureTesting {
     private static final Size size = Size.MEDIUM;
     static String[]
             senses = {"Darkvision 60ft","Passive perception 9"},
-            languages ={"Understands all languages it knew in life, but can't speak"},
-            vulnerabilities ={"Bludgeoning"},
-            immunities ={"poison"},
+            languages ={"Understands all languages it knew in life, but can't speak"};
+    static Damage[]
+            vulnerabilities ={Damage.BLUDGEONING},
+            immunities ={Damage.POISON},
             resistances ={};
     static Condition[]
             conditionResists ={},
@@ -52,8 +54,9 @@ public class CreatureTesting {
     static void setup(){
         ArrayList<String> conditions = new ArrayList<>();
 
-        skeleton = new BaseCreature(null, alignment,description,creatureClass,
-                maxHP,aC,speed,size,species,stats,conditionImmunities,conditionResists);
+        skeleton = new Monster(null, alignment,description,creatureClass,
+                maxHP,aC,speed,size,species,stats,conditionImmunities,conditionResists,
+                immunities,resistances,vulnerabilities);
 
     }
     @Test
@@ -148,6 +151,32 @@ public class CreatureTesting {
         //The skeleton creature is immune to poison, so an attempt to poison should throw a creature exception
         Assertions.assertThrows(Exception.class,()->skeleton.addCondition(Condition.POISONED,3));
     }
+
+    @Test
+    void ExhaustionTesting() throws CreatureException{
+        skeleton.setConditionImmunities(new Condition[]{Condition.POISONED});
+
+        //Accumulative exhaustionTesting
+        Assertions.assertEquals(0,skeleton.getExhaustionLevel());
+        skeleton.addCondition(Condition.EXHAUSTION,1);
+        skeleton.addCondition(Condition.EXHAUSTION,1);
+        Assertions.assertEquals(2,skeleton.getExhaustionLevel());
+        skeleton.removeCondition(Condition.EXHAUSTION);
+        Assertions.assertEquals(1,skeleton.getExhaustionLevel());
+        Assertions.assertTrue(skeleton.getConditions().contains(Condition.EXHAUSTION));
+
+    }
+
+    @Test
+    void testDamages(){
+        Assertions.assertTrue(
+                Arrays.equals(resistances, skeleton.getResistances())&&
+                        Arrays.equals(immunities,skeleton.getImmunities())&&
+                        Arrays.equals(vulnerabilities,skeleton.getVulnerabilities())
+                                        );
+    }
+
+
 
 
 

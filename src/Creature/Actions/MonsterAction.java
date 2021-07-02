@@ -1,14 +1,16 @@
-package Creature;
+package Creature.Actions;
 
-import Creature.Helpers.Attack;
+import Creature.Actions.Actions;
+import Creature.Actions.Attack;
+import Creature.Creature;
 import Helpers.DiceObject;
 
 /**
  * Information pertaining to a given monster action such as attack type\damage, effects, duration, range ect.
  */
-public class MonsterAction {
+public class MonsterAction extends Actions {
     //TODO change string definitions to enums
-    private String name, type, description;
+    private final String type;
     private Attack attack;
 
     /**
@@ -18,8 +20,7 @@ public class MonsterAction {
      * @param type the type of the action - e.g meleeAttack, rangedAttack, Magic, etc.
      */
     public MonsterAction(String name, String type, String description){
-        this.name = name;
-        this.description = description;
+        super(name,description);
         this.type = type;
     }
 
@@ -39,11 +40,15 @@ public class MonsterAction {
     public MonsterAction(String name, String type, String description,
                          String saveType, int saveThreshold,
                          int reach, int addToHit, int target,
-                         int diceAmount, int diceType, int diceMod
+                         int diceAmount, int diceType, int diceMod, Attack.Range range
     ){
-        this.name = name;
-        this.description = description;
+        super(name,description);
         this.type = type;
-        this.attack = new Attack(new DiceObject(diceType,diceAmount,diceMod), reach, target, saveType,saveThreshold, addToHit);
+        this.attack = new Attack(name,description,new DiceObject(diceType,diceAmount,diceMod), reach, target,
+                saveType,saveThreshold, addToHit, range);
+    }
+
+    public Attack getAttack() {
+        return attack;
     }
 }

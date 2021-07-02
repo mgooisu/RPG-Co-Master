@@ -1,5 +1,8 @@
 package Creature.Helpers.Enums;
 
+/**
+ * Creatures can be inflicted with conditions that cause effects
+ */
 public enum Condition {
     BLINDED( new String[]{
             "A blinded creature can't see and automatically fails any ability check that requires sight.",

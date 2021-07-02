@@ -2,7 +2,10 @@ package Creature;
 
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
+import Creature.Helpers.Enums.Damage;
+import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Stats;
+import Creature.Helpers.Types.SpeciesInfo.Species;
 import Exceptions.CreatureException;
 
 import java.util.List;
@@ -86,37 +89,34 @@ public interface Creature {
     String[] getLanguages();
 
     /**
-     * todo - make enum
      * @return a list of the elemental\ attack type weaknesses that the creature has
      */
-    String[] getVulnerabilities();
+    Damage[] getVulnerabilities();
 
     /**
-     * todo - make enum
      * @return a list of the elemental\ attack type immunities that the creature has
      */
-    String[] getImmunity();
+    Damage[] getImmunities();
 
     /**
-     * todo - make enum
      * @return a list of the elemental\ attack type that the creature is resistant to
      */
-    String[] getResistances();
+    Damage[] getResistances();
 
     /**
-     * todo - make condition object with enums
+     *
      * @return a list of the condition immunities that the creature has
      */
     Condition[] getConditionImmunity();
 
     /**
-     * todo - make condition object with enums
+     *
      * @return a list of the conditions that the creature is resistant to
      */
     Condition[] getConditionResistances();
 
     /**
-     * todo - make condition object with enums
+     *
      * @return a list of the conditions the creature is currently experiencing
      */
     List<Condition> getConditions();
@@ -126,7 +126,21 @@ public interface Creature {
      * @return the current exhaustion level of the creature
      */
     int getExhaustionLevel();
+
+    /**
+     *
+     * @return the size of the creature
+     */
+    Size getSize();
+
+    /**
+     *
+     * @return The species(type) of the creature
+     */
+    Species getSpecies();
     //Setters
+
+
 
 
 
@@ -142,12 +156,15 @@ public interface Creature {
     void setDescription(String description);
     void setSenses(String[] senses);
     void setLanguages(String[] languages);
-    void setImmunity(String[] immunities);
-    void setResistances(String[] resistances);
+    void setImmunity(Damage[] immunities);
+    void setResistances(Damage[] resistances);
     void setConditionImmunities(Condition[] conditionImmunity);
     void setConditionResistances(Condition[] conditionResistance);
     void setExhaustionLevel(int exhaustionLevel);
+    void setSize(Size size);
+    void setSpecies(Species species);
     //Modifiers
+
 
     /**
      * Damages the creature for a certain number; subtracts an integer amount from health
