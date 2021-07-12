@@ -138,6 +138,13 @@ public interface Creature {
      * @return The species(type) of the creature
      */
     Species getSpecies();
+
+    /**
+     *
+     * @return The current initiative for the creature
+     */
+    int getInitiative();
+
     //Setters
 
 
@@ -163,6 +170,7 @@ public interface Creature {
     void setExhaustionLevel(int exhaustionLevel);
     void setSize(Size size);
     void setSpecies(Species species);
+    void setInitiative(int initiative);
     //Modifiers
 
 

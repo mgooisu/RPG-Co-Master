@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * creatures will have some representation of.
  */
 public class BaseCreature implements Creature, Serializable {
-    private int health,maxHP,tempHP, AC, speed, exhaustionLevel;
+    private int health,maxHP,tempHP, AC, speed, exhaustionLevel, initiative;
     private Stats stats;
     private String description, name,creatureClass;
     private String[] senses, languages;
@@ -56,6 +56,9 @@ public class BaseCreature implements Creature, Serializable {
         this.immunities = immunities;
         this.resistances = resistances;
         this.vulnerabilities = vulnerabilities;
+
+        //Generate an initiative value that can be altered or re-rolled from the interface
+        this.initiative = 1+stats.getDexterityMod()+ (int)(Math.random()*20);
 
     }
 
@@ -144,6 +147,9 @@ public class BaseCreature implements Creature, Serializable {
     public Condition[] getConditionImmunity() {
         return conditionImmunities;
     }
+
+    @Override
+    public int getInitiative(){return initiative;}
 
 
 
@@ -264,6 +270,10 @@ public class BaseCreature implements Creature, Serializable {
         this.species = species;
     }
 
+    @Override
+    public void setInitiative(int initiative){
+        this.initiative = initiative;
+    }
 
     //Modifiers
     @Override

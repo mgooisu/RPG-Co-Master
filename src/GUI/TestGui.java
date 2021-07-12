@@ -14,6 +14,7 @@ import GUI.Helpers.ComponentHelpers;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -74,9 +75,8 @@ public class TestGui extends JFrame {
 /**
  * Panel that contains information and controls pertaining to a single creature
  */
-class CreaturePanel extends JPanel {
+class CreaturePanel extends JPanel  {
 BaseCreature creature;
-
 JLabel healthStatus;
     public CreaturePanel(BaseCreature creature){
         this.creature = creature;
@@ -93,14 +93,20 @@ JLabel healthStatus;
         JPanel content = new JPanel();
         content.setLayout(new GridLayout(8,1,50,50));
 
-        healthStatus = new JLabel("Health: "+creature.getHealth()+"/"+creature.getMaxHP());
+        content.add(new InitiativePanel());
 
+
+
+        healthStatus = new JLabel("Health: "+creature.getHealth()+"/"+creature.getMaxHP());
         content.add(healthStatus);
         content.add(new DamageHealingButtons());
-        ComponentHelpers.centerLabelsInPanel(content);
+
 
         add(content,BorderLayout.CENTER);
     }
+
+
+
     /**
      * Test Buttons for health Display
      */
@@ -152,6 +158,78 @@ JLabel healthStatus;
         }
     }
 
+    class InitiativePanel extends JPanel implements ActionListener{
+        JButton rollInitiative, setInitiative;
+        JSpinner initiativeSpinner;
+        JLabel initiativeValue;
+        InitiativePanel(){
+
+            setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
+
+
+            int initiative = creature.getInitiative();
+            initiativeValue = new JLabel(("Initiative: "+initiative));
+
+            rollInitiative = new JButton("Roll Initiative");
+            rollInitiative.addActionListener(this);
+
+            //Sub-panel for manually setting initiative
+            int overallHeight = 50, overallWidth = 100;
+            JPanel initiativeSetPanel = new JPanel();
+
+            initiativeSetPanel.setLayout(new BoxLayout(initiativeSetPanel,BoxLayout.PAGE_AXIS));
+
+            initiativeSpinner = new JSpinner(new SpinnerNumberModel(10,-4,30,1));
+            initiativeSetPanel.add(initiativeSpinner);
+            initiativeSetPanel.setAlignmentY(CENTER_ALIGNMENT);
+            Dimension setSpinnerSize= new Dimension(overallWidth,overallHeight/2);
+            initiativeSpinner.setMaximumSize(setSpinnerSize);
+            initiativeSpinner.setSize(setSpinnerSize);
+
+            setInitiative = new JButton("Set");
+            setInitiative.addActionListener(this);
+            Dimension setButtonDims = new Dimension(100,overallHeight/2);
+            setInitiative.setMinimumSize(setButtonDims);
+
+
+            Dimension initSetPanelSize = new Dimension(overallWidth,overallHeight);
+            initiativeSetPanel.setSize(initSetPanelSize);
+            initiativeSetPanel.setMaximumSize(initSetPanelSize);
+            initiativeSetPanel.add(setInitiative);
+
+           initiativeSetPanel.setBorder(new EtchedBorder());
+
+
+            Dimension elementSpacing = new Dimension(10,overallHeight);
+
+            add(initiativeValue);
+            add(Box.createRigidArea(elementSpacing));
+            add(initiativeSetPanel);
+            add(Box.createRigidArea(elementSpacing));
+            add(rollInitiative);
+
+
+
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            Component source = (Component) actionEvent.getSource();
+
+
+            if(source.equals(rollInitiative)){
+                creature.setInitiative(1+creature.getStats().getDexterityMod()+ (int)(Math.random()*20));
+                initiativeValue.setText("Initiative: "+creature.getInitiative());
+            }
+
+            if(source.equals(setInitiative)){
+                creature.setInitiative((int) initiativeSpinner.getValue());
+                initiativeValue.setText("Initiative: "+creature.getInitiative());
+
+            }
+
+        }
+    }
 
 }
 

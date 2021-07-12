@@ -1,5 +1,10 @@
 package Creature.Helpers;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 /**
  * This class describes an object that represents all the standard character statistics for
  * dungeons and dragons 5th edition and many other rpg systems
@@ -62,5 +67,59 @@ public class Stats {
 
     public void setCharisma(int charisma) {
         this.charisma = charisma;
+    }
+
+
+    //Modifier Values
+    private int getMod(int inputStat){
+        if(inputStat == 1){
+            return -5;
+        }
+        inputStat -= inputStat%2;
+
+       return inputStat/2-5;
+    }
+
+    //Modifier Handles for Each Ability score
+    public int getStrengthMod(){
+        return getMod(strength);
+    }
+    public int getDexterityMod(){
+        return getMod(dexterity);
+    }
+    public int getConstitutionMod(){
+        return getMod(constitution);
+    }
+    public int getIntelligenceMod(){
+        return getMod(intelligence);
+    }
+    public int getWisdomMod(){
+        return getMod(wisdom);
+    }
+    public int getCharismaMod(){
+        return getMod(charisma);
+    }
+
+}
+
+class StatsTesting{
+    Stats stats;
+    @BeforeEach
+    void setup(){
+        stats = new Stats(10,10,10,10,10,10);
+
+    }
+
+    @Test
+    void modTesting(){
+        int[] scoreArray = {-5,-4,-4,-3,-3,-2,-2,-1,-1,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10};
+        for(int i = 1; i<=30;i++){
+
+            stats.setStrength(i);
+            Assertions.assertEquals(stats.getStrengthMod(),scoreArray[i-1]);
+
+        }
+
+
     }
 }
