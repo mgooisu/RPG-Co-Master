@@ -36,7 +36,7 @@ public class MonsterAction extends Actions {
      */
     public MonsterAction(String name, ActionType type, String description,
                          String saveType, int saveThreshold,
-                         int reach, int addToHit, int target,
+                         Range reach, int addToHit, int target,
                          int diceAmount, int diceType, int diceMod
     ){
         super(name,description,type);

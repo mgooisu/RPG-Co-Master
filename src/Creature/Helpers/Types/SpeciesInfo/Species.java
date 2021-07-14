@@ -6,10 +6,11 @@ import java.io.Serializable;
 /**
  * Contains information on the species of a creature. E.g human, fae, demon, ect.
  */
+//Todo Challenge rating and experience for murdering (:C
 public class Species implements Serializable {
     private String name,description;
     private Role role;
-    public enum Role{MONSTER,HUMANOID};
+    public enum Role{MONSTER,HUMANOID}
 
 
     public Species(String name, String description, Role role) {

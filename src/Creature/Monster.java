@@ -28,6 +28,7 @@ public class Monster extends BaseCreature{
 
     private String[] abilities;
 
+    //TODO experience points
 
     public MonsterAction[] getActions() {
         return actions;
