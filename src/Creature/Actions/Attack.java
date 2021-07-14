@@ -10,15 +10,16 @@ import Helpers.DiceObject;
 //todo - add two integer datatype for close and long range ranged attacks
 public class Attack extends Actions {
     private DiceObject diceObject;
-    private int reach, target, addToHit, saveThreshold;
+    private int  target, addToHit, saveThreshold;
+    private Range range;
     private String saveType;
 
 
     public Attack(String name, String description,ActionType type,
-            DiceObject diceObject, int reach, int target, String saveType, int saveThreshold, int addToHit) {
+            DiceObject diceObject, Range reach, int target, String saveType, int saveThreshold, int addToHit) {
         super(name, description,type);
         this.diceObject = diceObject;
-        this.reach = reach;
+        this.range = reach;
         this.target = target;
         this.addToHit = addToHit;
         this.saveThreshold = saveThreshold;
@@ -35,8 +36,8 @@ public class Attack extends Actions {
         return target;
     }
 
-    public int getReach() {
-        return reach;
+    public Range getRange() {
+        return range;
     }
 
     public int getAddToHit() {

@@ -7,8 +7,10 @@ public class Actions {
      */
     public enum ActionType{MELEE_ATTACK, RANGED_ATTACK}
     private final String name, description;
+    private ActionType actionType;
     public Actions(String name, String description,ActionType actionType){
         this.name = name; this.description = description;
+        this.actionType = actionType;
     }
 
     public String getName() {
@@ -17,5 +19,9 @@ public class Actions {
 
     public String getDescription() {
         return description;
+    }
+
+    public ActionType getActionType() {
+        return actionType;
     }
 }

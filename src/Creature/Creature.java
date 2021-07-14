@@ -111,7 +111,7 @@ public interface Creature {
 
     /**
      *
-     * @return a list of the conditions that the creature is resistant to
+     * @return a list of the conditions that the creature has advantage for saving throws against
      */
     Condition[] getConditionResistances();
 
