@@ -8,6 +8,7 @@ import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Exceptions.CreatureException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -119,7 +120,7 @@ public interface Creature {
      *
      * @return a list of the conditions the creature is currently experiencing
      */
-    List<Condition> getConditions();
+    ArrayList<Condition> getConditions();
 
     /**
      *

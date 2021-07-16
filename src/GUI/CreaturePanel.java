@@ -4,7 +4,7 @@ import Creature.Actions.Actions;
 import Creature.Actions.Attack;
 import Creature.Actions.MonsterAction;
 import Creature.Actions.Range;
-import Creature.BaseCreature;
+import Creature.Creature;
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Damage;
@@ -38,25 +38,17 @@ import GUI.Helpers.JTextArea;
  * For example, there will be a healing interface and a damage interface, along with drop down menus for inflicting
  * and removing conditions.
  */
-public class TestGui extends JFrame {
-    SpeciesMapObjectHandler speciesMapObjectHandler;
-    Species undead;
-    Monster skeleton;
-    Stats stats;
+public class CreaturePanel extends JFrame {
+    static SpeciesMapObjectHandler speciesMapObjectHandler;
+    static Species undead;
+    static Monster skeleton;
+    static Stats stats;
 
     /**
      * Test Main method for generating GUI, will be replaced when a proper build system is in place
      */
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        try {
-            new TestGui();
-        } catch (CreatureException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public TestGui() throws IOException, ClassNotFoundException, CreatureException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, CreatureException {
         //Setting up a whole monster
 
         speciesMapObjectHandler = new SpeciesMapObjectHandler();
@@ -68,7 +60,7 @@ public class TestGui extends JFrame {
 
         Damage[] damageArray = new Damage[] {};
 
-        skeleton = new Monster("Dave", Alignment.CombinedAlignment.Lawful_Evil,"A clinking, rattling" +
+        skeleton = new Monster(null, Alignment.CombinedAlignment.Lawful_Evil,"A clinking, rattling" +
                 "pile of ancient bones","skeleton",13,13,30, Size.MEDIUM,undead,stats,
                 new Condition[]{Condition.EXHAUSTION,Condition.POISONED},conditionArray,
                 new Damage[] {Damage.POISON},damageArray,new Damage[] {Damage.BLUDGEONING});
@@ -83,10 +75,21 @@ public class TestGui extends JFrame {
         skeleton.setLanguages(new String[]{"Understands all languages they knew in life, but cannot speak","Common","Dwarfish"});
 
 
+
+        try {
+            new CreaturePanel(skeleton);
+        } catch (CreatureException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public CreaturePanel(Creature creature) throws IOException, ClassNotFoundException, CreatureException {
+
+
         //Setting up the UI
 
 
-        add(new CreaturePanel(skeleton));
+        add(new BasePanel(creature));
         pack();
 
         setLocationRelativeTo(null);
@@ -102,11 +105,11 @@ public class TestGui extends JFrame {
 /**
  * Panel that contains information and controls pertaining to a single creature
  */
-class CreaturePanel extends JPanel  {
+class BasePanel extends JPanel  {
 
 
-BaseCreature creature;
-    public CreaturePanel(BaseCreature creature){
+Creature creature;
+    public BasePanel(Creature creature){
 
         this.creature = creature;
         setLayout(new BorderLayout());
@@ -192,11 +195,7 @@ BaseCreature creature;
                 creature.healthDamage((Integer) numberIn.getValue());
                 int HP = creature.getHealth(), maxHP = creature.getMaxHP();
                 String healthText;
-                if (HP <= 0) {
-                    healthText = "Down";
-                } else {
-                    healthText = HP + "/" + maxHP;
-                }
+                healthText = HP + "/" + maxHP;
                 healthStatus.setText(healthText);
                 healthBar.setValue(HP);
 
@@ -408,7 +407,7 @@ BaseCreature creature;
 
 
             //Creature Actions - monsters only
-            if(creature.getClass().equals(Creature.Monster.class)){
+            if(creature.getClass().equals(Monster.class)){
                 JPanel monsterActionsPanel = new JPanel();
                 monsterActionsPanel.setBorder(new TitledBorder("Actions"));
                 monsterActionsPanel.setLayout(new GridLayout(0,2));
