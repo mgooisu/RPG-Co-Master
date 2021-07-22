@@ -29,87 +29,13 @@ import java.util.EventListener;
 import GUI.Helpers.JTextArea;
 
 /**
- * Transistional GUI for testing the base functionality of different elements of the application
- * The first tab will be dedicated to the construction of creature\monster entities and ensuring the correct
- * serialization of that information
- *
- * The second tab will allow for the construction of different encounters, which can be filled with instances of
- * creatures from the first tab and provide an interface for changing the state of those instanced creatures.
- * For example, there will be a healing interface and a damage interface, along with drop down menus for inflicting
- * and removing conditions.
- */
-public class CreaturePanel extends JFrame {
-    static SpeciesMapObjectHandler speciesMapObjectHandler;
-    static Species undead;
-    static Monster skeleton;
-    static Stats stats;
-
-    /**
-     * Test Main method for generating GUI, will be replaced when a proper build system is in place
-     */
-
-    public static void main(String[] args) throws IOException, ClassNotFoundException, CreatureException {
-        //Setting up a whole monster
-
-        speciesMapObjectHandler = new SpeciesMapObjectHandler();
-        undead = speciesMapObjectHandler.readObject().getSpeciesHashMap().get("Undead");
-
-        stats = new Stats(10,11,12,4,14,15);
-
-        Condition[] conditionArray = new Condition[] {};
-
-        Damage[] damageArray = new Damage[] {};
-
-        skeleton = new Monster(null, Alignment.CombinedAlignment.Lawful_Evil,"A clinking, rattling" +
-                "pile of ancient bones","skeleton",13,13,30, Size.MEDIUM,undead,stats,
-                new Condition[]{Condition.EXHAUSTION,Condition.POISONED},conditionArray,
-                new Damage[] {Damage.POISON},damageArray,new Damage[] {Damage.BLUDGEONING});
-        skeleton.addCondition(Condition.BLINDED,3);
-        MonsterAction[] actions = new MonsterAction[]{new MonsterAction("Shortsword", Actions.ActionType.MELEE_ATTACK,"An attack with a shortsword",
-                null,0,new Range(5),4,1,1,6,2),
-                new MonsterAction("Shortbow", Actions.ActionType.RANGED_ATTACK,"An attack with a shortbow",
-                        null,0,new Range(80,320),4,1,1,6,2)
-        };
-        skeleton.setActions(actions);
-        skeleton.setSenses(new String[]{"Darkvision 60ft","Passive Perception 9"});
-        skeleton.setLanguages(new String[]{"Understands all languages they knew in life, but cannot speak","Common","Dwarfish"});
-
-
-
-        try {
-            new CreaturePanel(skeleton);
-        } catch (CreatureException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public CreaturePanel(Creature creature) throws IOException, ClassNotFoundException, CreatureException {
-
-
-        //Setting up the UI
-
-
-        add(new BasePanel(creature));
-        pack();
-
-        setLocationRelativeTo(null);
-        setVisible(true);
-        pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-
-
-}
-
-
-/**
  * Panel that contains information and controls pertaining to a single creature
  */
-class BasePanel extends JPanel  {
+class CreaturePanel extends JPanel  {
 
 
 Creature creature;
-    public BasePanel(Creature creature){
+    public CreaturePanel(Creature creature){
 
         this.creature = creature;
         setLayout(new BorderLayout());
@@ -134,6 +60,7 @@ Creature creature;
 
 
         add(content,BorderLayout.CENTER);
+        add(new JSeparator(),BorderLayout.SOUTH);
     }
 
 
