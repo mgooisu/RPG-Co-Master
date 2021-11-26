@@ -4,6 +4,7 @@ import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
+import Exceptions.CreatureException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +69,7 @@ public class EncounterFrame extends JFrame implements ActionListener {
             CreatureGenPanel creatureGenPanel = null;
             try {
                 creatureGenPanel = new CreatureGenPanel();
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException | CreatureException e) {
                 e.printStackTrace();
             }
             if (creatureGenPanel != null) {

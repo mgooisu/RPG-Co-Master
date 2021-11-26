@@ -1,11 +1,15 @@
 package GUI;
 
 import Creature.Helpers.Alignment;
+import Creature.Helpers.Enums.Condition;
+import Creature.Helpers.Enums.Damage;
 import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
+import Exceptions.CreatureException;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,10 +17,9 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class CreatureGenPanel extends JFrame implements ActionListener {
+    //GUI elements
     JPanel namePanel, baseAlignPanel, speciesPanel,acPanel,healthPanel,diceHPValue,speedPanel,
-            statParentPanel,statPanel,baseAlignPanelChild, sizePanel, descriptionPanel,
-            languagePanel, sensesPanel, damImmunitiesPanel,damResPanel,damVulPanel,
-            condResPanel,condImmunityPanel;
+            statParentPanel,statPanel,baseAlignPanelChild, sizePanel, descriptionPanel;
     JLabel labelName;
     JTextField textName;
     JTextArea description;
@@ -30,7 +33,16 @@ public class CreatureGenPanel extends JFrame implements ActionListener {
     JComboBox<Alignment.Ethic> ethicJComboBox;
     JComboBox<Alignment.Moral> moralJComboBox;
 
-    CreatureGenPanel() throws IOException, ClassNotFoundException {
+    //Data
+    public String[] languageArray = {"Common","Dwarfish","Mexican"},
+    sensesArray = {"Darkvision 69 feet", "Passive Perception 4"};
+    public Damage[] damageImmunities = {Damage.BLUDGEONING, Damage.ACID},
+    damageResistances = {}, damageVulnerabilities = {Damage.COLD};
+
+    public Condition[] conditionResistances = {Condition.POISONED},
+            conditionImmunities = {Condition.BLINDED};
+
+    CreatureGenPanel() throws IOException, ClassNotFoundException, CreatureException {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
 
@@ -166,12 +178,39 @@ public class CreatureGenPanel extends JFrame implements ActionListener {
         descriptionPanel.add(description);
         add(descriptionPanel);
 
-        //Senses
+        //Damage parameters
+        JPanel damageStuff = new JPanel(new GridLayout(1,3));
+        ArraySetGui damageImmunities = new ArraySetGui(this, "Damage Immunities");
+        ArraySetGui damageResistances = new ArraySetGui(this, "Damage Resistances");
+        ArraySetGui damageVulnerabilities = new ArraySetGui(this, "Damage Vulnerabilities");
+
+        damageStuff.add(damageImmunities);
+        damageStuff.add(damageResistances);
+        damageStuff.add(damageVulnerabilities);
+
+        add(damageStuff);
+
+        //Conditions Parameters
+        JPanel conditionStuff = new JPanel(new GridLayout(1,2));
+        ArraySetGui conditionImmunities = new ArraySetGui(this,"Condition Immunities");
+        ArraySetGui conditionResistances = new ArraySetGui(this,"Condition Resistances");
+
+        conditionStuff.add(conditionImmunities);
+        conditionStuff.add(conditionResistances);
 
 
+        add(conditionStuff);
 
 
+        //language & Senses
+        JPanel langSens = new JPanel(new GridLayout(1,2));
+        ArraySetGui languageGui = new ArraySetGui(this, "Languages");
+        langSens.add(languageGui);
 
+        ArraySetGui senseGui = new ArraySetGui(this, "Senses");
+        langSens.add(senseGui);
+
+        add(langSens);
 
         // Creature
         pack();
@@ -187,11 +226,118 @@ public class CreatureGenPanel extends JFrame implements ActionListener {
     }
 }
 
-
-class arraySetGui extends JFrame implements ActionListener{
-    JPanel mainPanel;
+/**
+ * Private class for generating interface that populates arrays of information for the creature.
+ * e.g a creature can speak 5 languages, this class helps the user specify that
+ */
+class ArraySetGui extends JPanel implements ActionListener{
     JButton addButton;
-    JList<String> arrayEls;
+    JPanel editorPanel, listPanel;
+    JComponent parameterEditor;
+
+    String[] arrayEls;
+
+
+    /**
+     * Constructor for the class
+     * @param arrayInfo - A string representation of the type of data e.g: "language" or "senses"
+     */
+    ArraySetGui(CreatureGenPanel creatureGenPanel, String arrayInfo) throws CreatureException {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        addButton = new JButton("add");
+        editorPanel = new JPanel();
+        editorPanel.setLayout(new FlowLayout());
+
+        switch (arrayInfo){
+            case "Languages"->{
+                parameterEditor = new JTextField(10);
+                editorPanel.add(parameterEditor);
+                editorPanel.add(addButton);
+                add(editorPanel);
+                arrayEls = creatureGenPanel.languageArray;
+            }
+            case "Senses"->{
+                parameterEditor = new JTextField(10);
+                editorPanel.add(parameterEditor);
+                editorPanel.add(addButton);
+                add(editorPanel);
+                arrayEls = creatureGenPanel.sensesArray;
+            }
+            case "Damage Immunities"->{
+                parameterEditor = new JComboBox<>(Damage.values());
+                editorPanel.add(parameterEditor);
+                editorPanel.add(addButton);
+                add(editorPanel);
+                String[] damageArrToStringArr =new String[creatureGenPanel.damageImmunities.length];
+                for(int i = 0; i< damageArrToStringArr.length;i++) {
+                    damageArrToStringArr[i] = creatureGenPanel.damageImmunities[i].toString();
+                }
+                arrayEls = damageArrToStringArr;
+            }
+            case "Damage Resistances"->{
+                parameterEditor = new JComboBox<>(Damage.values());
+                editorPanel.add(parameterEditor);
+                editorPanel.add(addButton);
+                add(editorPanel);
+                String[] damageArrToStringArr =new String[creatureGenPanel.damageResistances.length];
+                for(int i = 0; i< damageArrToStringArr.length;i++) {
+                    damageArrToStringArr[i] = creatureGenPanel.damageResistances[i].toString();
+                }
+                arrayEls = damageArrToStringArr;
+            }
+            case "Damage Vulnerabilities"->{
+                parameterEditor = new JComboBox<>(Damage.values());
+                editorPanel.add(parameterEditor);
+                editorPanel.add(addButton);
+                add(editorPanel);
+                String[] damageArrToStringArr =new String[creatureGenPanel.damageVulnerabilities.length];
+                for(int i = 0; i< damageArrToStringArr.length;i++) {
+                    damageArrToStringArr[i] = creatureGenPanel.damageVulnerabilities[i].toString();
+                }
+                arrayEls = damageArrToStringArr;
+            }
+            case "Condition Immunities" ->{
+                parameterEditor = new JComboBox<>(Condition.values());
+                editorPanel.add(parameterEditor);
+                editorPanel.add(addButton);
+                add(editorPanel);
+                String[] conditionArrToStringArr =new String[creatureGenPanel.conditionImmunities.length];
+                for(int i = 0; i< conditionArrToStringArr.length;i++) {
+                    conditionArrToStringArr[i] = creatureGenPanel.conditionImmunities[i].toString();
+                }
+                arrayEls = conditionArrToStringArr;
+            }
+            case "Condition Resistances" ->{
+                parameterEditor = new JComboBox<>(Condition.values());
+                editorPanel.add(parameterEditor);
+                editorPanel.add(addButton);
+                add(editorPanel);
+                String[] conditionArrToStringArr =new String[creatureGenPanel.conditionResistances.length];
+                for(int i = 0; i< conditionArrToStringArr.length;i++) {
+                    conditionArrToStringArr[i] = creatureGenPanel.conditionResistances[i].toString();
+                }
+                arrayEls = conditionArrToStringArr;
+            }
+            default -> throw new CreatureException("Not valid Creature info");
+        }
+
+        //Creates the Panel with the existing values for this info type
+
+        for(String element : arrayEls){
+            JPanel elementPanel = new JPanel();
+            elementPanel.add(new JLabel(element));
+            elementPanel.add(new Button("X"));
+            add(elementPanel);
+        }
+
+        //styling
+        setBorder(new TitledBorder(arrayInfo));
+
+
+
+
+
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
