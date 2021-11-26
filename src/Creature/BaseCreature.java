@@ -10,6 +10,7 @@ import Exceptions.CreatureException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Parent class of all creatures to be used in the game. Contains base information like health and armor that all
@@ -38,7 +39,7 @@ public class BaseCreature implements Creature, Serializable {
                         Condition[] conditionImmunities, Condition[] conditionResists,
                         Damage[] immunities, Damage[] resistances,Damage[] vulnerabilities
     ){
-        this. description = description;
+        this.description = description;
         this.creatureClass = creatureClass;
         this.maxHP= maxHP;
         this.health = maxHP;
@@ -174,8 +175,7 @@ public class BaseCreature implements Creature, Serializable {
 
     @Override
     public void setAlignment(Alignment.CombinedAlignment combinedAlignment) {
-        this.alignment = new Alignment(combinedAlignment);
-
+        this.alignment = new Alignment(Objects.requireNonNullElse(combinedAlignment, Alignment.CombinedAlignment.UNALIGNED));
     }
 
     @Override

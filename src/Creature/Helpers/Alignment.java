@@ -11,8 +11,8 @@ public class Alignment {
         return moral;
     }
 
-    public enum Moral {GOOD, NEUTRAL, EVIL};
-    public enum Ethic {LAWFUL, NEUTRAL, CHAOTIC};
+    public enum Moral {GOOD, NEUTRAL, EVIL}
+    public enum Ethic {LAWFUL, NEUTRAL, CHAOTIC}
     private Ethic ethic;
     private Moral moral;
 
@@ -28,7 +28,8 @@ public class Alignment {
         Neutral_Evil,
         Chaotic_Good,
         Chaotic_Neutral,
-        Chaotic_Evil;
+        Chaotic_Evil,
+        UNALIGNED
 
     }
 
@@ -43,9 +44,10 @@ public class Alignment {
             case Chaotic_Good ->{ethic = Ethic.CHAOTIC; moral = Moral.GOOD;}
             case Chaotic_Neutral ->{ethic = Ethic.CHAOTIC; moral = Moral.NEUTRAL;}
             case Chaotic_Evil ->{ethic = Ethic.CHAOTIC; moral = Moral.EVIL;}
+            case UNALIGNED -> {ethic = null; moral = null;}
 
 
-
+            default -> throw new IllegalStateException("Unexpected value: " + combinedAlignment);
         }
 
     }

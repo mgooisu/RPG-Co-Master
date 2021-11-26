@@ -123,6 +123,12 @@ public class CreatureTesting {
         skelAlign = skeleton.getAlignment();
         Assertions.assertEquals(Alignment.Ethic.LAWFUL,skelAlign.getEthic());
         Assertions.assertEquals(Alignment.Moral.GOOD,skelAlign.getMoral());
+        //Unaligned
+        skeleton.setAlignment(null);
+        skelAlign = skeleton.getAlignment();
+        Assertions.assertNull(skelAlign.getEthic());
+        Assertions.assertNull(skelAlign.getMoral());
+
     }
 
     @Test
