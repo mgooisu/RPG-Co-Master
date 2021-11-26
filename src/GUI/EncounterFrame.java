@@ -1,5 +1,7 @@
 package GUI;
 
+import Creature.Helpers.Alignment;
+import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 
@@ -8,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.HashMap;
 
 /**
@@ -17,8 +20,8 @@ public class EncounterFrame extends JFrame implements ActionListener {
     JMenuBar encounterMenuBar;
 
     JMenuItem createCreature, addCreature;
-    CreatureGenPanel creatureGenPanel;
-    EncounterFrame() throws IOException, ClassNotFoundException {
+
+    EncounterFrame(){
 
 
         encounterMenuBar = new JMenuBar();
@@ -51,8 +54,7 @@ public class EncounterFrame extends JFrame implements ActionListener {
         setMinimumSize(new Dimension(400,400));
         pack();
 
-        creatureGenPanel = new CreatureGenPanel();
-        creatureGenPanel.setVisible(true);
+
     }
 
     @Override
@@ -63,52 +65,20 @@ public class EncounterFrame extends JFrame implements ActionListener {
             System.out.println("wa");
         }
         if(source.equals(createCreature)){
-            creatureGenPanel.setLocationRelativeTo(this);
-            creatureGenPanel.setVisible(true);
+            CreatureGenPanel creatureGenPanel = null;
+            try {
+                creatureGenPanel = new CreatureGenPanel();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            if (creatureGenPanel != null) {
+                creatureGenPanel.setLocationRelativeTo(this);
+                creatureGenPanel.setVisible(true);
+            }
+
+
         }
     }
 
-    class CreatureGenPanel extends JFrame{
-        JLabel labelName, labelSpecies;
-        JTextField textName;
-        JComboBox<String> speciesBox;
-        SpeciesMapObjectHandler speciesMapObjectHandler;
-        CreatureGenPanel() throws IOException, ClassNotFoundException {
-            setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-
-
-            //Creature Name Panel
-            JPanel namePanel = new JPanel();
-            namePanel.setLayout(new BoxLayout(namePanel,BoxLayout.X_AXIS));
-            namePanel.setLayout(new GridLayout(1,2));
-            labelName = new JLabel("Creature Name: ");
-            textName = new JTextField();
-
-
-            namePanel.add(labelName);
-            namePanel.add(textName);
-            namePanel.setPreferredSize(new Dimension(400,25));
-            namePanel.setMaximumSize(new Dimension(400,25));
-            add(namePanel);
-
-
-            //Creature Species Panel
-
-            //Todo temporary species allocation - raise scope for other uses without execcive polling
-            speciesMapObjectHandler = new SpeciesMapObjectHandler();
-            HashMap<String,Species> speciesHashMap= speciesMapObjectHandler.readObject().getSpeciesHashMap();
-            String[] speciesNames = speciesHashMap.keySet().toArray(new String[0]);
-
-            speciesBox = new JComboBox<>(speciesNames);
-            add(speciesBox);
-
-
-
-
-            pack();
-        }
-
-
-    }
 }
