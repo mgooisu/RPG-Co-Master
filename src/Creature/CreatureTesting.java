@@ -1,7 +1,6 @@
 package Creature;
 
 import Creature.Actions.Actions;
-import Creature.Actions.Attack;
 import Creature.Actions.MonsterAction;
 import Creature.Actions.Range;
 import Creature.Helpers.Alignment;
