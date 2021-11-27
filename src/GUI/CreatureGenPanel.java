@@ -7,6 +7,8 @@ import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Exceptions.CreatureException;
+import GUI.Elements.Buttons.DeleteButton;
+import GUI.Elements.DeletableList;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -14,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CreatureGenPanel extends JFrame implements ActionListener {
@@ -34,16 +37,27 @@ public class CreatureGenPanel extends JFrame implements ActionListener {
     JComboBox<Alignment.Moral> moralJComboBox;
 
     //Data
-    public String[] languageArray = {"Common","Dwarfish","Mexican"},
-    sensesArray = {"Darkvision 69 feet", "Passive Perception 4"};
-    public Damage[] damageImmunities = {Damage.BLUDGEONING, Damage.ACID},
-    damageResistances = {}, damageVulnerabilities = {Damage.COLD};
+    public ArrayList<String> languageArray, sensesArray;
+    public ArrayList<Damage> damageImmunities,damageResistances, damageVulnerabilities;
 
-    public Condition[] conditionResistances = {Condition.POISONED},
-            conditionImmunities = {Condition.BLINDED};
+    public ArrayList<Condition> conditionResistances; ArrayList<Condition> conditionImmunities;
 
     CreatureGenPanel() throws IOException, ClassNotFoundException, CreatureException {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        languageArray =new ArrayList<>(); sensesArray = new ArrayList<>();
+        damageImmunities = new ArrayList<>();damageResistances = new ArrayList<>();damageVulnerabilities = new ArrayList<>();
+        conditionImmunities = new ArrayList<>(); conditionResistances = new ArrayList<>();
+
+
+
+        //Data Demo Init TODO REMOVE
+        languageArray.add("Common");
+        sensesArray.add("Darkvision 69 feet");
+        damageImmunities.add(Damage.BLUDGEONING);
+        damageVulnerabilities.add(Damage.COLD);
+        conditionImmunities.add(Condition.BLINDED);
+        conditionResistances.add(Condition.EXHAUSTION);
+
 
 
 
@@ -231,8 +245,8 @@ public class CreatureGenPanel extends JFrame implements ActionListener {
  * e.g a creature can speak 5 languages, this class helps the user specify that
  */
 class ArraySetGui extends JPanel implements ActionListener{
-    JButton addButton;
-    JPanel editorPanel, listPanel;
+    JButton addLang, addSense, addDamImmunity,addDamRes,addDamVul, addCondImmunity,addCondRes;
+    JPanel editorPanel;
     JComponent parameterEditor;
 
     String[] arrayEls;
@@ -244,91 +258,103 @@ class ArraySetGui extends JPanel implements ActionListener{
      */
     ArraySetGui(CreatureGenPanel creatureGenPanel, String arrayInfo) throws CreatureException {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        addButton = new JButton("add");
         editorPanel = new JPanel();
         editorPanel.setLayout(new FlowLayout());
+        this.setName(arrayInfo);
 
         switch (arrayInfo){
             case "Languages"->{
                 parameterEditor = new JTextField(10);
                 editorPanel.add(parameterEditor);
-                editorPanel.add(addButton);
+                addLang = new JButton("Add Language");
+                addLang.addActionListener(this);
+                editorPanel.add(addLang);
                 add(editorPanel);
-                arrayEls = creatureGenPanel.languageArray;
+                // Create the list element
+                DeletableList languageList = new DeletableList("Language List", creatureGenPanel.languageArray, "");
+                add(languageList);
             }
             case "Senses"->{
                 parameterEditor = new JTextField(10);
                 editorPanel.add(parameterEditor);
-                editorPanel.add(addButton);
+                addSense = new JButton("Add Sense");
+                addSense.addActionListener(this);
+                editorPanel.add(addSense);
                 add(editorPanel);
-                arrayEls = creatureGenPanel.sensesArray;
+                // Create the list element
+                DeletableList sensesList = new DeletableList("Senses List", creatureGenPanel.sensesArray, "");
+                add(sensesList);
+
             }
             case "Damage Immunities"->{
                 parameterEditor = new JComboBox<>(Damage.values());
                 editorPanel.add(parameterEditor);
-                editorPanel.add(addButton);
+                addDamImmunity = new JButton("Add DMG Immunity");
+                addDamImmunity.addActionListener(this);
+                editorPanel.add(addDamImmunity);
                 add(editorPanel);
-                String[] damageArrToStringArr =new String[creatureGenPanel.damageImmunities.length];
-                for(int i = 0; i< damageArrToStringArr.length;i++) {
-                    damageArrToStringArr[i] = creatureGenPanel.damageImmunities[i].toString();
+                arrayEls = new String[creatureGenPanel.damageImmunities.size()];
+                int i = 0;
+                for(Damage damage: creatureGenPanel.damageImmunities){
+                    arrayEls[i] = damage.name();
+                    i++;
                 }
-                arrayEls = damageArrToStringArr;
+                // Create the list element
+                DeletableList damageImmunitiesList = new DeletableList("Damage Immunities List",creatureGenPanel.damageImmunities, Damage.ACID);
+                add(damageImmunitiesList);
+
             }
             case "Damage Resistances"->{
                 parameterEditor = new JComboBox<>(Damage.values());
                 editorPanel.add(parameterEditor);
-                editorPanel.add(addButton);
+                addDamRes = new JButton("Add DMG Resistance");
+                addDamRes.addActionListener(this);
+                editorPanel.add(addDamRes);
                 add(editorPanel);
-                String[] damageArrToStringArr =new String[creatureGenPanel.damageResistances.length];
-                for(int i = 0; i< damageArrToStringArr.length;i++) {
-                    damageArrToStringArr[i] = creatureGenPanel.damageResistances[i].toString();
-                }
-                arrayEls = damageArrToStringArr;
+                // Create the list element
+                DeletableList damageResistancesList = new DeletableList("Damage Resistances List",creatureGenPanel.damageResistances, Damage.COLD);
+                add(damageResistancesList);
+
             }
             case "Damage Vulnerabilities"->{
                 parameterEditor = new JComboBox<>(Damage.values());
                 editorPanel.add(parameterEditor);
-                editorPanel.add(addButton);
+                addDamVul = new JButton("Add DMG Vulnerability");
+                addDamVul.addActionListener(this);
+                editorPanel.add(addDamVul);
                 add(editorPanel);
-                String[] damageArrToStringArr =new String[creatureGenPanel.damageVulnerabilities.length];
-                for(int i = 0; i< damageArrToStringArr.length;i++) {
-                    damageArrToStringArr[i] = creatureGenPanel.damageVulnerabilities[i].toString();
-                }
-                arrayEls = damageArrToStringArr;
+                // Create the list element
+                DeletableList damageVulnerabilitiesList = new DeletableList("Damage Vulnerabilities List",creatureGenPanel.damageVulnerabilities, Damage.FIRE);
+                add(damageVulnerabilitiesList);
+
             }
             case "Condition Immunities" ->{
                 parameterEditor = new JComboBox<>(Condition.values());
                 editorPanel.add(parameterEditor);
-                editorPanel.add(addButton);
+                addCondImmunity = new JButton("Add Condition Immunity");
+                addCondImmunity.addActionListener(this);
+                editorPanel.add(addCondImmunity);
                 add(editorPanel);
-                String[] conditionArrToStringArr =new String[creatureGenPanel.conditionImmunities.length];
-                for(int i = 0; i< conditionArrToStringArr.length;i++) {
-                    conditionArrToStringArr[i] = creatureGenPanel.conditionImmunities[i].toString();
-                }
-                arrayEls = conditionArrToStringArr;
+                // Create the list element
+                DeletableList conditionImmunitiesList = new DeletableList("Condition Immunities List",creatureGenPanel.conditionImmunities, Condition.CHARMED);
+                add(conditionImmunitiesList);
             }
             case "Condition Resistances" ->{
                 parameterEditor = new JComboBox<>(Condition.values());
                 editorPanel.add(parameterEditor);
-                editorPanel.add(addButton);
+                addCondRes = new JButton("Add Condition Resistance");
+                addCondRes.addActionListener(this);
+                editorPanel.add(addCondRes);
                 add(editorPanel);
-                String[] conditionArrToStringArr =new String[creatureGenPanel.conditionResistances.length];
-                for(int i = 0; i< conditionArrToStringArr.length;i++) {
-                    conditionArrToStringArr[i] = creatureGenPanel.conditionResistances[i].toString();
-                }
-                arrayEls = conditionArrToStringArr;
+                // Create the list element
+                DeletableList conditionResistancesList = new DeletableList("Condition Resistances List",creatureGenPanel.conditionResistances, Condition.CHARMED);
+                add(conditionResistancesList);
             }
             default -> throw new CreatureException("Not valid Creature info");
         }
 
-        //Creates the Panel with the existing values for this info type
 
-        for(String element : arrayEls){
-            JPanel elementPanel = new JPanel();
-            elementPanel.add(new JLabel(element));
-            elementPanel.add(new Button("X"));
-            add(elementPanel);
-        }
+
 
         //styling
         setBorder(new TitledBorder(arrayInfo));
@@ -341,6 +367,62 @@ class ArraySetGui extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        String parentPanel = ((JButton) e.getSource()).getParent().getParent().getName();
+        switch (parentPanel) {
+            case "Languages"->{
+                if(e.getSource().getClass() == DeleteButton.class){
+                    System.out.println("This is a delete button");
+                }
+                else{
+
+                }
+
+            }
+            case "Senses"->{
+                if(e.getSource().getClass() == DeleteButton.class){
+                    System.out.println("This is a delete button");
+                }
+
+            }
+            case "Damage Immunities"->{
+                if(e.getSource().getClass() == DeleteButton.class){
+                    System.out.println("This is a delete button");
+                }
+
+            }
+            case "Damage Resistances"->{
+                if(e.getSource().getClass() == DeleteButton.class){
+                    System.out.println("This is a delete button");
+                }
+
+            }
+            case "Damage Vulnerabilities"->{
+                if(e.getSource().getClass() == DeleteButton.class){
+                    System.out.println("This is a delete button");
+                }
+
+            }
+            case "Condition Immunities" ->{
+                if(e.getSource().getClass() == DeleteButton.class){
+                    System.out.println("This is a delete button");
+                }
+
+            }
+            case "Condition Resistances" ->{
+                if(e.getSource().getClass() == DeleteButton.class){
+                    System.out.println("This is a delete button");
+                }
+
+            }
+            default -> {
+                try {
+                    throw new Exception("Button not assigned");
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        }
 
     }
+
 }
