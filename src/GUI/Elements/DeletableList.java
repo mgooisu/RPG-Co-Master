@@ -2,6 +2,7 @@ package GUI.Elements;
 
 import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Damage;
+import Exceptions.CreatureException;
 import GUI.Elements.Buttons.DeleteButton;
 
 import javax.swing.*;
@@ -15,15 +16,7 @@ public class DeletableList extends JPanel implements ActionListener {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
         for(Damage damage: damageList){
-            JLabel damageLabel = new JLabel(damage.name());
-            DeleteButton deleteThis = new DeleteButton();
-            deleteThis.addActionListener(this);
-            JPanel damageTile = new JPanel();
-            damageTile.setName(damage.name());
-            damageTile.setLayout(new BoxLayout(damageTile,BoxLayout.X_AXIS));
-            damageTile.add(damageLabel);
-            damageTile.add(deleteThis);
-            add(damageTile);
+            addElement(damage);
         }
 
     }
@@ -31,15 +24,7 @@ public class DeletableList extends JPanel implements ActionListener {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
         for(String string: stringList){
-            JLabel stringLabel = new JLabel(string);
-            DeleteButton deleteThis = new DeleteButton();
-            deleteThis.addActionListener(this);
-            JPanel stringTile = new JPanel();
-            stringTile.setName(string);
-            stringTile.setLayout(new BoxLayout(stringTile,BoxLayout.X_AXIS));
-            stringTile.add(stringLabel);
-            stringTile.add(deleteThis);
-            add(stringTile);
+            addElement(string);
         }
 
     }
@@ -47,15 +32,98 @@ public class DeletableList extends JPanel implements ActionListener {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
         for(Condition condition: conditionList){
-            JLabel stringLabel = new JLabel(condition.name());
+            addElement(condition);
+        }
+
+    }
+
+
+    public void addElement(String input){
+        if(checkElements(input)) {
+            JLabel stringLabel = new JLabel(input);
             DeleteButton deleteThis = new DeleteButton();
             deleteThis.addActionListener(this);
-            JPanel conditionTile = new JPanel();
-            conditionTile.setName(condition.name());
-            conditionTile.setLayout(new BoxLayout(conditionTile,BoxLayout.X_AXIS));
-            conditionTile.add(stringLabel);
-            conditionTile.add(deleteThis);
-            add(conditionTile);
+            JPanel stringTile = new JPanel();
+            stringTile.setName(input);
+            stringTile.setLayout(new BoxLayout(stringTile, BoxLayout.X_AXIS));
+            stringTile.add(stringLabel);
+            stringTile.add(deleteThis);
+            add(stringTile);
+            revalidate();
+            repaint();
+        }
+
+    }
+    public void addElement(Damage input){
+        JLabel damageLabel = new JLabel(input.name());
+        DeleteButton deleteThis = new DeleteButton();
+        deleteThis.addActionListener(this);
+        JPanel damageTile = new JPanel();
+        damageTile.setName(input.name());
+        damageTile.setLayout(new BoxLayout(damageTile,BoxLayout.X_AXIS));
+        damageTile.add(damageLabel);
+        damageTile.add(deleteThis);
+        add(damageTile);
+        revalidate();
+        repaint();
+
+    }
+    public void addElement(Condition input){
+        JLabel conditionLabel = new JLabel(input.name());
+        DeleteButton deleteThis = new DeleteButton();
+        deleteThis.addActionListener(this);
+        JPanel conditionTile = new JPanel();
+        conditionTile.setName(input.name());
+        conditionTile.setLayout(new BoxLayout(conditionTile,BoxLayout.X_AXIS));
+        conditionTile.add(conditionLabel);
+        conditionTile.add(deleteThis);
+        add(conditionTile);
+        revalidate();
+        repaint();
+
+    }
+
+    boolean checkElements(String newElement){
+        if(newElement.length()<1){
+            try {
+                throw new CreatureException("Name too short");
+            } catch (CreatureException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        for(Component c: getComponents()){
+            System.out.println(c.getName());
+            if(c.getName().equals(newElement)){
+                try {
+                    throw new CreatureException("Element already exists!");
+                } catch (CreatureException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void addElement(Object input){
+        if (input instanceof String) {
+            addElement((String) input);
+            return;
+        }
+        if(input instanceof Damage){
+            addElement((Damage) input);
+            return;
+        }
+        if(input instanceof Condition){
+            addElement((Condition) input);
+            return;
+        }
+        try {
+            throw new CreatureException("Invalid type");
+        } catch (CreatureException e) {
+            e.printStackTrace();
         }
 
     }
@@ -73,9 +141,6 @@ public class DeletableList extends JPanel implements ActionListener {
             parentPanel.revalidate();
             parentPanel.repaint();
         }
-
-
-
 
     }
 }

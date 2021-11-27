@@ -7,7 +7,6 @@ import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Exceptions.CreatureException;
-import GUI.Elements.Buttons.DeleteButton;
 import GUI.Elements.DeletableList;
 
 import javax.swing.*;
@@ -52,6 +51,8 @@ public class CreatureGenPanel extends JFrame implements ActionListener {
 
         //Data Demo Init TODO REMOVE
         languageArray.add("Common");
+        languageArray.add("Dwarvish");
+        languageArray.add("Elvish");
         sensesArray.add("Darkvision 69 feet");
         damageImmunities.add(Damage.BLUDGEONING);
         damageVulnerabilities.add(Damage.COLD);
@@ -368,59 +369,18 @@ class ArraySetGui extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String parentPanel = ((JButton) e.getSource()).getParent().getParent().getName();
-        switch (parentPanel) {
-            case "Languages"->{
-                if(e.getSource().getClass() == DeleteButton.class){
-                    System.out.println("This is a delete button");
+        JPanel parentPanel = (JPanel) (((JButton) e.getSource()).getParent().getParent());
+        for(Component c: parentPanel.getComponents()){
+            if(c instanceof DeletableList){
+                if(editorPanel.getComponent(0) instanceof JTextField){
+                    JTextField editor = (JTextField) editorPanel.getComponent(0);
+                    ((DeletableList) c).addElement(editor.getText());
                 }
-                else{
-
-                }
-
-            }
-            case "Senses"->{
-                if(e.getSource().getClass() == DeleteButton.class){
-                    System.out.println("This is a delete button");
+                if(editorPanel.getComponent(0) instanceof JComboBox){
+                    JComboBox editor = (JComboBox) editorPanel.getComponent(0);
+                    ((DeletableList) c).addElement(editor.getSelectedItem());
                 }
 
-            }
-            case "Damage Immunities"->{
-                if(e.getSource().getClass() == DeleteButton.class){
-                    System.out.println("This is a delete button");
-                }
-
-            }
-            case "Damage Resistances"->{
-                if(e.getSource().getClass() == DeleteButton.class){
-                    System.out.println("This is a delete button");
-                }
-
-            }
-            case "Damage Vulnerabilities"->{
-                if(e.getSource().getClass() == DeleteButton.class){
-                    System.out.println("This is a delete button");
-                }
-
-            }
-            case "Condition Immunities" ->{
-                if(e.getSource().getClass() == DeleteButton.class){
-                    System.out.println("This is a delete button");
-                }
-
-            }
-            case "Condition Resistances" ->{
-                if(e.getSource().getClass() == DeleteButton.class){
-                    System.out.println("This is a delete button");
-                }
-
-            }
-            default -> {
-                try {
-                    throw new Exception("Button not assigned");
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
             }
         }
 
