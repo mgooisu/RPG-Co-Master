@@ -8,6 +8,7 @@ import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Exceptions.CreatureException;
 import GUI.Elements.DeletableList;
+import GUI.Helpers.ComponentHelpers;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -42,7 +43,9 @@ public class CreatureGenPanel extends JFrame implements ActionListener {
     public ArrayList<Condition> conditionResistances; ArrayList<Condition> conditionImmunities;
 
     CreatureGenPanel() throws IOException, ClassNotFoundException, CreatureException {
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+//        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        setLayout(new FlowLayout());
+        setPreferredSize(new Dimension(1000,1000));
         languageArray =new ArrayList<>(); sensesArray = new ArrayList<>();
         damageImmunities = new ArrayList<>();damageResistances = new ArrayList<>();damageVulnerabilities = new ArrayList<>();
         conditionImmunities = new ArrayList<>(); conditionResistances = new ArrayList<>();
@@ -64,45 +67,35 @@ public class CreatureGenPanel extends JFrame implements ActionListener {
 
         //Creature Name Panel
         //TODO - Prevent Duplicate Creature Names
-        namePanel = new JPanel();
-        namePanel.setLayout(new GridLayout(1,2));
-        labelName = new JLabel("Creature \"Class\" name: ");
         textName = new JTextField();
 
+        textName.setBorder(new TitledBorder("Creature \"Class\" name"));
+        textName.setColumns(20);
 
-
-        namePanel.add(labelName);
-        namePanel.add(textName);
-        namePanel.setPreferredSize(new Dimension(400,25));
-        namePanel.setMaximumSize(new Dimension(400,25));
-        add(namePanel);
+        add(textName);
 
 
         //Creature Size
-        sizePanel = new JPanel(new GridLayout(1,2));
-        sizePanel.add(new JLabel("Size: "));
         sizeJComboBox = new JComboBox<>(Size.values());
-        sizePanel.add(sizeJComboBox);
         sizeJComboBox.setSelectedItem(Size.MEDIUM);
-        add(sizePanel);
-
-
+        sizeJComboBox.setBorder(new TitledBorder("Creature Size"));
+        add(sizeJComboBox);
 
         //Creature Default Alignment
-        baseAlignPanel = new JPanel();
-        baseAlignPanel.setLayout(new GridLayout(1,2));
-        baseAlignPanel.add(new JLabel("Base Alignment: "));
 
-        baseAlignPanelChild = new JPanel(new GridLayout(1,3));
+        baseAlignPanel = new JPanel(new GridLayout(1,3));
         alignedCheck = new JCheckBox();
-        baseAlignPanelChild.add(alignedCheck);
+        JPanel alignmentCheckPanel = new JPanel();
+        alignmentCheckPanel.add(new JLabel("Unaligned"));
         alignedCheck.addActionListener(this);
+        alignmentCheckPanel.add(alignedCheck);
+        baseAlignPanel.add(alignmentCheckPanel);
 
         ethicJComboBox = new JComboBox<>(Alignment.Ethic.values());
         moralJComboBox = new JComboBox<>(Alignment.Moral.values());
-        baseAlignPanelChild.add(ethicJComboBox);
-        baseAlignPanelChild.add(moralJComboBox);
-        baseAlignPanel.add(baseAlignPanelChild);
+        baseAlignPanel.add(ethicJComboBox);
+        baseAlignPanel.add(moralJComboBox);
+        baseAlignPanel.setBorder(new TitledBorder("Creature Default Alignment"));
         add(baseAlignPanel);
 
         //Creature Species Panel
@@ -115,66 +108,79 @@ public class CreatureGenPanel extends JFrame implements ActionListener {
         String[] speciesNames = speciesHashMap.keySet().toArray(new String[0]);
 
         speciesBox = new JComboBox<>(speciesNames);
-        speciesPanel = new JPanel();
-        speciesPanel.setLayout(new GridLayout(1,2));
-        speciesPanel.add(new JLabel("Species:"));
-        speciesPanel.add(speciesBox);
-        add(speciesPanel);
+        speciesBox.setBorder(new TitledBorder("Species"));
+        add(speciesBox);
 
         //AC
-        acPanel = new JPanel(new GridLayout(1,2));
-        acPanel.add(new JLabel("AC:"));
         acSpinner = new JSpinner(new SpinnerNumberModel(10,0,100,1));
-        acPanel.add(acSpinner);
-        add(acPanel);
+        acSpinner.setBorder(new TitledBorder("AC"));
+        ComponentHelpers.hideSpinnerArrow(acSpinner,60);
+        add(acSpinner);
 
         //HP
         /*Sets the max HP and Dice HP. Either can be used to create instances, but not both*/
-        healthPanel = new JPanel(new GridLayout(1,3));
-        healthPanel.add(new JLabel("HP:"));
+        healthPanel = new JPanel();
+        healthPanel.setBorder(new TitledBorder("HP"));
 
         //IntegerHP HP variant for basic number
+        JPanel intHPPanel = new JPanel(new GridLayout(2,1));
         integerHP = new JSpinner(new SpinnerNumberModel(30,1,99999,10));
-        healthPanel.add(integerHP);
+        intHPPanel.add(new JLabel("Health"));
+        intHPPanel.add(integerHP);
+        healthPanel.add(intHPPanel);
 
         //Dice HP Variant
-        diceHPValue = new JPanel(new GridLayout(1,3));
+        diceHPValue = new JPanel(new GridLayout(2,3));
         diceNumHP = new JSpinner(new SpinnerNumberModel(3,1,100,1));
         diceValHP = new JSpinner(new SpinnerNumberModel(6,2,100,1));
         diceModHP = new JSpinner(new SpinnerNumberModel(0,0,500,1));
+        diceHPValue.add(new JLabel("Amount"));
+        diceHPValue.add(new JLabel("Value"));
+        diceHPValue.add(new JLabel("Modifier"));
         diceHPValue.add(diceNumHP);
         diceHPValue.add(diceValHP);
         diceHPValue.add(diceModHP);
+        diceHPValue.setBorder(new TitledBorder("Dice"));
 
         healthPanel.add(diceHPValue);
 
         add(healthPanel);
 
         //Speed Panel
-        speedPanel = new JPanel(new GridLayout(1,2));
         speedSpinner = new JSpinner(new SpinnerNumberModel(20,0,200,5));
-        speedPanel.add(new JLabel("Speed: "));
-        speedPanel.add(speedSpinner);
-
-        add(speedPanel);
+        speedSpinner.setPreferredSize(new Dimension(85,40));
+        speedSpinner.setBorder(new TitledBorder("Speed"));
+        ComponentHelpers.hideSpinnerArrow(speedSpinner,70);
+        add(speedSpinner);
 
         //Stats Panel
-        statParentPanel = new JPanel(new GridLayout(1,2));
-        statParentPanel.add(new JLabel("Stats:"));
+
         //Each stat panel
-        statPanel= new JPanel(new GridLayout(2,6));
+        statPanel= new JPanel(new GridLayout(1,6));
         strSpinner = new JSpinner(new SpinnerNumberModel(10,0,50,1));
         dexSpinner = new JSpinner(new SpinnerNumberModel(10,0,50,1));
         conSpinner = new JSpinner(new SpinnerNumberModel(10,0,50,1));
         intSpinner = new JSpinner(new SpinnerNumberModel(10,0,50,1));
         wisSpinner = new JSpinner(new SpinnerNumberModel(10,0,50,1));
         chaSpinner = new JSpinner(new SpinnerNumberModel(10,0,50,1));
-        statPanel.add(new JLabel("STR"));
-        statPanel.add(new JLabel("DEX"));
-        statPanel.add(new JLabel("CON"));
-        statPanel.add(new JLabel("INT"));
-        statPanel.add(new JLabel("WIS"));
-        statPanel.add(new JLabel("CHA"));
+
+        strSpinner.setBorder(new TitledBorder("STR"));
+        dexSpinner.setBorder(new TitledBorder("DEX"));
+        conSpinner.setBorder(new TitledBorder("CON"));
+        intSpinner.setBorder(new TitledBorder("INT"));
+        wisSpinner.setBorder(new TitledBorder("WIS"));
+        chaSpinner.setBorder(new TitledBorder("CHA"));
+
+
+        ComponentHelpers.hideSpinnerArrow(strSpinner,60);
+        ComponentHelpers.hideSpinnerArrow(dexSpinner,60);
+        ComponentHelpers.hideSpinnerArrow(conSpinner,60);
+        ComponentHelpers.hideSpinnerArrow(intSpinner,60);
+        ComponentHelpers.hideSpinnerArrow(wisSpinner,60);
+        ComponentHelpers.hideSpinnerArrow(chaSpinner,60);
+
+
+
 
         statPanel.add(strSpinner);
         statPanel.add(dexSpinner);
@@ -182,53 +188,51 @@ public class CreatureGenPanel extends JFrame implements ActionListener {
         statPanel.add(intSpinner);
         statPanel.add(wisSpinner);
         statPanel.add(chaSpinner);
-        statParentPanel.add(statPanel);
-
-        add(statParentPanel);
+        statPanel.setBorder(new TitledBorder("Default Stats"));
+        add(statPanel);
 
         //Description
-        descriptionPanel = new JPanel(new GridLayout(1,2));
-        descriptionPanel.add(new JLabel("Description:"));
-        description = new JTextArea(3,50);
-        descriptionPanel.add(description);
-        add(descriptionPanel);
+
+        description = new JTextArea();
+        description.setPreferredSize(new Dimension(800,100));
+        description.setBorder(new TitledBorder("Description"));
+        add(description);
+
+
+
 
         //Damage parameters
-        JPanel damageStuff = new JPanel(new GridLayout(1,3));
         ArraySetGui damageImmunities = new ArraySetGui(this, "Damage Immunities");
         ArraySetGui damageResistances = new ArraySetGui(this, "Damage Resistances");
         ArraySetGui damageVulnerabilities = new ArraySetGui(this, "Damage Vulnerabilities");
 
-        damageStuff.add(damageImmunities);
-        damageStuff.add(damageResistances);
-        damageStuff.add(damageVulnerabilities);
+        add(damageImmunities);
+        add(damageResistances);
+        add(damageVulnerabilities);
 
-        add(damageStuff);
 
         //Conditions Parameters
-        JPanel conditionStuff = new JPanel(new GridLayout(1,2));
         ArraySetGui conditionImmunities = new ArraySetGui(this,"Condition Immunities");
         ArraySetGui conditionResistances = new ArraySetGui(this,"Condition Resistances");
 
-        conditionStuff.add(conditionImmunities);
-        conditionStuff.add(conditionResistances);
-
-
-        add(conditionStuff);
+        add(conditionImmunities);
+        add(conditionResistances);
 
 
         //language & Senses
-        JPanel langSens = new JPanel(new GridLayout(1,2));
         ArraySetGui languageGui = new ArraySetGui(this, "Languages");
-        langSens.add(languageGui);
+        add(languageGui);
 
         ArraySetGui senseGui = new ArraySetGui(this, "Senses");
-        langSens.add(senseGui);
+        add(senseGui);
 
-        add(langSens);
 
-        // Creature
+        // Save Button
+
         pack();
+
+
+
     }
 
 
@@ -367,6 +371,7 @@ class ArraySetGui extends JPanel implements ActionListener{
 
     }
 
+    /** @noinspection rawtypes*/
     @Override
     public void actionPerformed(ActionEvent e) {
         JPanel parentPanel = (JPanel) (((JButton) e.getSource()).getParent().getParent());
