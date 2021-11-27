@@ -1,4 +1,4 @@
-package GUI;
+package GUI.Creatures;
 
 import Creature.Actions.Actions;
 import Creature.Actions.Attack;

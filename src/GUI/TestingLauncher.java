@@ -12,6 +12,7 @@ import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Creature.Monster;
 import Exceptions.CreatureException;
+import GUI.Creatures.CreatureGenFrame;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -49,10 +50,13 @@ public class TestingLauncher {
         skeleton.setActions(actions);
         skeleton.setSenses(new String[]{"Darkvision 60ft", "Passive Perception 9"});
         skeleton.setLanguages(new String[]{"Understands all languages they knew in life, but cannot speak", "Common", "Dwarfish"});
-        CreatureGenPanel creatureGenPanel = new CreatureGenPanel();
-        creatureGenPanel.setLocationRelativeTo(null);
-        creatureGenPanel.setVisible(true);
-        creatureGenPanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        CreatureGenFrame creatureGenFrame = new CreatureGenFrame();
+        creatureGenFrame.pack();
+        creatureGenFrame.setLocationRelativeTo(null);
+
+        creatureGenFrame.setVisible(true);
+
+        creatureGenFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
 

@@ -1,11 +1,16 @@
 package GUI.Elements;
 
+import Creature.Actions.Actions;
+import Creature.Actions.Attack;
+import Creature.Features;
 import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Damage;
 import Exceptions.CreatureException;
 import GUI.Elements.Buttons.DeleteButton;
+import Helpers.DiceObject;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,6 +38,23 @@ public class DeletableList extends JPanel implements ActionListener {
         this.setName(id);
         for(Condition condition: conditionList){
             addElement(condition);
+        }
+
+    }
+
+    public DeletableList(String id, ArrayList<Features> featuresList, Features dummy){
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setName(id);
+        for(Features features: featuresList){
+            addElement(features);
+        }
+
+    }
+    public DeletableList(String id, ArrayList<Actions> actionsList, Actions dummy){
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setName(id);
+        for(Actions actions: actionsList){
+            addElement(actions);
         }
 
     }
@@ -87,6 +109,66 @@ public class DeletableList extends JPanel implements ActionListener {
 
     }
 
+    public void addElement(Features input){
+        if(checkElements(input.getName())){
+            JTextField featuresDesc = new JTextField(input.getDescription());
+            DeleteButton deleteThis = new DeleteButton();
+            deleteThis.addActionListener(this);
+            JPanel featuresTile = new JPanel();
+            featuresTile.setName(input.getName());
+            featuresTile.setLayout(new BoxLayout(featuresTile, BoxLayout.X_AXIS));
+
+            featuresTile.setBorder(new TitledBorder(input.getName()));
+            featuresTile.add(featuresDesc);
+            featuresTile.add(deleteThis);
+            add(featuresTile);
+            revalidate();
+            repaint();
+        }
+    }
+    public void addElement(Actions input){
+        if(checkElements(input.getName())){
+            JTextField actionsDesc = new JTextField(input.getDescription());
+            DeleteButton deleteThis = new DeleteButton();
+            deleteThis.addActionListener(this);
+            JPanel actionsTile = new JPanel();
+            actionsTile.setName(input.getName());
+            actionsTile.setLayout(new BoxLayout(actionsTile, BoxLayout.X_AXIS));
+            actionsTile.setBorder(new TitledBorder(input.getName()));
+
+            JPanel actionsWords = new JPanel();
+            actionsWords.setLayout(new BoxLayout(actionsWords, BoxLayout.Y_AXIS));
+
+            //Attacks
+            if(input.getActionType() == Actions.ActionType.MELEE_ATTACK|| input.getActionType()== Actions.ActionType.RANGED_ATTACK){
+                Attack attackInput = (Attack) input;
+                String rangeString, diceString;
+                DiceObject dice  = attackInput.getDiceObject();
+                if(input.getActionType() == Actions.ActionType.RANGED_ATTACK){
+                    rangeString = "range "+attackInput.getRange().getClose()+"/"+attackInput.getRange().getFar();
+                }
+                else{
+                    rangeString = "reach "+ attackInput.getRange().getClose();
+                }
+                diceString = dice.getAmount()+"d"+dice.getType()+"+"+dice.getModifier();
+                JTextArea attackText = new JTextArea(
+                        attackInput.getAddToHit() +" to hit, "+rangeString+" ft., "+attackInput.getTarget()+
+                                " target."+"Hit: "+diceString+" "+attackInput.getDamage()+" damage.");
+                actionsWords.add(attackText);
+            }
+            else {
+
+                actionsWords.add(actionsDesc);
+            }
+            actionsTile.add(actionsWords);
+            actionsTile.add(deleteThis);
+            add(actionsTile);
+
+            revalidate();
+            repaint();
+        }
+    }
+
     boolean checkElements(String newElement){
         if(newElement.length()<1){
             try {
@@ -121,6 +203,14 @@ public class DeletableList extends JPanel implements ActionListener {
         }
         if(input instanceof Condition){
             addElement((Condition) input);
+            return;
+        }
+        if(input instanceof Features){
+            addElement((Features) input);
+            return;
+        }
+        if(input instanceof Actions){
+            addElement((Actions) input);
             return;
         }
         try {

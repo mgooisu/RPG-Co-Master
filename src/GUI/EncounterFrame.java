@@ -1,18 +1,13 @@
 package GUI;
 
-import Creature.Helpers.Alignment;
-import Creature.Helpers.Enums.Size;
-import Creature.Helpers.Types.SpeciesInfo.Species;
-import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Exceptions.CreatureException;
+import GUI.Creatures.BaseCreatureGenPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.util.HashMap;
 
 /**
  * Lowest scope panel for creating creatures and managing them in an encounter
@@ -66,15 +61,14 @@ public class EncounterFrame extends JFrame implements ActionListener {
             System.out.println("wa");
         }
         if(source.equals(createCreature)){
-            CreatureGenPanel creatureGenPanel = null;
+            BaseCreatureGenPanel baseCreatureGenPanel = null;
             try {
-                creatureGenPanel = new CreatureGenPanel();
+                baseCreatureGenPanel = new BaseCreatureGenPanel();
             } catch (IOException | ClassNotFoundException | CreatureException e) {
                 e.printStackTrace();
             }
-            if (creatureGenPanel != null) {
-                creatureGenPanel.setLocationRelativeTo(this);
-                creatureGenPanel.setVisible(true);
+            if (baseCreatureGenPanel != null) {
+                baseCreatureGenPanel.setVisible(true);
             }
 
 

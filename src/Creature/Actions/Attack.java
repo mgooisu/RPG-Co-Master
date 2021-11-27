@@ -1,6 +1,7 @@
 package Creature.Actions;
 
 import Creature.Creature;
+import Creature.Helpers.Enums.Damage;
 import Helpers.DiceObject;
 
 /**
@@ -13,6 +14,7 @@ public class Attack extends Actions {
     private int  target, addToHit, saveThreshold;
     private Range range;
     private String saveType;
+    private Damage damage;
 
 
     public Attack(String name, String description,ActionType type,
@@ -24,6 +26,17 @@ public class Attack extends Actions {
         this.addToHit = addToHit;
         this.saveThreshold = saveThreshold;
         this.saveType = saveType;
+
+    }
+    //No Saves version
+    public Attack(String name, String description,ActionType type,
+                  DiceObject diceObject, Range reach, int target, int addToHit, Damage damage) {
+        super(name, description,type);
+        this.diceObject = diceObject;
+        this.range = reach;
+        this.target = target;
+        this.addToHit = addToHit;
+        this.damage = damage;
 
     }
 
@@ -50,5 +63,13 @@ public class Attack extends Actions {
 
     public String getSaveType() {
         return saveType;
+    }
+
+    public Damage getDamage() {
+        return damage;
+    }
+
+    public void setDamage(Damage damage) {
+        this.damage = damage;
     }
 }
