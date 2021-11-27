@@ -55,31 +55,35 @@ public class DeletableList extends JPanel implements ActionListener {
 
     }
     public void addElement(Damage input){
-        JLabel damageLabel = new JLabel(input.name());
-        DeleteButton deleteThis = new DeleteButton();
-        deleteThis.addActionListener(this);
-        JPanel damageTile = new JPanel();
-        damageTile.setName(input.name());
-        damageTile.setLayout(new BoxLayout(damageTile,BoxLayout.X_AXIS));
-        damageTile.add(damageLabel);
-        damageTile.add(deleteThis);
-        add(damageTile);
-        revalidate();
-        repaint();
+        if(checkElements(input.name())) {
+            JLabel damageLabel = new JLabel(input.name());
+            DeleteButton deleteThis = new DeleteButton();
+            deleteThis.addActionListener(this);
+            JPanel damageTile = new JPanel();
+            damageTile.setName(input.name());
+            damageTile.setLayout(new BoxLayout(damageTile, BoxLayout.X_AXIS));
+            damageTile.add(damageLabel);
+            damageTile.add(deleteThis);
+            add(damageTile);
+            revalidate();
+            repaint();
+        }
 
     }
     public void addElement(Condition input){
-        JLabel conditionLabel = new JLabel(input.name());
-        DeleteButton deleteThis = new DeleteButton();
-        deleteThis.addActionListener(this);
-        JPanel conditionTile = new JPanel();
-        conditionTile.setName(input.name());
-        conditionTile.setLayout(new BoxLayout(conditionTile,BoxLayout.X_AXIS));
-        conditionTile.add(conditionLabel);
-        conditionTile.add(deleteThis);
-        add(conditionTile);
-        revalidate();
-        repaint();
+        if(checkElements(input.name())) {
+            JLabel conditionLabel = new JLabel(input.name());
+            DeleteButton deleteThis = new DeleteButton();
+            deleteThis.addActionListener(this);
+            JPanel conditionTile = new JPanel();
+            conditionTile.setName(input.name());
+            conditionTile.setLayout(new BoxLayout(conditionTile, BoxLayout.X_AXIS));
+            conditionTile.add(conditionLabel);
+            conditionTile.add(deleteThis);
+            add(conditionTile);
+            revalidate();
+            repaint();
+        }
 
     }
 
@@ -94,7 +98,6 @@ public class DeletableList extends JPanel implements ActionListener {
         }
 
         for(Component c: getComponents()){
-            System.out.println(c.getName());
             if(c.getName().equals(newElement)){
                 try {
                     throw new CreatureException("Element already exists!");
