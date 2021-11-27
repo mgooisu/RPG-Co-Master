@@ -4,6 +4,6 @@ import javax.swing.*;
 
 public class DeleteButton extends JButton {
     public DeleteButton(){
-        this.setText("X");
+        setText("X");
     }
 }

@@ -349,6 +349,7 @@ class ArraySetGui extends JPanel implements ActionListener{
                 // Create the list element
                 DeletableList conditionResistancesList = new DeletableList("Condition Resistances List",creatureGenPanel.conditionResistances, Condition.CHARMED);
                 add(conditionResistancesList);
+
             }
             default -> throw new CreatureException("Not valid Creature info");
         }
