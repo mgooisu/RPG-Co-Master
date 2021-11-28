@@ -2,6 +2,7 @@ package GUI;
 
 import Exceptions.CreatureException;
 import GUI.Creatures.BaseCreatureGenPanel;
+import GUI.Creatures.CreatureGenFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,14 +62,16 @@ public class EncounterFrame extends JFrame implements ActionListener {
             System.out.println("wa");
         }
         if(source.equals(createCreature)){
-            BaseCreatureGenPanel baseCreatureGenPanel = null;
+            CreatureGenFrame creatureGenFrame = null;
             try {
-                baseCreatureGenPanel = new BaseCreatureGenPanel();
+                creatureGenFrame = new CreatureGenFrame();
             } catch (IOException | ClassNotFoundException | CreatureException e) {
                 e.printStackTrace();
             }
-            if (baseCreatureGenPanel != null) {
-                baseCreatureGenPanel.setVisible(true);
+            if (creatureGenFrame != null) {
+                creatureGenFrame.setVisible(true);
+                creatureGenFrame.pack();
+                creatureGenFrame.setLocationRelativeTo(this);
             }
 
 
