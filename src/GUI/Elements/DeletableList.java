@@ -121,6 +121,7 @@ public class DeletableList extends JPanel implements ActionListener {
             featuresTile.setBorder(new TitledBorder(input.getName()));
             featuresTile.add(featuresDesc);
             featuresTile.add(deleteThis);
+            featuresDesc.setEditable(false);
             add(featuresTile);
             revalidate();
             repaint();
@@ -129,6 +130,7 @@ public class DeletableList extends JPanel implements ActionListener {
     public void addElement(Actions input){
         if(checkElements(input.getName())){
             JTextField actionsDesc = new JTextField(input.getDescription());
+            actionsDesc.setEditable(false);
             DeleteButton deleteThis = new DeleteButton();
             deleteThis.addActionListener(this);
             JPanel actionsTile = new JPanel();
@@ -151,18 +153,19 @@ public class DeletableList extends JPanel implements ActionListener {
                     rangeString = "reach "+ attackInput.getRange().getClose();
                 }
                 diceString = dice.getAmount()+"d"+dice.getType()+"+"+dice.getModifier();
-                JTextArea attackText = new JTextArea(
+                actionsDesc = new JTextField(
                         attackInput.getAddToHit() +" to hit, "+rangeString+" ft., "+attackInput.getTarget()+
                                 " target."+"Hit: "+diceString+" "+attackInput.getDamage()+" damage.");
-                actionsWords.add(attackText);
-            }
-            else {
 
-                actionsWords.add(actionsDesc);
+
             }
+
+            actionsWords.add(actionsDesc);
+            actionsDesc.setEditable(false);
             actionsTile.add(actionsWords);
             actionsTile.add(deleteThis);
             add(actionsTile);
+
 
             revalidate();
             repaint();
