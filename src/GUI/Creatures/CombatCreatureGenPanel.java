@@ -140,9 +140,9 @@ public class CombatCreatureGenPanel extends JPanel implements ActionListener {
 class CombatEditorPanel extends JPanel implements ActionListener {
     //Elements
 
-    JComboBox<Actions.ActionType> attackType;
+    JComboBox<Actions.ActionType> actionType;
     JComboBox<Damage> damageType;
-    JPanel centrePanel, rangePanel;
+    JPanel centrePanel, rangePanel,dicePanel;
     FocusTextField combatName;
     FocusTextArea description;
     JButton addButton;
@@ -190,18 +190,19 @@ class CombatEditorPanel extends JPanel implements ActionListener {
                     //Attack type
                 rangePanel = new JPanel();
 
-                attackType = new JComboBox<>(new Actions.ActionType[]{Actions.ActionType.RANGED_ATTACK, Actions.ActionType.MELEE_ATTACK});
-                attackType.setBorder(new TitledBorder("Attack Type"));
+                actionType = new JComboBox<>(new Actions.ActionType[]{Actions.ActionType.RANGED_ATTACK,
+                        Actions.ActionType.MELEE_ATTACK, Actions.ActionType.OTHER});
+                actionType.setBorder(new TitledBorder("Action Type"));
 
-                attackType.addActionListener(this);
+                actionType.addActionListener(this);
 
-                rangePanel.add(attackType);
+                centrePanel.add(actionType);
 
 
                     //Range
                 rangePanel.setBorder(new TitledBorder("Targets"));
 
-                if(attackType.getSelectedItem()== Actions.ActionType.RANGED_ATTACK){
+                if(actionType.getSelectedItem()== Actions.ActionType.RANGED_ATTACK){
                     System.out.println("wa");
                     closeRangeSpinner = new JSpinner(new SpinnerNumberModel(10,1,100,5));
                     longRangeSpinner = new JSpinner(new SpinnerNumberModel(30,20,1000,10));
@@ -212,7 +213,7 @@ class CombatEditorPanel extends JPanel implements ActionListener {
                     rangePanel.add(longRangeSpinner);
 
                 }
-                if(attackType.getSelectedItem()== Actions.ActionType.MELEE_ATTACK){
+                if(actionType.getSelectedItem()== Actions.ActionType.MELEE_ATTACK){
                     rangePanel.setBorder(new TitledBorder("Reach"));
                     closeRangeSpinner = new JSpinner(new SpinnerNumberModel(10,1,100,5));
                     closeRangeSpinner.setBorder(new TitledBorder("Reach"));
@@ -237,7 +238,7 @@ class CombatEditorPanel extends JPanel implements ActionListener {
 
 
                 //Dice
-                JPanel dicePanel = new JPanel(new GridLayout(1,3));
+                dicePanel = new JPanel(new GridLayout(1,3));
                 diceNumSpinner = new JSpinner(new SpinnerNumberModel(1,1,100,2));
                 diceValSpinner = new JSpinner(new SpinnerNumberModel(1,1,100,2));
                 diceModSpinner = new JSpinner(new SpinnerNumberModel(0,-100,100,2));
@@ -254,7 +255,6 @@ class CombatEditorPanel extends JPanel implements ActionListener {
 
                 centrePanel.add(dicePanel);
 
-                //        actions.add(new Attack("Spit","gross", Actions.ActionType.RANGED_ATTACK,new DiceObject(6,2,3),new Range(5,10),1,5,Damage.PSYCHIC));
 
                 damageType = new JComboBox<>(Damage.values());
                 damageType.setBorder(new TitledBorder("Damage Type"));
@@ -292,21 +292,32 @@ class CombatEditorPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        //Attack type spinner check
-        if(source == attackType){
-            rangePanel.removeAll();
-            rangePanel.add(attackType);
-            if(attackType.getSelectedItem()== Actions.ActionType.RANGED_ATTACK){
+        //Action type spinner check
 
+        if(source == actionType){
+            rangePanel.removeAll();
+            if(actionType.getSelectedItem()== Actions.ActionType.RANGED_ATTACK){
+                dicePanel.setVisible(true);
+                damageType.setVisible(true);
+                rangePanel.setVisible(true);
                 closeRangeSpinner.setBorder(new TitledBorder("Close"));
                 longRangeSpinner.setBorder(new TitledBorder("Long"));
                 rangePanel.add(closeRangeSpinner);
                 rangePanel.add(longRangeSpinner);
 
             }
-            if(attackType.getSelectedItem()== Actions.ActionType.MELEE_ATTACK){
+            if(actionType.getSelectedItem()== Actions.ActionType.MELEE_ATTACK){
+                dicePanel.setVisible(true);
+                damageType.setVisible(true);
+                rangePanel.setVisible(true);
                 closeRangeSpinner.setBorder(new TitledBorder("Reach"));
                 rangePanel.add(closeRangeSpinner);
+            }
+            if(actionType.getSelectedItem() == Actions.ActionType.OTHER){
+                dicePanel.setVisible(false);
+                damageType.setVisible(false);
+                rangePanel.setVisible(false);
+
             }
             rangePanel.add(targetCountSpinner);
             rangePanel.add(toHitSpinner);
@@ -337,18 +348,23 @@ class CombatEditorPanel extends JPanel implements ActionListener {
                     System.out.println("To do :(");
                 }
                 case "Actions"->{
-                    DiceObject dice = new DiceObject((Integer) diceValSpinner.getValue(),(Integer) diceNumSpinner.getValue(),(Integer) diceModSpinner.getValue());
-                    Range range;
-                    if(attackType.getSelectedItem() == Actions.ActionType.RANGED_ATTACK){
-                        range = new Range((Integer) closeRangeSpinner.getValue(),(Integer) longRangeSpinner.getValue());
-                    }else{
-                        range = new Range((Integer) closeRangeSpinner.getValue());
+                    if(actionType.getSelectedItem() == Actions.ActionType.MELEE_ATTACK|| actionType.getSelectedItem() == Actions.ActionType.RANGED_ATTACK) {
+
+                        DiceObject dice = new DiceObject((Integer) diceValSpinner.getValue(), (Integer) diceNumSpinner.getValue(), (Integer) diceModSpinner.getValue());
+                        Range range;
+                        if (actionType.getSelectedItem() == Actions.ActionType.RANGED_ATTACK) {
+                            range = new Range((Integer) closeRangeSpinner.getValue(), (Integer) longRangeSpinner.getValue());
+                        } else {
+                            range = new Range((Integer) closeRangeSpinner.getValue());
+                        }
+                        targetList.addElement
+                                (new Attack(combatNameText, descriptionText, (Actions.ActionType) actionType.getSelectedItem(),
+                                        dice, range, (Integer) targetCountSpinner.getValue(), (Integer) toHitSpinner.getValue(),
+                                        (Damage) (damageType.getSelectedItem())));
                     }
-                    //TODO - add interface for the other attack elements and an alternate action panel for non-attack actions?
-                    targetList.addElement
-                            (new Attack(combatNameText,descriptionText,(Actions.ActionType) attackType.getSelectedItem(),
-                                    dice,range,(Integer) targetCountSpinner.getValue(),(Integer) toHitSpinner.getValue(),
-                                    (Damage)(damageType.getSelectedItem())));
+                    if(actionType.getSelectedItem() == Actions.ActionType.OTHER){
+                        targetList.addElement(new Actions(combatNameText,descriptionText, Actions.ActionType.OTHER));
+                    }
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + targetList.getName());
             }
