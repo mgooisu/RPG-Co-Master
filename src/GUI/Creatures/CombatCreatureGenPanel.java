@@ -342,10 +342,12 @@ class CombatEditorPanel extends JPanel implements ActionListener {
 
             switch (targetList.getName()){
                 case "Features"->{
-                    targetList.addElement(new Features(combatNameText,descriptionText));
+                    Features features = new Features(combatNameText, descriptionText);
+                    targetList.addElement(features);
                 }
                 case "Legendary Actions"->{
-                    System.out.println("To do :(");
+                    Actions legendaryAction = new Actions(combatNameText,descriptionText, Actions.ActionType.LEGENDARY);
+                    targetList.addElement(legendaryAction);
                 }
                 case "Actions"->{
                     if(actionType.getSelectedItem() == Actions.ActionType.MELEE_ATTACK|| actionType.getSelectedItem() == Actions.ActionType.RANGED_ATTACK) {
