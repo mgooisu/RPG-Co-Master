@@ -1,4 +1,4 @@
-package GUI.Elements;
+package GUI.Elements.DeletableList;
 
 import Creature.Actions.Actions;
 import Creature.Actions.Attack;
@@ -17,23 +17,33 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class DeletableList extends JPanel implements ActionListener {
+    CreatureElArrayList creatureElArrayList;
+
     public DeletableList(String id, ArrayList<Damage> damageList, Damage dummy){
+        creatureElArrayList = new CreatureElArrayList(damageList,dummy);
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
         for(Damage damage: damageList){
             addElement(damage);
         }
 
+
     }
     public DeletableList(String id, ArrayList<String> stringList, String dummy){
+        creatureElArrayList = new CreatureElArrayList(stringList,dummy);
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
         for(String string: stringList){
             addElement(string);
         }
 
+
     }
     public DeletableList(String id, ArrayList<Condition> conditionList, Condition dummy){
+        creatureElArrayList = new CreatureElArrayList(conditionList, dummy);
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
         for(Condition condition: conditionList){
@@ -43,6 +53,8 @@ public class DeletableList extends JPanel implements ActionListener {
     }
 
     public DeletableList(String id, ArrayList<Features> featuresList, Features dummy){
+        creatureElArrayList = new CreatureElArrayList(featuresList, dummy);
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
         for(Features features: featuresList){
@@ -51,17 +63,19 @@ public class DeletableList extends JPanel implements ActionListener {
 
     }
     public DeletableList(String id, ArrayList<Actions> actionsList, Actions dummy){
+        creatureElArrayList = new CreatureElArrayList(actionsList, dummy);
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
         for(Actions actions: actionsList){
             addElement(actions);
         }
-
     }
 
 // TODO - these are the functions that need editing - save elements as typed arraylist
     public void addElement(String input){
         if(checkElements(input)) {
+
             JLabel stringLabel = new JLabel(input);
             DeleteButton deleteThis = new DeleteButton();
             deleteThis.addActionListener(this);
@@ -73,6 +87,7 @@ public class DeletableList extends JPanel implements ActionListener {
             add(stringTile);
             revalidate();
             repaint();
+
         }
 
     }
@@ -89,6 +104,7 @@ public class DeletableList extends JPanel implements ActionListener {
             add(damageTile);
             revalidate();
             repaint();
+
         }
 
     }
@@ -105,6 +121,7 @@ public class DeletableList extends JPanel implements ActionListener {
             add(conditionTile);
             revalidate();
             repaint();
+
         }
 
     }
@@ -125,6 +142,7 @@ public class DeletableList extends JPanel implements ActionListener {
             add(featuresTile);
             revalidate();
             repaint();
+
         }
     }
     public void addElement(Actions input){
@@ -169,6 +187,7 @@ public class DeletableList extends JPanel implements ActionListener {
 
             revalidate();
             repaint();
+
         }
     }
 

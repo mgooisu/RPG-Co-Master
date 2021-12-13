@@ -1,5 +1,7 @@
 package GUI.Creatures;
 
+import Creature.BaseCreature;
+import Creature.Creature;
 import Creature.Helpers.Alignment;
 import Creature.Monster;
 import Exceptions.CreatureException;
@@ -43,10 +45,39 @@ public class CreatureGenFrame extends JFrame implements ActionListener, ChangeLi
 
 
 
-    Monster getMonster(){
-        //new Monster()
 
-        return null;
+    Creature getCreature(){
+        Creature creature;
+        if(baseCreatureGenPanel.getCombatCheck()){
+             creature =new Monster(
+                    null, baseCreatureGenPanel.getAlignment(), baseCreatureGenPanel.getDescription(),
+                    baseCreatureGenPanel.getCreatureClass(), baseCreatureGenPanel.getIntegerHealth(),
+                    baseCreatureGenPanel.getHpDice(),baseCreatureGenPanel.getAC(),baseCreatureGenPanel.getSpeed(),
+                    baseCreatureGenPanel.getCreatureSize(), baseCreatureGenPanel.getSpecies(), baseCreatureGenPanel.getStats(),
+                    baseCreatureGenPanel.getConditionImmunities(),baseCreatureGenPanel.getConditionResists(),
+                    baseCreatureGenPanel.getDamageImmunities(),baseCreatureGenPanel.getDamageResistances(),
+                    baseCreatureGenPanel.getDamageVulnerabilities()
+            );
+
+
+        }
+        creature = new BaseCreature(
+                null, baseCreatureGenPanel.getAlignment(), baseCreatureGenPanel.getDescription(),
+                baseCreatureGenPanel.getCreatureClass(), baseCreatureGenPanel.getIntegerHealth(),
+                baseCreatureGenPanel.getHpDice(),baseCreatureGenPanel.getAC(),baseCreatureGenPanel.getSpeed(),
+                baseCreatureGenPanel.getCreatureSize(), baseCreatureGenPanel.getSpecies(), baseCreatureGenPanel.getStats(),
+                baseCreatureGenPanel.getConditionImmunities(),baseCreatureGenPanel.getConditionResists(),
+                baseCreatureGenPanel.getDamageImmunities(),baseCreatureGenPanel.getDamageResistances(),
+                baseCreatureGenPanel.getDamageVulnerabilities()
+
+        );
+
+        //shared elements
+        creature.setLanguages(baseCreatureGenPanel.getLanguages());
+
+        return creature;
+
+
 
     }
 
@@ -55,8 +86,7 @@ public class CreatureGenFrame extends JFrame implements ActionListener, ChangeLi
         if(e.getSource().getClass() == JButton.class){
             JButton button = (JButton) e.getSource();
             if(button == submit){
-                if(baseCreatureGenPanel.combatCheck.isSelected()){
-                }
+                Creature creature = getCreature();
 
             }
         }

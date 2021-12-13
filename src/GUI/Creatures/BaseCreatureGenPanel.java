@@ -8,7 +8,7 @@ import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Exceptions.CreatureException;
-import GUI.Elements.DeletableList;
+import GUI.Elements.DeletableList.DeletableList;
 import GUI.Elements.Fields.FocusTextArea;
 import GUI.Elements.Fields.FocusTextField;
 import GUI.Helpers.ComponentHelpers;
@@ -57,6 +57,8 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
     public ArrayList<Damage> damageImmunities,damageResistances, damageVulnerabilities;
 
     public ArrayList<Condition> conditionResistances, conditionImmunities;
+
+    HashMap<String, Species> speciesHashMap;
 
     public BaseCreatureGenPanel() throws IOException, ClassNotFoundException, CreatureException {
 
@@ -125,7 +127,7 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
          * it grabs the information from the file for every element. It should just grab everything
          * at the start ONCE */
         speciesMapObjectHandler = new SpeciesMapObjectHandler();
-        HashMap<String, Species> speciesHashMap= speciesMapObjectHandler.readObject().getSpeciesHashMap();
+        speciesHashMap= speciesMapObjectHandler.readObject().getSpeciesHashMap();
         String[] speciesNames = speciesHashMap.keySet().toArray(new String[0]);
 
         speciesBox = new JComboBox<>(speciesNames);
@@ -288,7 +290,7 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
     }
 
     public Species getSpecies(){
-        return (Species) speciesBox.getSelectedItem();
+        return speciesHashMap.get((String) speciesBox.getSelectedItem());
     }
 
     public Stats getStats(){
@@ -326,6 +328,14 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
     public Damage[] getDamageVulnerabilities(){
         return null;
 
+    }
+
+    public String[] getLanguages(){
+        return null;
+    }
+
+    public Boolean getCombatCheck(){
+        return combatCheck.isSelected();
     }
 
 

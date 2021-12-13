@@ -5,7 +5,7 @@ import Creature.Actions.Attack;
 import Creature.Actions.Range;
 import Creature.Features;
 import Creature.Helpers.Enums.Damage;
-import GUI.Elements.DeletableList;
+import GUI.Elements.DeletableList.DeletableList;
 import GUI.Elements.Fields.*;
 import Helpers.DiceObject;
 
