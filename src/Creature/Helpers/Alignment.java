@@ -51,6 +51,10 @@ public class Alignment {
         }
 
     }
+    public Alignment(Ethic ethic, Moral moral){
+        this.ethic = ethic;
+        this.moral = moral;
+    }
 
 
 }

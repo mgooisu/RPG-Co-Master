@@ -104,6 +104,8 @@ public class CombatCreatureGenPanel extends JPanel implements ActionListener {
 
     }
 
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton sourceButton = (JButton) e.getSource();
@@ -148,7 +150,8 @@ class CombatEditorPanel extends JPanel implements ActionListener {
     JButton addButton;
     DeletableList targetList;
     JFrame parentFrame;
-    JSpinner diceNumSpinner, diceValSpinner, diceModSpinner, closeRangeSpinner, longRangeSpinner, targetCountSpinner,toHitSpinner;
+    JSpinner diceNumSpinner, diceValSpinner, diceModSpinner, closeRangeSpinner,
+            longRangeSpinner, targetCountSpinner,toHitSpinner;
 
 
 
@@ -203,7 +206,6 @@ class CombatEditorPanel extends JPanel implements ActionListener {
                 rangePanel.setBorder(new TitledBorder("Targets"));
 
                 if(actionType.getSelectedItem()== Actions.ActionType.RANGED_ATTACK){
-                    System.out.println("wa");
                     closeRangeSpinner = new JSpinner(new SpinnerNumberModel(10,1,100,5));
                     longRangeSpinner = new JSpinner(new SpinnerNumberModel(30,20,1000,10));
 
@@ -343,6 +345,7 @@ class CombatEditorPanel extends JPanel implements ActionListener {
             switch (targetList.getName()){
                 case "Features"->{
                     Features features = new Features(combatNameText, descriptionText);
+
                     targetList.addElement(features);
                 }
                 case "Legendary Actions"->{

@@ -11,6 +11,7 @@ import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Exceptions.CreatureException;
+import Helpers.DiceObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,13 +35,14 @@ public class CreatureTesting {
 
     static Monster skeleton;
     private static final int maxHP = 13, aC = 13, speed = 30;
+    private static final DiceObject hpDice = new DiceObject(2,6,0);
     private static final Stats stats =
             new Stats(10,14,15,6,8,5);
     private final static String description ="A shambling, rattling warrior of bone",
             name = null, creatureClass ="Skeleton";
 
 
-    private static final Alignment.CombinedAlignment alignment = Alignment.CombinedAlignment.Lawful_Evil;
+    private static final Alignment alignment = new Alignment(Alignment.Ethic.LAWFUL, Alignment.Moral.EVIL);
     private static final Size size = Size.MEDIUM;
     static String[]
             senses = {"Darkvision 60ft","Passive perception 9"},
@@ -58,7 +60,7 @@ public class CreatureTesting {
         ArrayList<String> conditions = new ArrayList<>();
 
         skeleton = new Monster(null, alignment,description,creatureClass,
-                maxHP,aC,speed,size,species,stats,conditionImmunities,conditionResists,
+                maxHP,hpDice,aC,speed,size,species,stats,conditionImmunities,conditionResists,
                 immunities,resistances,vulnerabilities);
 
     }

@@ -13,6 +13,7 @@ import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Creature.Monster;
 import Exceptions.CreatureException;
 import GUI.Creatures.CreatureGenFrame;
+import Helpers.DiceObject;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -24,21 +25,23 @@ public class TestingLauncher {
     static Stats stats;
     static SpeciesMapObjectHandler speciesMapObjectHandler;
     static Species undead;
+    static DiceObject hpDice;
 
     public static void main(String[] args) throws CreatureException, IOException, ClassNotFoundException {
         //Setting up a whole monster
 
         speciesMapObjectHandler = new SpeciesMapObjectHandler();
         undead = speciesMapObjectHandler.readObject().getSpeciesHashMap().get("Undead");
-
+        hpDice = new DiceObject(6,2,0);
         stats = new Stats(10, 11, 12, 4, 14, 15);
+
 
         Condition[] conditionArray = new Condition[]{};
 
         Damage[] damageArray = new Damage[]{};
         Monster skeleton;
-        skeleton = new Monster(null, Alignment.CombinedAlignment.Lawful_Evil, "A clinking, rattling" +
-                "pile of ancient bones", "skeleton", 13, 13, 30, Size.MEDIUM, undead, stats,
+        skeleton = new Monster(null, new Alignment(Alignment.Ethic.LAWFUL, Alignment.Moral.EVIL), "A clinking, rattling" +
+                "pile of ancient bones", "skeleton", 13, hpDice,13, 30, Size.MEDIUM, undead, stats,
                 new Condition[]{Condition.EXHAUSTION, Condition.POISONED}, conditionArray,
                 new Damage[]{Damage.POISON}, damageArray, new Damage[]{Damage.BLUDGEONING});
         skeleton.addCondition(Condition.BLINDED, 3);

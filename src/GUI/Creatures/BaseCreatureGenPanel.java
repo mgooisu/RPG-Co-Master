@@ -4,11 +4,15 @@ import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Damage;
 import Creature.Helpers.Enums.Size;
+import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Exceptions.CreatureException;
 import GUI.Elements.DeletableList;
+import GUI.Elements.Fields.FocusTextArea;
+import GUI.Elements.Fields.FocusTextField;
 import GUI.Helpers.ComponentHelpers;
+import Helpers.DiceObject;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -24,8 +28,8 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
     JPanel namePanel, baseAlignPanel, speciesPanel,acPanel,healthPanel,diceHPValue,speedPanel,
             statParentPanel,statPanel,baseAlignPanelChild, sizePanel, descriptionPanel;
     JLabel labelName;
-    JTextField textName;
-    JTextArea description;
+    FocusTextField textName;
+    FocusTextArea description;
     JSpinner acSpinner,integerHP, diceNumHP, diceValHP, diceModHP, speedSpinner,
             strSpinner, dexSpinner,conSpinner,intSpinner,wisSpinner,chaSpinner;
 
@@ -36,13 +40,27 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
     JComboBox<Alignment.Ethic> ethicJComboBox;
     JComboBox<Alignment.Moral> moralJComboBox;
 
+    // Condition/ Damage parameter lists
+    ArraySetGui languageGui, senseGui, damageImmunitiesGui,damageResistancesGui,damageVulnerabilitiesGui,
+    conditionImmunitiesGui,conditionResistancesGui;
+
     //Data
     public ArrayList<String> languageArray, sensesArray;
+    /* TODO URGENT - change how the arrayguis work.
+    As it stands, the array guis populate thier own deletable lists as part of thier constructor. This is
+    fundametally flawed, because this is a creature CREATOR, not a creature EDITOR. It COULD stay for testing, but
+    it needs to call the standard addElement methods to be comparable.
+    More importantly, the addElement methods somehow need to retain the original datatype of the element, rather than
+    just parsing them to strings, so that when the creature needs to be created, the gui can just pull those elements
+    out and parse them into the new Creature() constructor.
+    */
     public ArrayList<Damage> damageImmunities,damageResistances, damageVulnerabilities;
 
-    public ArrayList<Condition> conditionResistances; ArrayList<Condition> conditionImmunities;
+    public ArrayList<Condition> conditionResistances, conditionImmunities;
 
     public BaseCreatureGenPanel() throws IOException, ClassNotFoundException, CreatureException {
+
+
 //        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setLayout(new FlowLayout());
         setPreferredSize(new Dimension(800,1000));
@@ -56,7 +74,7 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
 
         //Creature Name Panel
         //TODO - Prevent Duplicate Creature Names
-        textName = new JTextField();
+        textName = new FocusTextField();
 
         textName.setBorder(new TitledBorder("Creature \"Class\" name"));
         textName.setColumns(20);
@@ -196,7 +214,7 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
 
         //Description
 
-        description = new JTextArea();
+        description = new FocusTextArea();
         description.setPreferredSize(new Dimension(800,100));
         description.setBorder(new TitledBorder("Description"));
         add(description);
@@ -205,37 +223,114 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
 
 
         //Damage parameters
-        ArraySetGui damageImmunities = new ArraySetGui(this, "Damage Immunities");
-        ArraySetGui damageResistances = new ArraySetGui(this, "Damage Resistances");
-        ArraySetGui damageVulnerabilities = new ArraySetGui(this, "Damage Vulnerabilities");
+        damageImmunitiesGui = new ArraySetGui(this, "Damage Immunities");
+        damageResistancesGui = new ArraySetGui(this, "Damage Resistances");
+        damageVulnerabilitiesGui = new ArraySetGui(this, "Damage Vulnerabilities");
 
-        add(damageImmunities);
-        add(damageResistances);
-        add(damageVulnerabilities);
+        add(damageImmunitiesGui);
+        add(damageResistancesGui);
+        add(damageVulnerabilitiesGui);
 
 
         //Conditions Parameters
-        ArraySetGui conditionImmunities = new ArraySetGui(this,"Condition Immunities");
-        ArraySetGui conditionResistances = new ArraySetGui(this,"Condition Resistances");
+        conditionImmunitiesGui = new ArraySetGui(this,"Condition Immunities");
+        conditionResistancesGui = new ArraySetGui(this,"Condition Resistances");
 
-        add(conditionImmunities);
-        add(conditionResistances);
+        add(conditionImmunitiesGui);
+        add(conditionResistancesGui);
 
 
         //language & Senses
-        ArraySetGui languageGui = new ArraySetGui(this, "Languages");
+        languageGui = new ArraySetGui(this, "Languages");
         add(languageGui);
 
-        ArraySetGui senseGui = new ArraySetGui(this, "Senses");
+        senseGui = new ArraySetGui(this, "Senses");
         add(senseGui);
+    }
+    //Getters
+    public Alignment getAlignment(){
+        if(ethicJComboBox.isEnabled()){
+            Alignment.Ethic ethic = (Alignment.Ethic) ethicJComboBox.getSelectedItem();
+            Alignment.Moral moral = (Alignment.Moral) moralJComboBox.getSelectedItem();
+            return new Alignment(ethic,moral);
+        }
+        else {
+            return new Alignment(Alignment.CombinedAlignment.UNALIGNED);
+        }
+    }
 
+    public String getDescription(){
+        return description.getText();
+    }
 
+    public String getCreatureClass(){
+        return textName.getText();
+    }
 
+    public int getIntegerHealth(){
+        return (Integer) integerHP.getValue();
+    }
 
+    public DiceObject getHpDice(){
+        return new DiceObject((Integer)diceValHP.getValue(),(Integer)diceNumHP.getValue(),(Integer)diceModHP.getValue());
+    }
 
+    public int getAC(){
+        return (Integer) acSpinner.getValue();
+    }
 
+    public int getSpeed(){
+        return (Integer) speedSpinner.getValue();
+    }
+
+    public Size getCreatureSize(){
+        return (Size) sizeJComboBox.getSelectedItem();
+    }
+
+    public Species getSpecies(){
+        return (Species) speciesBox.getSelectedItem();
+    }
+
+    public Stats getStats(){
+        Integer strength, dexterity, constitution,intelligence,wisdom, charisma;
+        strength = (Integer) strSpinner.getValue();
+        dexterity = (Integer) dexSpinner.getValue();
+        constitution = (Integer) conSpinner.getValue();
+        intelligence = (Integer) intSpinner.getValue();
+        wisdom = (Integer) wisSpinner.getValue();
+        charisma = (Integer) chaSpinner.getValue();
+        return new Stats(strength,dexterity,constitution,intelligence,wisdom,charisma);
 
     }
+
+    public Condition[] getConditionImmunities(){
+        DeletableList list = conditionImmunitiesGui.conditionImmunitiesList;
+        for(Component thing : list.getComponents()){
+            System.out.println(thing.getName());
+        }
+        return null;
+    }
+    public Condition[] getConditionResists(){
+        return null;
+
+    }
+
+    public Damage[] getDamageImmunities(){
+        return null;
+
+    }
+    public Damage[] getDamageResistances(){
+        return null;
+
+    }
+    public Damage[] getDamageVulnerabilities(){
+        return null;
+
+    }
+
+
+
+
 
 
     @Override
@@ -263,6 +358,8 @@ class ArraySetGui extends JPanel implements ActionListener{
     JButton addLang, addSense, addDamImmunity,addDamRes,addDamVul, addCondImmunity,addCondRes;
     JPanel editorPanel;
     JComponent parameterEditor;
+    DeletableList languageList, sensesList,damageImmunitiesList,damageResistancesList,damageVulnerabilitiesList,
+    conditionImmunitiesList,conditionResistancesList;
 
     String[] arrayEls;
 
@@ -286,7 +383,7 @@ class ArraySetGui extends JPanel implements ActionListener{
                 editorPanel.add(addLang);
                 add(editorPanel);
                 // Create the list element
-                DeletableList languageList = new DeletableList("Language List", baseCreatureGenPanel.languageArray, "");
+                languageList = new DeletableList("Language List", baseCreatureGenPanel.languageArray, "");
                 add(languageList);
             }
             case "Senses"->{
@@ -297,7 +394,7 @@ class ArraySetGui extends JPanel implements ActionListener{
                 editorPanel.add(addSense);
                 add(editorPanel);
                 // Create the list element
-                DeletableList sensesList = new DeletableList("Senses List", baseCreatureGenPanel.sensesArray, "");
+                sensesList = new DeletableList("Senses List", baseCreatureGenPanel.sensesArray, "");
                 add(sensesList);
 
             }
@@ -315,7 +412,7 @@ class ArraySetGui extends JPanel implements ActionListener{
                     i++;
                 }
                 // Create the list element
-                DeletableList damageImmunitiesList = new DeletableList("Damage Immunities List", baseCreatureGenPanel.damageImmunities, Damage.ACID);
+                damageImmunitiesList = new DeletableList("Damage Immunities List", baseCreatureGenPanel.damageImmunities, Damage.ACID);
                 add(damageImmunitiesList);
 
             }
@@ -327,7 +424,7 @@ class ArraySetGui extends JPanel implements ActionListener{
                 editorPanel.add(addDamRes);
                 add(editorPanel);
                 // Create the list element
-                DeletableList damageResistancesList = new DeletableList("Damage Resistances List", baseCreatureGenPanel.damageResistances, Damage.COLD);
+                damageResistancesList = new DeletableList("Damage Resistances List", baseCreatureGenPanel.damageResistances, Damage.COLD);
                 add(damageResistancesList);
 
             }
@@ -339,7 +436,7 @@ class ArraySetGui extends JPanel implements ActionListener{
                 editorPanel.add(addDamVul);
                 add(editorPanel);
                 // Create the list element
-                DeletableList damageVulnerabilitiesList = new DeletableList("Damage Vulnerabilities List", baseCreatureGenPanel.damageVulnerabilities, Damage.FIRE);
+                damageVulnerabilitiesList = new DeletableList("Damage Vulnerabilities List", baseCreatureGenPanel.damageVulnerabilities, Damage.FIRE);
                 add(damageVulnerabilitiesList);
 
             }
@@ -351,7 +448,7 @@ class ArraySetGui extends JPanel implements ActionListener{
                 editorPanel.add(addCondImmunity);
                 add(editorPanel);
                 // Create the list element
-                DeletableList conditionImmunitiesList = new DeletableList("Condition Immunities List", baseCreatureGenPanel.conditionImmunities, Condition.CHARMED);
+                conditionImmunitiesList = new DeletableList("Condition Immunities List", baseCreatureGenPanel.conditionImmunities, Condition.CHARMED);
                 add(conditionImmunitiesList);
             }
             case "Condition Resistances" ->{
@@ -362,7 +459,7 @@ class ArraySetGui extends JPanel implements ActionListener{
                 editorPanel.add(addCondRes);
                 add(editorPanel);
                 // Create the list element
-                DeletableList conditionResistancesList = new DeletableList("Condition Resistances List", baseCreatureGenPanel.conditionResistances, Condition.CHARMED);
+                conditionResistancesList = new DeletableList("Condition Resistances List", baseCreatureGenPanel.conditionResistances, Condition.CHARMED);
                 add(conditionResistancesList);
 
             }

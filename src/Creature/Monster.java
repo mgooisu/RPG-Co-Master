@@ -7,18 +7,18 @@ import Creature.Helpers.Enums.Damage;
 import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
-
+import Helpers.DiceObject;
 
 
 public class Monster extends BaseCreature{
 //todo - add skills like deception and acrobatics
 
 
-    public Monster(String name, Alignment.CombinedAlignment alignment, String description,
-                   String creatureClass, int health, int aC, int speed, Size size,
+    public Monster(String name, Alignment alignment, String description,
+                   String creatureClass, int health, DiceObject hpDice, int aC, int speed, Size size,
                    Species species, Stats stats, Condition[] conditionImmunities, Condition[] conditionResists,
-                   Damage[] immunities,Damage[] resistances,Damage[] vulnerabilities) {
-        super(name, alignment, description, creatureClass, health, aC, speed,size,
+                   Damage[] immunities, Damage[] resistances, Damage[] vulnerabilities) {
+        super(name, alignment, description, creatureClass, health, hpDice,aC, speed,size,
                 species,stats,conditionImmunities,conditionResists,immunities,resistances,vulnerabilities);
     }
 

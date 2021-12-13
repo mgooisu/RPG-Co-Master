@@ -7,6 +7,7 @@ import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Exceptions.CreatureException;
+import Helpers.DiceObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class BaseCreature implements Creature, Serializable {
     private Alignment alignment;
     private Size size;
     private Species species;
+    private DiceObject hpDice;
 
 
 
@@ -34,19 +36,20 @@ public class BaseCreature implements Creature, Serializable {
 
 
 
-    public BaseCreature(String name, Alignment.CombinedAlignment combinedAlignment, String description,
-                        String creatureClass, int maxHP, int AC, int speed, Size size, Species species, Stats stats,
+    public BaseCreature(String name, Alignment alignment, String description,
+                        String creatureClass, int maxHP, DiceObject hpDice, int AC, int speed, Size size, Species species, Stats stats,
                         Condition[] conditionImmunities, Condition[] conditionResists,
-                        Damage[] immunities, Damage[] resistances,Damage[] vulnerabilities
+                        Damage[] immunities, Damage[] resistances, Damage[] vulnerabilities
     ){
         this.description = description;
         this.creatureClass = creatureClass;
         this.maxHP= maxHP;
         this.health = maxHP;
+        this.hpDice = hpDice;
         this.AC = AC;
         this.speed = speed;
         this.name = name;
-        this.alignment = new Alignment(combinedAlignment);
+        this.alignment = alignment;
         this.size = size;
         this.species = species;
         this.stats =stats;
