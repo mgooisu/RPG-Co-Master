@@ -4,6 +4,7 @@ import Creature.BaseCreature;
 import Creature.Creature;
 import Creature.Helpers.Alignment;
 import Creature.Monster;
+import Creature.CreatureListHandler;
 import Exceptions.CreatureException;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class CreatureGenFrame extends JFrame implements ActionListener, ChangeListener {
+    CreatureListHandler creatureListHandler = new CreatureListHandler();
     //The proper OO way to have submit buttons on both of these would be to create an parent object that they inherit
     //Or I could make it scuffed and create panels for both of them.... :)
     BaseCreatureGenPanel baseCreatureGenPanel;
@@ -46,7 +48,7 @@ public class CreatureGenFrame extends JFrame implements ActionListener, ChangeLi
 
 
 
-    Creature getCreature(){
+    Creature getCreature() throws CreatureException {
         Creature creature;
         if(baseCreatureGenPanel.getCombatCheck()){
              creature =new Monster(
@@ -61,16 +63,18 @@ public class CreatureGenFrame extends JFrame implements ActionListener, ChangeLi
 
 
         }
-        creature = new BaseCreature(
-                null, baseCreatureGenPanel.getAlignment(), baseCreatureGenPanel.getDescription(),
-                baseCreatureGenPanel.getCreatureClass(), baseCreatureGenPanel.getIntegerHealth(),
-                baseCreatureGenPanel.getHpDice(),baseCreatureGenPanel.getAC(),baseCreatureGenPanel.getSpeed(),
-                baseCreatureGenPanel.getCreatureSize(), baseCreatureGenPanel.getSpecies(), baseCreatureGenPanel.getStats(),
-                baseCreatureGenPanel.getConditionImmunities(),baseCreatureGenPanel.getConditionResists(),
-                baseCreatureGenPanel.getDamageImmunities(),baseCreatureGenPanel.getDamageResistances(),
-                baseCreatureGenPanel.getDamageVulnerabilities()
+        else {
+            creature = new BaseCreature(
+                    null, baseCreatureGenPanel.getAlignment(), baseCreatureGenPanel.getDescription(),
+                    baseCreatureGenPanel.getCreatureClass(), baseCreatureGenPanel.getIntegerHealth(),
+                    baseCreatureGenPanel.getHpDice(), baseCreatureGenPanel.getAC(), baseCreatureGenPanel.getSpeed(),
+                    baseCreatureGenPanel.getCreatureSize(), baseCreatureGenPanel.getSpecies(), baseCreatureGenPanel.getStats(),
+                    baseCreatureGenPanel.getConditionImmunities(), baseCreatureGenPanel.getConditionResists(),
+                    baseCreatureGenPanel.getDamageImmunities(), baseCreatureGenPanel.getDamageResistances(),
+                    baseCreatureGenPanel.getDamageVulnerabilities()
 
-        );
+            );
+        }
 
         //shared elements
         creature.setLanguages(baseCreatureGenPanel.getLanguages());
@@ -86,7 +90,20 @@ public class CreatureGenFrame extends JFrame implements ActionListener, ChangeLi
         if(e.getSource().getClass() == JButton.class){
             JButton button = (JButton) e.getSource();
             if(button == submit){
-                Creature creature = getCreature();
+                Creature creature = null;
+                try {
+                    creature = getCreature();
+                } catch (CreatureException creatureException) {
+                    creatureException.printStackTrace();
+                }
+                if (creature != null) {
+                    try {
+                        creatureListHandler.addCreature(creature);
+                    } catch (IOException | ClassNotFoundException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+
 
             }
         }

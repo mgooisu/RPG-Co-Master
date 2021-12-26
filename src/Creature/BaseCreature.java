@@ -40,8 +40,11 @@ public class BaseCreature implements Creature, Serializable {
                         String creatureClass, int maxHP, DiceObject hpDice, int AC, int speed, Size size, Species species, Stats stats,
                         Condition[] conditionImmunities, Condition[] conditionResists,
                         Damage[] immunities, Damage[] resistances, Damage[] vulnerabilities
-    ){
+    ) throws CreatureException {
         this.description = description;
+        if (creatureClass == null || creatureClass.equals("")|| creatureClass.length() < 1){
+            throw new CreatureException("The creature type must be named");
+        }
         this.creatureClass = creatureClass;
         this.maxHP= maxHP;
         this.health = maxHP;

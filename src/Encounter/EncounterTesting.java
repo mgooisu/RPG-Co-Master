@@ -1,8 +1,6 @@
 package Encounter;
 
-import Creature.BaseCreature;
-import Creature.CreatureListHandler;
-import Creature.CreatureMap;
+import Creature.*;
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Damage;
@@ -11,7 +9,7 @@ import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMap;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
-import Creature.Monster;
+import Exceptions.CreatureException;
 import Helpers.DiceObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -33,7 +31,7 @@ public class EncounterTesting {
     }
 
     @Test
-    void addMonsters() throws IOException, ClassNotFoundException {
+    void addMonsters() throws  CreatureException {
         DiceObject testDice = new DiceObject(6,2,0);
         Stats stats = new Stats(10,14,15,6,8,5);
         Monster skeleton = new Monster(null, new Alignment(Alignment.Ethic.LAWFUL, Alignment.Moral.EVIL),
@@ -50,13 +48,13 @@ public class EncounterTesting {
         //temporary setting
         creatureMap.setCreatureHashMap(new HashMap<>());
 
-        HashMap<String,BaseCreature> newMap = creatureMap.getCreatureHashMap();
+        HashMap<String, Creature> newMap = creatureMap.getCreatureHashMap();
         newMap.put("Skeleton 1",skeleton);
         newMap.put("Skeleton 2",skeleton);
         newMap.put("Cultist 1",cultist);
         creatureMap.setCreatureHashMap(newMap);
         for(String key: creatureMap.getCreatureHashMap().keySet()){
-            BaseCreature creature = creatureMap.getCreatureHashMap().get(key);
+            Creature creature = creatureMap.getCreatureHashMap().get(key);
             System.out.println(creature.getDescription());
         }
     }

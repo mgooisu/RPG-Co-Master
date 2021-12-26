@@ -1,9 +1,11 @@
 package Helpers;
 
+import java.io.Serializable;
+
 /**
  * Expresses the combination of dice and additions to their result as an object - eg. (3d4 +2)
  */
-public class DiceObject {
+public class DiceObject implements Serializable {
     private int type,amount,modifier;
 
     public DiceObject(int type, int amount, int modifier) {

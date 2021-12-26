@@ -7,9 +7,13 @@ import Creature.Helpers.Enums.Damage;
 import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
+import Exceptions.CreatureException;
 import Helpers.DiceObject;
 
-
+/**
+ * The term "monster" refers to creatures that can be engaged in combat. There is no distinction between a human
+ * bandit and an ogre in this regard
+ */
 public class Monster extends BaseCreature{
 //todo - add skills like deception and acrobatics
 
@@ -17,7 +21,7 @@ public class Monster extends BaseCreature{
     public Monster(String name, Alignment alignment, String description,
                    String creatureClass, int health, DiceObject hpDice, int aC, int speed, Size size,
                    Species species, Stats stats, Condition[] conditionImmunities, Condition[] conditionResists,
-                   Damage[] immunities, Damage[] resistances, Damage[] vulnerabilities) {
+                   Damage[] immunities, Damage[] resistances, Damage[] vulnerabilities) throws CreatureException {
         super(name, alignment, description, creatureClass, health, hpDice,aC, speed,size,
                 species,stats,conditionImmunities,conditionResists,immunities,resistances,vulnerabilities);
     }

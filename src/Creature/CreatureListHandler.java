@@ -2,6 +2,7 @@ package Creature;
 
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMap;
+import Exceptions.CreatureException;
 import Helpers.FileReadWrite;
 import Helpers.SerializedObjectHandler;
 
@@ -22,6 +23,39 @@ public class CreatureListHandler implements SerializedObjectHandler {
             writeObject();
             storedCreatures = readObject();
         }
+    }
+
+    /**
+     * Grabs the current version of the creature list and adds a new creature to it.
+     * @param creature The creature to be added
+     */
+    public void addCreature(Creature creature) throws IOException, ClassNotFoundException {
+        // creates the file if it doesn't yet exist. This should never run under normal circumstances
+        if(!fileExists()){
+            localCreatures = new CreatureMap();
+            writeObject();
+        }
+        else{
+            localCreatures = readObject();
+        }
+        System.out.println(localCreatures.getCreatureHashMap().keySet());
+        HashMap<String, Creature> tempMap = localCreatures.getCreatureHashMap();
+        if(tempMap.containsKey(creature.getCreatureClass())){
+            throw new IOException("Creature File already exists");
+        }
+        tempMap.put(creature.getCreatureClass(),creature);
+        localCreatures.setCreatureHashMap(tempMap);
+        writeObject();
+
+        System.out.println(readObject().getCreatureHashMap().keySet());
+        for(Creature mappedCreature : readObject().getCreatureHashMap().values()){
+            if(mappedCreature.getClass() == Monster.class){
+                System.out.println(mappedCreature.getCreatureClass()+" is a monster");
+            }
+        }
+
+
+
     }
 
     @Override
@@ -47,13 +81,13 @@ public class CreatureListHandler implements SerializedObjectHandler {
     @Override
     public boolean compareData() throws IOException, ClassNotFoundException {
         storedCreatures = readObject();
-        HashMap<String,BaseCreature> localHash = localCreatures.getCreatureHashMap(),
+        HashMap<String,Creature> localHash = localCreatures.getCreatureHashMap(),
                 storedHash = storedCreatures.getCreatureHashMap();
         if(localHash.keySet().size()!=storedHash.keySet().size()){
             return false;
     }
         for(String key : localHash.keySet()){
-            BaseCreature localMappedCreatures = localHash.get(key), storedMappedCreatures = storedHash.get(key);
+            Creature localMappedCreatures = localHash.get(key), storedMappedCreatures = storedHash.get(key);
 
             if(
                 //checks each of the data structures for inconsistencies

@@ -19,8 +19,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class CreatureTesting {
+    static CreatureListHandler creatureListHandler;
     SpeciesMapObjectHandler speciesMapObjectHandler;
     private static Species species;
 
@@ -56,8 +58,9 @@ public class CreatureTesting {
             conditionImmunities = {Condition.EXHAUSTION,Condition.POISONED};
 
     @BeforeAll
-    static void setup(){
+    static void setup() throws CreatureException, IOException, ClassNotFoundException {
         ArrayList<String> conditions = new ArrayList<>();
+        creatureListHandler = new CreatureListHandler();
 
         skeleton = new Monster(null, alignment,description,creatureClass,
                 maxHP,hpDice,aC,speed,size,species,stats,conditionImmunities,conditionResists,
@@ -200,6 +203,15 @@ public class CreatureTesting {
         for (MonsterAction action: actions){
             System.out.println("the "+skeleton.getCreatureClass()+" has the following actions:");
             System.out.println(action.getName()+": "+action.getDescription());        }
+    }
+
+    @Test
+    void addCreatureToFile() throws IOException, ClassNotFoundException {
+        creatureListHandler.addCreature(skeleton);
+        HashMap<String, Creature> creatureHashMap = creatureListHandler.readObject().getCreatureHashMap();
+        Assertions.assertTrue(creatureHashMap.containsKey(skeleton.getCreatureClass()));
+        Assertions.assertEquals(creatureHashMap.get(skeleton.getCreatureClass()).getDescription(),skeleton.getDescription());
+
     }
 
 

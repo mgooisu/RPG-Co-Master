@@ -5,11 +5,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
+
 /**
  * This class describes an object that represents all the standard character statistics for
  * dungeons and dragons 5th edition and many other rpg systems
  */
-public class Stats {
+public class Stats implements Serializable {
     private int strength, dexterity, constitution, intelligence, wisdom, charisma;
 
     public Stats(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma) {

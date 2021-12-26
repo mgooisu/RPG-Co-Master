@@ -2,7 +2,9 @@ package Creature.Helpers;
 
 import Creature.Creature;
 
-public class Alignment {
+import java.io.Serializable;
+
+public class Alignment implements Serializable {
     public Ethic getEthic() {
         return ethic;
     }
