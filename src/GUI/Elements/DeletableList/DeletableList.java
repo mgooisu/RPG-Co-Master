@@ -72,7 +72,6 @@ public class DeletableList extends JPanel implements ActionListener {
         }
     }
 
-// TODO - these are the functions that need editing - save elements as typed arraylist
     public void addElement(String input){
         if(checkElements(input)) {
 

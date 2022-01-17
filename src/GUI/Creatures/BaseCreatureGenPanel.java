@@ -46,14 +46,6 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
 
     //Data
     public ArrayList<String> languageArray, sensesArray;
-    /* TODO URGENT - change how the arrayguis work.
-    As it stands, the array guis populate thier own deletable lists as part of thier constructor. This is
-    fundametally flawed, because this is a creature CREATOR, not a creature EDITOR. It COULD stay for testing, but
-    it needs to call the standard addElement methods to be comparable.
-    More importantly, the addElement methods somehow need to retain the original datatype of the element, rather than
-    just parsing them to strings, so that when the creature needs to be created, the gui can just pull those elements
-    out and parse them into the new Creature() constructor.
-    */
     public ArrayList<Damage> damageImmunities,damageResistances, damageVulnerabilities;
 
     public ArrayList<Condition> conditionResistances, conditionImmunities;

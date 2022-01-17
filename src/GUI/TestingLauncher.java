@@ -53,13 +53,14 @@ public class TestingLauncher {
         skeleton.setActions(actions);
         skeleton.setSenses(new String[]{"Darkvision 60ft", "Passive Perception 9"});
         skeleton.setLanguages(new String[]{"Understands all languages they knew in life, but cannot speak", "Common", "Dwarfish"});
-        CreatureGenFrame creatureGenFrame = new CreatureGenFrame();
-        creatureGenFrame.pack();
-        creatureGenFrame.setLocationRelativeTo(null);
+        EncounterFrame encounterFrame = new EncounterFrame();
+        encounterFrame.pack();
+        encounterFrame.setLocationRelativeTo(null);
 
-        creatureGenFrame.setVisible(true);
+        encounterFrame.setSize(400,400);
+        encounterFrame.setVisible(true);
 
-        creatureGenFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        encounterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
 

@@ -1,14 +1,20 @@
 package GUI;
 
+import Creature.Creature;
+import Creature.CreatureListHandler;
+import Creature.CreatureMap;
 import Exceptions.CreatureException;
 import GUI.Creatures.BaseCreatureGenPanel;
 import GUI.Creatures.CreatureGenFrame;
+import GUI.Creatures.CreaturePanel;
+import GUI.Elements.Panels.CreatureListPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Lowest scope panel for creating creatures and managing them in an encounter
@@ -18,9 +24,16 @@ public class EncounterFrame extends JFrame implements ActionListener {
 
     JMenuItem createCreature, addCreature;
 
+    JPanel creatureList;
+
+    JScrollPane creatureScrollPane;
+
+    //todo remove test button
+    JButton testButton = new JButton("Print info");
+
     EncounterFrame(){
 
-
+        // Menu Bar
         encounterMenuBar = new JMenuBar();
         JMenu encounterFileMenu = new JMenu("File");
         JMenu encounterAddMenu = new JMenu("Add");
@@ -46,12 +59,37 @@ public class EncounterFrame extends JFrame implements ActionListener {
 
         setJMenuBar(encounterMenuBar);
 
-        add(new JButton("test"));
+        // Creature Scrollbar
+        // Todo - Local <Creaturename|Creature Class + id, Creature> Arraylist
+        //Todo - Adding Creatures
+        // Todo - Removing Creatures
+        //Todo - Inititative Implies sort
+        creatureList = new JPanel();
+        creatureList.setLayout(new BoxLayout(creatureList,BoxLayout.Y_AXIS));
 
-        setMinimumSize(new Dimension(400,400));
+
+        creatureScrollPane = new JScrollPane(creatureList);
+        creatureScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+
+        try {
+            CreatureListHandler creatureListHandler = new CreatureListHandler();
+            HashMap<String,Creature> creatureHashMap = creatureListHandler.readObject().getCreatureHashMap();
+            for(Creature creature: creatureHashMap.values()){
+                creatureList.add(new CreatureListPanel(creature));
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
+        //Element adding
+
+        add(creatureScrollPane,BorderLayout.LINE_START);
+
+        setMinimumSize(new Dimension(800,500));
         pack();
-
-
     }
 
     @Override
@@ -76,6 +114,43 @@ public class EncounterFrame extends JFrame implements ActionListener {
 
 
         }
+        if(source.equals(testButton)){
+           printCreaturesInDatabase();
+        }
+    }
+
+
+
+
+    //Debugging Programs
+
+    void printCreaturesInDatabase(){
+        CreatureListHandler creatureListHandler;
+        HashMap<String, Creature> creatureHashMap;
+
+        System.out.println("Debug Program : \n Saved Creatures: ");
+        try {
+            creatureListHandler = new CreatureListHandler();
+            creatureHashMap = creatureListHandler.readObject().getCreatureHashMap();
+            if(creatureHashMap.keySet().isEmpty()){
+                System.out.println("No Saved Creatures :(");
+            }
+            for(Creature creature : creatureHashMap.values()){
+                System.out.println(creature.getCreatureClass());
+                System.out.println(creature.getDescription());
+                System.out.println(creature.getSpecies().getName());
+            }
+
+
+
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
+        System.out.println("------------------------------");
     }
 
 

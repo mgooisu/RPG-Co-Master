@@ -8,7 +8,6 @@ import Helpers.DiceObject;
  * Defines any physical attack in 5e. For now, intended as a reference object. Actual application of
  * damage and effects are still to be undertaken by the DM using the gui.
  */
-//todo - add two integer datatype for close and long range ranged attacks
 public class Attack extends Actions {
     private DiceObject diceObject;
     private int  target, addToHit, saveThreshold;
