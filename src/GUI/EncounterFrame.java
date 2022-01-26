@@ -8,12 +8,14 @@ import GUI.Creatures.BaseCreatureGenPanel;
 import GUI.Creatures.CreatureGenFrame;
 import GUI.Creatures.CreaturePanel;
 import GUI.Elements.Panels.CreatureListPanel;
+import GUI.Encounter.EncounterCreatureList;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -24,9 +26,14 @@ public class EncounterFrame extends JFrame implements ActionListener {
 
     JMenuItem createCreature, addCreature;
 
-    JPanel creatureList;
+    JPanel topPanel;
+
+    EncounterCreatureList creatureList;
 
     JScrollPane creatureScrollPane;
+
+    JButton creatureInitRollsButton;
+
 
     //todo remove test button
     JButton testButton = new JButton("Print info");
@@ -60,24 +67,38 @@ public class EncounterFrame extends JFrame implements ActionListener {
         setJMenuBar(encounterMenuBar);
 
         // Creature Scrollbar
-        // Todo - Local <Creaturename|Creature Class + id, Creature> Arraylist
+
+
         //Todo - Adding Creatures
         // Todo - Removing Creatures
         //Todo - Inititative Implies sort
-        creatureList = new JPanel();
+        creatureList = new EncounterCreatureList();
         creatureList.setLayout(new BoxLayout(creatureList,BoxLayout.Y_AXIS));
 
 
         creatureScrollPane = new JScrollPane(creatureList);
         creatureScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
+        //Top pane - Operations that impact all creatures in the encounter
+        topPanel = new JPanel();
+        topPanel.setMaximumSize(new Dimension(200,50));
+        creatureInitRollsButton = new JButton("Roll Initiatives");
+        creatureInitRollsButton.addActionListener(this);
 
+        topPanel.add(creatureInitRollsButton,BorderLayout.PAGE_START);
+
+        creatureList.add(topPanel);
+
+        //TODO test structure - to be deleted when adding creatures implemented
         try {
             CreatureListHandler creatureListHandler = new CreatureListHandler();
             HashMap<String,Creature> creatureHashMap = creatureListHandler.readObject().getCreatureHashMap();
+            creatureList.initOrderLocked = true;
             for(Creature creature: creatureHashMap.values()){
-                creatureList.add(new CreatureListPanel(creature));
+                creatureList.addToCreatureList(new CreatureListPanel(creature));
             }
+            creatureList.initOrderLocked = false;
+            creatureList.initArrange();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -112,6 +133,10 @@ public class EncounterFrame extends JFrame implements ActionListener {
                 creatureGenFrame.setLocationRelativeTo(this);
             }
 
+
+        }
+        if(source.equals(creatureInitRollsButton)){
+            creatureList.rollInitiatives();
 
         }
         if(source.equals(testButton)){

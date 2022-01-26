@@ -153,6 +153,8 @@ public interface Creature {
 
 
 
+
+
     void setAlignment(Alignment.CombinedAlignment alignment);
     void setName(String name);
     void setCreatureClass(String creatureClass);
@@ -207,4 +209,10 @@ public interface Creature {
      * @param exhaustionDecreaseAmount the integer amount by which the exhaustion decreases, usually 1
      */
     void decreaseExhaustion(int exhaustionDecreaseAmount);
+
+    /**
+     * Randomizes the initiative value
+     * @return the initiative value
+     */
+    int rollInitiative();
 }

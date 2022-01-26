@@ -31,7 +31,7 @@ import GUI.Helpers.JTextArea;
 /**
  * Panel that contains information and controls pertaining to a single creature
  */
-class CreaturePanel extends JPanel  {
+public class CreaturePanel extends JPanel  {
 
 
 Creature creature;
@@ -212,22 +212,20 @@ Creature creature;
         cannot wrap text, so a JPanel must be implemented for general application*/
 
         JLabel typeLabel, value;
+
+
         creatureInfoPanel() {
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-
+            //TODO - Creature Info Panel Data Management
+            /*
+            What the fuck was I thinking here? Why are the datatypes arranged into nested arrays?
+            This needs to be simplified, as it stands its just begging for errors.
+             */
             String[] numberStatNames = {"Armour Class", "Speed"},
                     damageInfoNames = {"Immunities", "Resistances", "Vulnerabilities"},
                     //Because current conditions are changeable, we'll leave them as an arraylist and call them specially
                     conditionInfoNames = {"Immunities", "Resistances"};
-
-            int[] numberStats = {creature.getAC(), creature.getSpeed()};
-
-            ArrayList<Condition> conditions = creature.getConditions();
-
-            Condition[][] conditionInfo = {creature.getConditionImmunity(), creature.getConditionResistances()};
-
-            Damage[][] damageInfo = {creature.getImmunities(), creature.getResistances(), creature.getVulnerabilities()};
 
 
             // Number Based stats first, essentially speed and AC (Health has its own special interface)
@@ -236,7 +234,6 @@ Creature creature;
             numberInfo.setLayout(new GridLayout(2, 2));
             for (int i = 0; i < numberStatNames.length; i++) {
                 numberInfo.add(new JLabel(numberStatNames[i]));
-                numberInfo.add(new JLabel(String.valueOf(numberStats[i])));
             }
 
             add(numberInfo);
@@ -249,23 +246,13 @@ Creature creature;
             // The creature's current conditions
             conditionInfoPanel.add(new JLabel("Current"));
             JTextArea currentConditionPane = new JTextArea();
-            if (conditions.size() == 0) {
-                currentConditionPane.setText("None");
-            }
-            for (Condition condition : conditions) {
-                currentConditionPane.append(condition.name() + "\n");
-            }
+
             conditionInfoPanel.add(currentConditionPane);
             //How the creature reacts to certain conditions - eg. resists
             for (int i = 0; i < conditionInfoNames.length; i++) {
                 conditionInfoPanel.add(new JLabel(conditionInfoNames[i]));
                 JTextArea conditionPane = new JTextArea();
-                if (conditionInfo[i].length == 0) {
-                    conditionPane.setText("None");
-                }
-                for (Condition condition : conditionInfo[i]) {
-                    conditionPane.append(condition.name() + "\n");
-                }
+
                 conditionPane.setBorder(new EtchedBorder());
                 currentConditionPane.setBorder(new EtchedBorder());
                 conditionInfoPanel.add(conditionPane);
@@ -286,13 +273,7 @@ Creature creature;
 
                 JTextArea damageText = new JTextArea();
                 damageText.setBorder(new EtchedBorder());
-                if (damageInfo[i].length == 0)
-                    damageText.setText("None");
-                else {
-                    for (Damage damage : damageInfo[i]) {
-                        damageText.append(damage.name() + "\n");
-                    }
-                }
+
                 damageSubPanels[i].add(damageText);
             }
             for (JPanel subPanel : damageSubPanels) {
@@ -344,41 +325,41 @@ Creature creature;
 
                 MonsterAction[] monsterActions = monster.getActions();
 
-                for(MonsterAction action: monsterActions) {
-                    JPanel monsterActionsSubPanel = new JPanel();
-                    monsterActionsSubPanel.setBorder(new TitledBorder(action.getName()));
-                    monsterActionsSubPanel.setLayout(new BorderLayout());
-                    monsterActionsSubPanel.add(new JTextArea(action.getDescription()),BorderLayout.PAGE_START);
-                    //If the action is an attack
-                    if(action.getActionType().equals(Actions.ActionType.RANGED_ATTACK)||action.getActionType().equals(Actions.ActionType.MELEE_ATTACK)){
-                        Attack attack = action.getAttack();
-                        DiceObject diceObject = attack.getDiceObject();
-
-                        JPanel attackPanel = new JPanel();
-//                        attackPanel.setBorder(new LineBorder(Color.GRAY));
-
-                        JLabel targeting = new JLabel();
-                        if(action.getActionType().equals(Actions.ActionType.RANGED_ATTACK))
-                        targeting.setText("+"+attack.getAddToHit()+" to hit, range: "+
-                                attack.getRange().getClose()+"/"+attack.getRange().getFar()+
-                                ", targets: "+attack.getTarget());
-                        else
-                            targeting.setText("+"+attack.getAddToHit()+" to hit, reach: "+attack.getRange().getClose()+
-                                    ", targets: "+attack.getTarget());
-
-                        JLabel dice = new JLabel( "Dice: "+diceObject.getAmount()+" d"+diceObject.getType()
-                                +"+"+ diceObject.getModifier());
-
-
-
-                        attackPanel.setLayout(new BoxLayout(attackPanel,BoxLayout.Y_AXIS));
-                        attackPanel.add(targeting);
-                        attackPanel.add(dice);
-
-                        monsterActionsSubPanel.add(attackPanel,BorderLayout.CENTER);
-                    }
-                    monsterActionsPanel.add(monsterActionsSubPanel);
-                }
+//                for(MonsterAction action: monsterActions) {
+//                    JPanel monsterActionsSubPanel = new JPanel();
+//                    monsterActionsSubPanel.setBorder(new TitledBorder(action.getName()));
+//                    monsterActionsSubPanel.setLayout(new BorderLayout());
+//                    monsterActionsSubPanel.add(new JTextArea(action.getDescription()),BorderLayout.PAGE_START);
+//                    //If the action is an attack
+//                    if(action.getActionType().equals(Actions.ActionType.RANGED_ATTACK)||action.getActionType().equals(Actions.ActionType.MELEE_ATTACK)){
+//                        Attack attack = action.getAttack();
+//                        DiceObject diceObject = attack.getDiceObject();
+//
+//                        JPanel attackPanel = new JPanel();
+////                        attackPanel.setBorder(new LineBorder(Color.GRAY));
+//
+//                        JLabel targeting = new JLabel();
+//                        if(action.getActionType().equals(Actions.ActionType.RANGED_ATTACK))
+//                        targeting.setText("+"+attack.getAddToHit()+" to hit, range: "+
+//                                attack.getRange().getClose()+"/"+attack.getRange().getFar()+
+//                                ", targets: "+attack.getTarget());
+//                        else
+//                            targeting.setText("+"+attack.getAddToHit()+" to hit, reach: "+attack.getRange().getClose()+
+//                                    ", targets: "+attack.getTarget());
+//
+//                        JLabel dice = new JLabel( "Dice: "+diceObject.getAmount()+" d"+diceObject.getType()
+//                                +"+"+ diceObject.getModifier());
+//
+//
+//
+//                        attackPanel.setLayout(new BoxLayout(attackPanel,BoxLayout.Y_AXIS));
+//                        attackPanel.add(targeting);
+//                        attackPanel.add(dice);
+//
+//                        monsterActionsSubPanel.add(attackPanel,BorderLayout.CENTER);
+//                    }
+//                    monsterActionsPanel.add(monsterActionsSubPanel);
+//                }
 
 
 

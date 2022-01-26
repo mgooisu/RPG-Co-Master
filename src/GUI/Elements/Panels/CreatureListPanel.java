@@ -1,22 +1,28 @@
 package GUI.Elements.Panels;
 
 import Creature.Creature;
+import GUI.Encounter.EncounterCreatureList;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * An expandable information panel for creatures in an encounter. Each creature involved in an encounter has one,
  * including players.
  */
-public class CreatureListPanel extends JPanel {
+public class CreatureListPanel extends JPanel implements ActionListener, ChangeListener {
     //Data
     Creature creature;
 
     //GUI Elements
     String idName;
     JLabel acLabel, initiativeLabel;
+    JButton deletionButton;
     JSpinner initiativeSpinner, acSpinner;
     JProgressBar healthBar;
 
@@ -37,19 +43,24 @@ public class CreatureListPanel extends JPanel {
         //TODO - change order of panels
         initiativeLabel = new JLabel("Init: ");
         initiativeSpinner = new JSpinner(new SpinnerNumberModel(creature.getInitiative(),-10,30,1));
+        initiativeSpinner.addChangeListener(this);
 
         //Armour Class
         acLabel = new JLabel("AC: ");
         acSpinner = new JSpinner(new SpinnerNumberModel(creature.getAC(),0,30,2));
 
-
-
+        //Deletion Button
+        deletionButton = new JButton("X");
 
         // Panel Assembly
         add(initiativeLabel,BorderLayout.CENTER);
         add(initiativeSpinner,BorderLayout.CENTER);
         add(acLabel,BorderLayout.CENTER);
         add(acSpinner,BorderLayout.CENTER);
+        add(deletionButton,BorderLayout.EAST);
+
+        //ActionListeners
+        deletionButton.addActionListener(this);
 
 
         setBorder(new TitledBorder(idName));
@@ -57,5 +68,46 @@ public class CreatureListPanel extends JPanel {
 
 
 
+    }
+
+    public Creature getCreature(){
+        return creature;
+    }
+
+    public void rollInitiative(){
+        creature.rollInitiative();
+        initiativeSpinner.setValue(creature.getInitiative());
+        repaint();
+        revalidate();
+    }
+
+    public int getInitiative(){
+        creature.setInitiative((Integer) initiativeSpinner.getValue());
+        return (int) initiativeSpinner.getValue();
+
+    }
+
+
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Component sourceComp = (Component) e.getSource();
+        if(sourceComp == deletionButton){
+            EncounterCreatureList parentList = (EncounterCreatureList) getParent();
+            parentList.removeFromCreatureList(this);
+        }
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        Component sourceComp = (Component) e.getSource();
+        EncounterCreatureList parentList = (EncounterCreatureList) getParent();
+        if(sourceComp == initiativeSpinner){
+            creature.setInitiative((Integer) initiativeSpinner.getValue());
+            if(!parentList.initOrderLocked){
+                parentList.initArrange();
+            }
+        }
     }
 }

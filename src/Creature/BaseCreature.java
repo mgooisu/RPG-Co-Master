@@ -65,7 +65,13 @@ public class BaseCreature implements Creature, Serializable {
         this.vulnerabilities = vulnerabilities;
 
         //Generate an initiative value that can be altered or re-rolled from the interface
+        this.initiative = rollInitiative();
+
+    }
+
+    public int rollInitiative(){
         this.initiative = 1+stats.getDexterityMod()+ (int)(Math.random()*20);
+        return this.initiative;
 
     }
 
