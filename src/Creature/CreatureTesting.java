@@ -17,9 +17,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
+
+import static java.lang.Math.round;
 
 public class CreatureTesting {
     static CreatureListHandler creatureListHandler;
@@ -213,6 +217,37 @@ public class CreatureTesting {
         Assertions.assertEquals(creatureHashMap.get(skeleton.getCreatureClass()).getDescription(),skeleton.getDescription());
 
     }
+
+    @Test
+    void ImAnIdiot(){
+        int[] arr = new int[10];
+        for(int i = 0; i< arr.length;i++){
+            arr[i] = Math.toIntExact(round(Math.random() * 10));
+        }
+
+        //Bubble sort
+        System.out.println(Arrays.toString(arr));
+
+        int n = arr.length;
+        int temp;
+        boolean swapped = true;
+        while(swapped) {
+            swapped = false;
+            for (int i = 1; i < n; i++) {
+                if (arr[i - 1] < arr[i]) {
+                    temp = arr[i];
+                    arr[i] = arr[i - 1];
+                    arr[i - 1] = temp;
+                    swapped = true;
+                }
+            }
+        }
+
+        System.out.println(Arrays.toString(arr));
+
+
+    }
+
 
 
 
