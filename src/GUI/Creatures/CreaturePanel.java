@@ -14,6 +14,7 @@ import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Creature.Monster;
 import Exceptions.CreatureException;
+import GUI.Elements.Panels.CreatureListPanel;
 import GUI.Helpers.ComponentHelpers;
 import Helpers.DiceObject;
 
@@ -33,12 +34,14 @@ import GUI.Helpers.JTextArea;
  */
 public class CreaturePanel extends JPanel  {
 
-
+CreatureListPanel creatureListPanel;
 Creature creature;
-    public CreaturePanel(Creature creature){
-        this.creature = creature;
+    public CreaturePanel(CreatureListPanel creatureListPanel){
+        this.creatureListPanel = creatureListPanel;
+        this.creature = creatureListPanel.getCreature();
         setLayout(new BorderLayout());
         JPanel title = new JPanel();
+        //TODO rename creature interface
         if(creature.getName() == null){
             title.add(new JLabel("<html><h1 style='text-align:center'>"+creature.getCreatureClass()+"</h1></html> "));
         }else {
@@ -62,9 +65,11 @@ Creature creature;
         add(new JSeparator(),BorderLayout.SOUTH);
     }
 
+    public Creature getCreature(){
+        return creature;
+    }
 
     class healthDisplay extends JPanel{
-        JLabel  healthStatus;
         JProgressBar healthBar;
         healthDisplay(){
             setBorder(new TitledBorder("Health"));
@@ -72,9 +77,9 @@ Creature creature;
             healthBar = new JProgressBar();
             healthBar.setMaximum(creature.getMaxHP());
             healthBar.setValue(creature.getHealth());
-            healthStatus = new JLabel(creature.getHealth()+"/"+creature.getMaxHP());
+            healthBar.setStringPainted(true);
+            healthBar.setString(creature.getHealth()+"/"+creature.getMaxHP());
             add(healthBar,BorderLayout.NORTH);
-            add(healthStatus,BorderLayout.CENTER);
             add(new DamageHealingButtons(),BorderLayout.SOUTH);
         }
 
@@ -107,25 +112,23 @@ Creature creature;
 
             Component source = (Component) actionEvent.getSource();
 
-            if (source.equals(HealButton)) {
-                creature.healthHealing((Integer) numberIn.getValue());
-                int HP = creature.getHealth();
-                healthStatus.setText(HP + "/" + creature.getMaxHP());
-                healthBar.setValue(creature.getHealth());
+            if(source.equals(HealButton)||source.equals((DamageButton))){
 
+                if (source.equals(HealButton)) {
+                    creature.healthHealing((Integer) numberIn.getValue());
 
-
-            }
-
-            if (source.equals(DamageButton)) {
-                creature.healthDamage((Integer) numberIn.getValue());
+                }
+                if (source.equals(DamageButton)) {
+                    creature.healthDamage((Integer) numberIn.getValue());
+                }
                 int HP = creature.getHealth(), maxHP = creature.getMaxHP();
-                String healthText;
-                healthText = HP + "/" + maxHP;
-                healthStatus.setText(healthText);
                 healthBar.setValue(HP);
-
+                healthBar.setString(HP+"/"+maxHP);
+                creatureListPanel.healthBar.setValue(HP);
+                creatureListPanel.healthBar.setString(HP+"/"+maxHP);
+                creatureListPanel.healthBar.repaint();
             }
+
         }
 
         }
@@ -194,11 +197,13 @@ Creature creature;
             if(source.equals(rollInitiative)){
                 creature.setInitiative(1+creature.getStats().getDexterityMod()+ (int)(Math.random()*20));
                 initiativeValue.setText(String.valueOf(creature.getInitiative()));
+                creatureListPanel.updateInitiative();
             }
 
             if(source.equals(setInitiative)){
                 creature.setInitiative((int) initiativeSpinner.getValue());
                 initiativeValue.setText(String.valueOf(creature.getInitiative()));
+                creatureListPanel.updateInitiative();
 
             }
 
@@ -216,9 +221,9 @@ Creature creature;
         creatureInfoPanel() {
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-            //TODO - Creature Info Panel Data Management
+            //TODO - Rework creature panel Numbers and Conditions
             /*
-            What the fuck was I thinking here? Why are the datatypes arranged into nested arrays?
+            What the heck was I thinking here? Why are the datatypes arranged into nested arrays?
             This needs to be simplified, as it stands its just begging for errors.
              */
             String[] numberStatNames = {"Armour Class", "Speed"},

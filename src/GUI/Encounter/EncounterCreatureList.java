@@ -88,9 +88,6 @@ public class EncounterCreatureList extends JPanel{
             repaint();
             revalidate();
 
-
-
-
         }
     }
 }
