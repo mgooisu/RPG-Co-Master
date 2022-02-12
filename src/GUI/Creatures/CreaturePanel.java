@@ -36,7 +36,6 @@ public class CreaturePanel extends JPanel  {
 
 Creature creature;
     public CreaturePanel(Creature creature){
-
         this.creature = creature;
         setLayout(new BorderLayout());
         JPanel title = new JPanel();

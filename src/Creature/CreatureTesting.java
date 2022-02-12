@@ -218,6 +218,9 @@ public class CreatureTesting {
 
     }
 
+    /**
+     * Yes, I did need to figure out bubble sort. I am a moron :(
+     */
     @Test
     void ImAnIdiot(){
         int[] arr = new int[10];

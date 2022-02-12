@@ -77,9 +77,17 @@ public class EncounterCreatureList extends JPanel{
                 }
             }
 
-            for(int i = 0 ; i< n; i++){
-                System.out.println(creatureListPanelsArray[i].getInitiative());
+            //Rearrange panels
+            for(CreatureListPanel creatureListPanel: getCreatureListPanels()){
+                remove(creatureListPanel);
             }
+            for(CreatureListPanel creatureListPanel : creatureListPanelsArray){
+                add(creatureListPanel);
+
+            }
+            repaint();
+            revalidate();
+
 
 
 

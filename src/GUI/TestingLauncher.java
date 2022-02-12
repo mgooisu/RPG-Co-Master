@@ -13,6 +13,8 @@ import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Creature.Monster;
 import Exceptions.CreatureException;
 import GUI.Creatures.CreatureGenFrame;
+import GUI.Creatures.CreaturePanel;
+import GUI.Elements.Panels.CreatureListPanel;
 import Helpers.DiceObject;
 
 import javax.swing.*;
@@ -63,7 +65,22 @@ public class TestingLauncher {
         encounterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
+        //Creature Full Interface
 
+        JFrame creatureFrame = new JFrame();
+        CreaturePanel creaturePanel = new CreaturePanel(skeleton);
+        creatureFrame.add(creaturePanel);
+        creatureFrame.setLocationRelativeTo(encounterFrame);
+        creatureFrame.setVisible(true);
+        creatureFrame.pack();
+
+        //
+        JFrame cf = new JFrame();
+        CreatureListPanel cr = new CreatureListPanel(skeleton);
+        cf.add(cr);
+        cf.setLocationRelativeTo(null);
+        cf.setVisible(true);
+        cf.pack();
 
 
 

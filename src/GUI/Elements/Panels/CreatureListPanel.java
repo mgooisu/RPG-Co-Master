@@ -4,6 +4,7 @@ import Creature.Creature;
 import GUI.Encounter.EncounterCreatureList;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -20,6 +21,7 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
     Creature creature;
 
     //GUI Elements
+    JPanel mainPanel,centrePanel;
     String idName;
     JLabel acLabel, initiativeLabel;
     JButton deletionButton;
@@ -39,6 +41,7 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
 
 
 
+
         //initiative Counter
         //TODO - change order of panels
         initiativeLabel = new JLabel("Init: ");
@@ -52,12 +55,28 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
         //Deletion Button
         deletionButton = new JButton("X");
 
+        //Health Bar
+        healthBar = new JProgressBar();
+        healthBar.setMaximum(creature.getMaxHP());
+        healthBar.setValue(creature.getHealth());
+
         // Panel Assembly
-        add(initiativeLabel,BorderLayout.CENTER);
-        add(initiativeSpinner,BorderLayout.CENTER);
-        add(acLabel,BorderLayout.CENTER);
-        add(acSpinner,BorderLayout.CENTER);
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
+        centrePanel = new JPanel();
+        centrePanel.add(initiativeLabel);
+        centrePanel.add(initiativeSpinner);
+        centrePanel.add(acLabel);
+        centrePanel.add(acSpinner);
+
+        mainPanel.add(healthBar,BorderLayout.NORTH);
+
+        mainPanel.add(centrePanel,BorderLayout.CENTER);
+
+        add(mainPanel,BorderLayout.CENTER);
         add(deletionButton,BorderLayout.EAST);
+
 
         //ActionListeners
         deletionButton.addActionListener(this);
@@ -68,6 +87,18 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
 
 
 
+    }
+
+    public void setCreature(Creature creature){
+        if(creature.getName() == null){
+            idName = creature.getCreatureClass();
+        }
+        else {
+            idName = creature.getName();
+        }
+        this.creature = creature;
+        initiativeSpinner.setValue(creature.getInitiative());
+        setBorder(new TitledBorder(idName));
     }
 
     public Creature getCreature(){
@@ -103,6 +134,7 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
     public void stateChanged(ChangeEvent e) {
         Component sourceComp = (Component) e.getSource();
         EncounterCreatureList parentList = (EncounterCreatureList) getParent();
+        creature.setInitiative((Integer) initiativeSpinner.getValue());
         if(sourceComp == initiativeSpinner){
             creature.setInitiative((Integer) initiativeSpinner.getValue());
             if(!parentList.initOrderLocked){
