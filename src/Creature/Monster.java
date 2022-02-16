@@ -1,5 +1,6 @@
 package Creature;
 
+import Creature.Actions.Actions;
 import Creature.Actions.MonsterAction;
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
@@ -9,6 +10,9 @@ import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Exceptions.CreatureException;
 import Helpers.DiceObject;
+
+import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * The term "monster" refers to creatures that can be engaged in combat. There is no distinction between a human
@@ -28,26 +32,38 @@ public class Monster extends BaseCreature{
 
 
     //Monster/enemy specific methods
-    private MonsterAction[] actions;
+    private Actions[] actions = new Actions[0];
 
-    private String[] abilities;
+    private Features[] features = new Features[0];
 
     //TODO experience points
 
-    public MonsterAction[] getActions() {
+    public Actions[] getActions() {
         return actions;
     }
 
-    public void setActions(MonsterAction[] actions) {
+    public void setActions(Actions[] actions) {
         this.actions = actions;
     }
 
 
-    public String[] getAbilities() {
-        return abilities;
+    //Todo - migrate implementation of getActions to arraylist to allow for creature evolution
+    public void setActions(ArrayList<MonsterAction> actions){
+        MonsterAction[] actionArray = new MonsterAction[actions.size()];
+        int i = 0;
+        for(MonsterAction monsterAction: actions){
+            actionArray[i] = monsterAction;
+            i++;
+        }
+        this.actions = actionArray;
     }
 
-    public void setAbilities(String[] abilities) {
-        this.abilities = abilities;
+
+    public Features[] getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(Features[] features) {
+        this.features = features;
     }
 }

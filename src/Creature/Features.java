@@ -1,9 +1,11 @@
 package Creature;
 
+import java.io.Serializable;
+
 /**
  * Simple Feature datatype for combat creatures - explains general abilities the creature has that aren't actions
  */
-public class Features {
+public class Features implements Serializable {
     private String name, description;
 
     /**

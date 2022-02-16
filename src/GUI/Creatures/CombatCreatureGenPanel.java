@@ -103,6 +103,35 @@ public class CombatCreatureGenPanel extends JPanel implements ActionListener {
 
 
     }
+    /**
+     *
+     * @return an array containing all the legendary or normal actions
+     */
+    public Actions[] getActionArray(){
+        Actions[] actionArray = new Actions[actions.size()];
+        int i = 0;
+        for(Actions action: actions){
+            actionArray[i] = action;
+            i++;
+        }
+        return actionArray;
+    }
+
+    /**
+     *
+     * @return an array containing all the features of the monster
+     */
+    public Features[] getFeaturesArray(){
+        Features[] featuresArray = new Features[features.size()];
+        int i = 0;
+        for(Features features: features){
+            featuresArray[i] = features;
+            i++;
+        }
+        return featuresArray;
+    }
+
+
 
 
 
@@ -113,15 +142,15 @@ public class CombatCreatureGenPanel extends JPanel implements ActionListener {
         CombatEditorPanel newFeaturePanel = null;
         if(sourceButton == newFeatureButton){
             combatEditorFrame.setTitle("Create new Creature Feature");
-            newFeaturePanel = new CombatEditorPanel(combatEditorFrame, featuresList);
+            newFeaturePanel = new CombatEditorPanel(combatEditorFrame, featuresList,this);
         }
         if(sourceButton == newActionButton){
             combatEditorFrame.setTitle("Create new Creature Action");
-            newFeaturePanel = new CombatEditorPanel(combatEditorFrame, actionsList);
+            newFeaturePanel = new CombatEditorPanel(combatEditorFrame, actionsList,this);
         }
         if(sourceButton == newLegendaryActionButton){
             combatEditorFrame.setTitle("Create new Legendary Creature Action");
-            newFeaturePanel = new CombatEditorPanel(combatEditorFrame,legendaryActionsList);
+            newFeaturePanel = new CombatEditorPanel(combatEditorFrame,legendaryActionsList,this);
                     }
         if(newFeaturePanel == null){
             return;
@@ -134,10 +163,12 @@ public class CombatCreatureGenPanel extends JPanel implements ActionListener {
         combatEditorFrame.setAlwaysOnTop(true);
         combatEditorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
+
+
 }
 
 /**
- * Panel that allows the user to new features or actions to the creature
+ * Panel that allows the user to add new features or actions to the creature
  */
 class CombatEditorPanel extends JPanel implements ActionListener {
     //Elements
@@ -153,17 +184,17 @@ class CombatEditorPanel extends JPanel implements ActionListener {
     JSpinner diceNumSpinner, diceValSpinner, diceModSpinner, closeRangeSpinner,
             longRangeSpinner, targetCountSpinner,toHitSpinner;
 
-
-
+    CombatCreatureGenPanel combatCreatureGenPanel;
 
     /**
      *
      * @param targetList The DeletableList object containing the combat creature elements to be added to
      * @param parentFrame The JFrame the Panel is being rendered in
      */
-    CombatEditorPanel(JFrame parentFrame,DeletableList targetList){
+    CombatEditorPanel(JFrame parentFrame,DeletableList targetList,CombatCreatureGenPanel combatCreatureGenPanel){
         this.parentFrame = parentFrame;
         this.targetList = targetList;
+        this.combatCreatureGenPanel = combatCreatureGenPanel;
 
         setLayout(new BorderLayout());
         centrePanel = new JPanel();
@@ -179,6 +210,8 @@ class CombatEditorPanel extends JPanel implements ActionListener {
         description.setBorder(new TitledBorder("Description"));
         description.setLineWrap(true);
         centrePanel.add(description);
+
+
 
 
 
@@ -289,6 +322,9 @@ class CombatEditorPanel extends JPanel implements ActionListener {
 
 
     }
+    //end of constructor
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -344,12 +380,13 @@ class CombatEditorPanel extends JPanel implements ActionListener {
 
             switch (targetList.getName()){
                 case "Features"->{
-                    Features features = new Features(combatNameText, descriptionText);
-
-                    targetList.addElement(features);
+                    Features feature = new Features(combatNameText, descriptionText);
+                    combatCreatureGenPanel.features.add(feature);
+                    targetList.addElement(feature);
                 }
                 case "Legendary Actions"->{
                     Actions legendaryAction = new Actions(combatNameText,descriptionText, Actions.ActionType.LEGENDARY);
+                    combatCreatureGenPanel.actions.add(legendaryAction);
                     targetList.addElement(legendaryAction);
                 }
                 case "Actions"->{
@@ -362,13 +399,16 @@ class CombatEditorPanel extends JPanel implements ActionListener {
                         } else {
                             range = new Range((Integer) closeRangeSpinner.getValue());
                         }
-                        targetList.addElement
-                                (new Attack(combatNameText, descriptionText, (Actions.ActionType) actionType.getSelectedItem(),
-                                        dice, range, (Integer) targetCountSpinner.getValue(), (Integer) toHitSpinner.getValue(),
-                                        (Damage) (damageType.getSelectedItem())));
+                        Attack attack = new Attack(combatNameText, descriptionText, (Actions.ActionType) actionType.getSelectedItem(),
+                                dice, range, (Integer) targetCountSpinner.getValue(), (Integer) toHitSpinner.getValue(),
+                                (Damage) (damageType.getSelectedItem()));
+                        targetList.addElement(attack);
+                        combatCreatureGenPanel.actions.add(attack);
                     }
                     if(actionType.getSelectedItem() == Actions.ActionType.OTHER){
-                        targetList.addElement(new Actions(combatNameText,descriptionText, Actions.ActionType.OTHER));
+                        Actions actions = new Actions(combatNameText,descriptionText, Actions.ActionType.OTHER);
+                        targetList.addElement(actions);
+                        combatCreatureGenPanel.actions.add(actions);
                     }
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + targetList.getName());

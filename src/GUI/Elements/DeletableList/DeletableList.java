@@ -24,9 +24,13 @@ public class DeletableList extends JPanel implements ActionListener {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
-        for(Damage damage: damageList){
-            addElement(damage);
-        }
+        /*GUI for each of the elements should be empty from the outset, but otherwise these snippits cause a
+        concurrent modification error
+         */
+
+//        for(Damage damage: damageList){
+//            addElement(damage);
+//        }
 
 
     }
@@ -35,9 +39,9 @@ public class DeletableList extends JPanel implements ActionListener {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
-        for(String string: stringList){
-            addElement(string);
-        }
+//        for(String string: stringList){
+//            addElement(string);
+//        }
 
 
     }
@@ -46,9 +50,9 @@ public class DeletableList extends JPanel implements ActionListener {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
-        for(Condition condition: conditionList){
-            addElement(condition);
-        }
+//        for(Condition condition: conditionList){
+//            addElement(condition);
+//        }
 
     }
 
@@ -57,9 +61,9 @@ public class DeletableList extends JPanel implements ActionListener {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
-        for(Features features: featuresList){
-            addElement(features);
-        }
+//        for(Features features: featuresList){
+//            addElement(features);
+//        }
 
     }
     public DeletableList(String id, ArrayList<Actions> actionsList, Actions dummy){
@@ -67,9 +71,13 @@ public class DeletableList extends JPanel implements ActionListener {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setName(id);
-        for(Actions actions: actionsList){
-            addElement(actions);
-        }
+//        for(Actions actions: actionsList){
+//            addElement(actions);
+//        }
+    }
+
+    public CreatureElArrayList getCreatureElArrayList() {
+        return creatureElArrayList;
     }
 
     public void addElement(String input){
@@ -87,6 +95,9 @@ public class DeletableList extends JPanel implements ActionListener {
             revalidate();
             repaint();
 
+            //Add to underlying Data
+            creatureElArrayList.addElement(input);
+
         }
 
     }
@@ -103,6 +114,8 @@ public class DeletableList extends JPanel implements ActionListener {
             add(damageTile);
             revalidate();
             repaint();
+            //Add to underlying Data
+            creatureElArrayList.addElement(input);
 
         }
 
@@ -120,6 +133,8 @@ public class DeletableList extends JPanel implements ActionListener {
             add(conditionTile);
             revalidate();
             repaint();
+            //Add to underlying Data
+            creatureElArrayList.addElement(input);
 
         }
 
@@ -141,6 +156,8 @@ public class DeletableList extends JPanel implements ActionListener {
             add(featuresTile);
             revalidate();
             repaint();
+            //Add to underlying Data
+            creatureElArrayList.addElement(input);
 
         }
     }
@@ -186,6 +203,8 @@ public class DeletableList extends JPanel implements ActionListener {
 
             revalidate();
             repaint();
+            //Add to underlying Data
+            creatureElArrayList.addElement(input);
 
         }
     }

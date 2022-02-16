@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class CreatureGenFrame extends JFrame implements ActionListener, ChangeListener {
     CreatureListHandler creatureListHandler = new CreatureListHandler();
@@ -61,6 +62,11 @@ public class CreatureGenFrame extends JFrame implements ActionListener, ChangeLi
                     baseCreatureGenPanel.getDamageVulnerabilities()
             );
 
+            ((Monster) creature).setActions(combatCreatureGenPanel.getActionArray());
+            ((Monster)creature).setFeatures(combatCreatureGenPanel.getFeaturesArray());
+
+
+
 
         }
         else {
@@ -78,6 +84,8 @@ public class CreatureGenFrame extends JFrame implements ActionListener, ChangeLi
 
         //shared elements
         creature.setLanguages(baseCreatureGenPanel.getLanguages());
+        System.out.println(Arrays.toString(baseCreatureGenPanel.getSenses()));
+        creature.setSenses(baseCreatureGenPanel.getSenses());
 
         return creature;
 
@@ -85,6 +93,7 @@ public class CreatureGenFrame extends JFrame implements ActionListener, ChangeLi
 
     }
 
+    //TODO - Up until now, actions and features have not been added to the creature. They need to be made serializable
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().getClass() == JButton.class){

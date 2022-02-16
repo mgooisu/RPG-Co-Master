@@ -298,32 +298,77 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
     }
 
     public Condition[] getConditionImmunities(){
-        DeletableList list = conditionImmunitiesGui.conditionImmunitiesList;
-        for(Component thing : list.getComponents()){
-            System.out.println(thing.getName());
+        Condition[] conditions = new Condition[conditionImmunities.size()];
+        int i = 0;
+        for(Condition condition: conditionImmunities){
+            conditions[i] = condition;
+            i++;
         }
-        return null;
+        return conditions;
     }
     public Condition[] getConditionResists(){
-        return null;
+
+        Condition[] conditions = new Condition[conditionResistances.size()];
+        int i = 0;
+        for(Condition condition: conditionResistances){
+            conditions[i] = condition;
+            i++;
+        }
+        return conditions;
 
     }
 
     public Damage[] getDamageImmunities(){
-        return null;
+        Damage[] damages = new Damage[damageImmunities.size()];
+        int i = 0;
+        for(Damage damage: damageImmunities){
+            damages[i] = damage;
+            i++;
+        }
+        return damages;
 
     }
     public Damage[] getDamageResistances(){
-        return null;
+        Damage[] damages = new Damage[damageResistances.size()];
+        int i = 0;
+        for(Damage damage: damageResistances){
+            damages[i] = damage;
+            i++;
+        }
+        return damages;
 
     }
     public Damage[] getDamageVulnerabilities(){
-        return null;
+        Damage[] damages = new Damage[damageVulnerabilities.size()];
+        int i = 0;
+        for(Damage damage: damageVulnerabilities){
+            damages[i] = damage;
+            i++;
+        }
+        return damages;
 
     }
 
     public String[] getLanguages(){
-        return null;
+        String[] languages = new String[languageArray.size()];
+        int i = 0;
+        for(String language: languageArray){
+            languages[i] = language;
+            i++;
+        }
+        return languages;
+
+    }
+
+    public String[] getSenses(){
+        String[] strings = new String[sensesArray.size()];
+        int i = 0;
+        for(String language: sensesArray){
+            strings[i] = language;
+            i++;
+        }
+        return strings;
+
     }
 
     public Boolean getCombatCheck(){

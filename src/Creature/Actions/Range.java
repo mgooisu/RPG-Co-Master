@@ -1,10 +1,12 @@
 package Creature.Actions;
 
+import java.io.Serializable;
+
 /**
  * Data structure to store the range of attacks with one or two ranges. e.g longswords have a single range of 5ft,
  * and shortbows have a double range of 80/320, whereby they have disadvantage on distances between 80ft and 320 ft
  */
-public class Range {
+public class Range implements Serializable {
     int close, far;
 
     /**

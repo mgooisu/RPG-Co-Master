@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventListener;
 
 import GUI.Helpers.JTextArea;
@@ -71,6 +72,7 @@ Creature creature;
 
     class healthDisplay extends JPanel{
         JProgressBar healthBar;
+        //Todo - health set context menu
         healthDisplay(){
             setBorder(new TitledBorder("Health"));
             setLayout(new BorderLayout());
@@ -211,34 +213,30 @@ Creature creature;
     }
 
     class creatureInfoPanel extends JPanel {
-        //Todo: Change JLabel for value into a panel with a wrapping layout
-        /*The value array can be of any arbitrary length, so it shouldn't affect the size of the window. JLabels
-        cannot wrap text, so a JPanel must be implemented for general application*/
-
-        JLabel typeLabel, value;
-
+        JSpinner armourSpinner, speedSpinner;
 
         creatureInfoPanel() {
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
             //TODO - Rework creature panel Numbers and Conditions
             /*
-            What the heck was I thinking here? Why are the datatypes arranged into nested arrays?
+            What the heck was I thinking here? Why are the datatype arranged into nested arrays?
             This needs to be simplified, as it stands its just begging for errors.
              */
-            String[] numberStatNames = {"Armour Class", "Speed"},
-                    damageInfoNames = {"Immunities", "Resistances", "Vulnerabilities"},
-                    //Because current conditions are changeable, we'll leave them as an arraylist and call them specially
+            String[] damageInfoNames = {"Immunities", "Resistances", "Vulnerabilities"},
                     conditionInfoNames = {"Immunities", "Resistances"};
 
 
             // Number Based stats first, essentially speed and AC (Health has its own special interface)
             JPanel numberInfo = new JPanel();
             numberInfo.setBorder(new TitledBorder("Combat Stats"));
-            numberInfo.setLayout(new GridLayout(2, 2));
-            for (int i = 0; i < numberStatNames.length; i++) {
-                numberInfo.add(new JLabel(numberStatNames[i]));
-            }
+            armourSpinner = new JSpinner(new SpinnerNumberModel(creature.getAC(),0,99,1));
+            armourSpinner.setBorder(new TitledBorder("AC"));
+
+            speedSpinner = new JSpinner(new SpinnerNumberModel(creature.getSpeed(),0,200,5));
+            speedSpinner.setBorder(new TitledBorder("Speed"));
+
+            numberInfo.add(speedSpinner);
+            numberInfo.add(armourSpinner);
 
             add(numberInfo);
 
@@ -264,6 +262,10 @@ Creature creature;
             }
             add(conditionInfoPanel);
 
+            //TODO display for conditions
+            System.out.println("Conditions Resistances "+ Arrays.toString(creature.getConditionResistances()));
+            System.out.println("Conditions Immunities " + Arrays.toString(creature.getConditionImmunity()));
+
             //Damage reaction panel
             JPanel damagePanel = new JPanel();
             damagePanel.setBorder(new TitledBorder("Damage"));
@@ -284,9 +286,14 @@ Creature creature;
                 damagePanel.add(subPanel);
             }
             add(damagePanel);
+            //TODO display for damages
+            System.out.println("Damage Vulnerabilities "+ Arrays.toString(creature.getVulnerabilities()));
 
+            System.out.println("Damage Resistances "+ Arrays.toString(creature.getResistances()));
+            System.out.println("Damage Immunities " + Arrays.toString(creature.getImmunities()));
 
             //Stats block
+            //TODO make stats changeable - not all orcs are the same intelligence
             JPanel statPanel = new JPanel();
             statPanel.setBorder(new TitledBorder("Abilities"));
             statPanel.setLayout(new GridLayout(1,6));
@@ -322,54 +329,11 @@ Creature creature;
             if(creature.getClass().equals(Monster.class)){
                 JPanel monsterActionsPanel = new JPanel();
                 monsterActionsPanel.setBorder(new TitledBorder("Actions"));
-                monsterActionsPanel.setLayout(new GridLayout(0,2));
 
+                for(Actions action: ((Monster)creature).getActions()){
+                    System.out.println(action.getName());
+                }
 
-                Monster monster = (Monster) creature;
-
-                MonsterAction[] monsterActions = monster.getActions();
-
-//                for(MonsterAction action: monsterActions) {
-//                    JPanel monsterActionsSubPanel = new JPanel();
-//                    monsterActionsSubPanel.setBorder(new TitledBorder(action.getName()));
-//                    monsterActionsSubPanel.setLayout(new BorderLayout());
-//                    monsterActionsSubPanel.add(new JTextArea(action.getDescription()),BorderLayout.PAGE_START);
-//                    //If the action is an attack
-//                    if(action.getActionType().equals(Actions.ActionType.RANGED_ATTACK)||action.getActionType().equals(Actions.ActionType.MELEE_ATTACK)){
-//                        Attack attack = action.getAttack();
-//                        DiceObject diceObject = attack.getDiceObject();
-//
-//                        JPanel attackPanel = new JPanel();
-////                        attackPanel.setBorder(new LineBorder(Color.GRAY));
-//
-//                        JLabel targeting = new JLabel();
-//                        if(action.getActionType().equals(Actions.ActionType.RANGED_ATTACK))
-//                        targeting.setText("+"+attack.getAddToHit()+" to hit, range: "+
-//                                attack.getRange().getClose()+"/"+attack.getRange().getFar()+
-//                                ", targets: "+attack.getTarget());
-//                        else
-//                            targeting.setText("+"+attack.getAddToHit()+" to hit, reach: "+attack.getRange().getClose()+
-//                                    ", targets: "+attack.getTarget());
-//
-//                        JLabel dice = new JLabel( "Dice: "+diceObject.getAmount()+" d"+diceObject.getType()
-//                                +"+"+ diceObject.getModifier());
-//
-//
-//
-//                        attackPanel.setLayout(new BoxLayout(attackPanel,BoxLayout.Y_AXIS));
-//                        attackPanel.add(targeting);
-//                        attackPanel.add(dice);
-//
-//                        monsterActionsSubPanel.add(attackPanel,BorderLayout.CENTER);
-//                    }
-//                    monsterActionsPanel.add(monsterActionsSubPanel);
-//                }
-
-
-
-
-
-                add(monsterActionsPanel);
             }
 
             //Miscellaneous information - stuff like description, language, behaviour, loot, user notes
@@ -396,6 +360,7 @@ Creature creature;
             languages.setBorder(new TitledBorder("Languages"));
             languages.setLineWrap(true);
             languages.setWrapStyleWord(true);
+            System.out.println(Arrays.toString(creature.getLanguages()));
             if(creature.getLanguages() != null) {
 
 
@@ -412,6 +377,7 @@ Creature creature;
             JTextArea senses = new JTextArea();
             senses.setBorder(new TitledBorder("Senses"));
             senses.setLineWrap(true);
+            System.out.println("Senses:" + Arrays.toString(creature.getSenses()));
             if(creature.getSenses()!=null){
                 String[] creatureSenses = creature.getSenses();
                 for(int i = 0; i<creatureSenses.length;i++) {

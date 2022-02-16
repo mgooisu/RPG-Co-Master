@@ -1,8 +1,12 @@
 package GUI.Elements.Panels;
 
+import Creature.Actions.Actions;
+import Creature.Actions.MonsterAction;
 import Creature.Creature;
+import Creature.Monster;
 import GUI.Creatures.CreaturePanel;
 import GUI.Encounter.EncounterCreatureList;
+import GUI.Helpers.JTextArea;
 import GUI.Helpers.PopClickListener;
 
 import javax.swing.*;
@@ -24,6 +28,7 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
     //GUI Elements
     JPanel mainPanel,centrePanel, damageHealPanel;
     InfoPanel infoPanel;
+    ActionsPanel actionsPanel;
     String idName;
     JLabel acLabel, initiativeLabel;
     JButton deletionButton, damageHealButton;
@@ -50,12 +55,12 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
         //TODO - change order of panels
         initiativeLabel = new JLabel("Init: ");
         initiativeSpinner = new JSpinner(new SpinnerNumberModel(creature.getInitiative(),-10,30,1));
-        initiativeSpinner.addChangeListener(this);
+        initiativeSpinner.setBorder(new TitledBorder("Init"));
 
         //Armour Class
-        acLabel = new JLabel("AC: ");
-        acSpinner = new JSpinner(new SpinnerNumberModel(creature.getAC(),0,30,2));
-
+        acLabel = new JLabel(String.valueOf(creature.getAC()));
+        acLabel.setBorder(new TitledBorder("AC"));
+        acLabel.setPreferredSize(new Dimension(33,35));
         //Deletion Button
         deletionButton = new JButton("X");
 
@@ -73,29 +78,37 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
         damageHealPanel = new JPanel();
         damageHealSpinner = new JSpinner(new SpinnerNumberModel(0,-999,999,5));
         damageHealButton = new JButton("-");
+        damageHealPanel.setBorder(new TitledBorder("HP Change"));
 
 
         damageHealPanel.setLayout(new BorderLayout());
         damageHealPanel.add(damageHealSpinner,BorderLayout.WEST);
         damageHealPanel.add(damageHealButton,BorderLayout.CENTER);
+        //Actions Panel
+        actionsPanel = new ActionsPanel(creature);
         // Info Panel
-        infoPanel = new InfoPanel();
+        infoPanel = new InfoPanel(creature);
 
         // Panel Assembly
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         centrePanel = new JPanel();
-        centrePanel.add(initiativeLabel);
+        //centrePanel.add(initiativeLabel);
         centrePanel.add(initiativeSpinner);
         centrePanel.add(acLabel);
-        centrePanel.add(acSpinner);
         centrePanel.add(damageHealPanel);
 
         mainPanel.add(healthBar,BorderLayout.NORTH);
 
         mainPanel.add(centrePanel,BorderLayout.CENTER);
 
-        mainPanel.add(infoPanel,BorderLayout.SOUTH);
+        JPanel southPanel = new JPanel();
+        southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
+        southPanel.add(actionsPanel);
+        southPanel.add(infoPanel);
+
+
+        mainPanel.add(southPanel,BorderLayout.SOUTH);
 
         add(mainPanel,BorderLayout.CENTER);
         add(deletionButton,BorderLayout.EAST);
@@ -105,6 +118,8 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
         deletionButton.addActionListener(this);
         damageHealSpinner.addChangeListener(this);
         damageHealButton.addActionListener(this);
+        initiativeSpinner.addChangeListener(this);
+
         //Right click menu setup
         fullPanel = new JMenuItem("Show Full Creature Panel");
         fullPanel.addActionListener(this);
@@ -112,7 +127,7 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
         //Setup
         addMouseListener(new PopClickListener(jMenuItems));
         setBorder(new TitledBorder(idName));
-        setMaximumSize(new Dimension(500,150));
+        setMaximumSize(new Dimension(500,200));
         repaint();
         revalidate();
 
@@ -224,7 +239,34 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
  * Panel that concisely shows the conditions, weaknesses, and strength of the creature using icons
  */
 class InfoPanel extends JPanel{
-    public InfoPanel(){
-       add(new JLabel("Todo - panel that shows the conditions, weaknesses, and strengths"));
+    InfoPanel(Creature creature){
+        add(new JTextArea("To-do"));
     }
+}
+
+/**
+ * Panel that shows a label for each of the actions a creature can take and a tooltip for each action defining it
+ * Could be expanded to direct attacks and spells at players
+ */
+class ActionsPanel extends JPanel{
+
+    ActionsPanel(Creature creature){
+        // Monster type Actions
+        if(creature.getClass() == Monster.class){
+            Monster monster = (Monster) creature;
+            //generateActionPanes(monster.getActions());
+           // System.out.println(monster.getCreatureClass()+monster.getActions().length);
+        }
+        // Player Class type actions
+        /*
+        There may be combat enabled creatures that arent "monsters" and are instead player characters or DM controlled
+        NPCS. Actions for these characters are naturally much more advanced, but this space will be for them.
+         */
+    }
+    private void generateActionPanes(MonsterAction[] actions){
+        for(MonsterAction action : actions){
+            System.out.println(action.getName());
+        }
+    }
+
 }

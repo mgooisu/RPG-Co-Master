@@ -207,6 +207,7 @@ public class CreatureTesting {
         for (MonsterAction action: actions){
             System.out.println("the "+skeleton.getCreatureClass()+" has the following actions:");
             System.out.println(action.getName()+": "+action.getDescription());        }
+        Assertions.assertEquals(skeleton.getActions(), actions);
     }
 
     @Test
@@ -217,6 +218,7 @@ public class CreatureTesting {
         Assertions.assertEquals(creatureHashMap.get(skeleton.getCreatureClass()).getDescription(),skeleton.getDescription());
 
     }
+
 
     /**
      * Yes, I did need to figure out bubble sort. I am a moron :(

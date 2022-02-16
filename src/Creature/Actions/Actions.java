@@ -1,9 +1,12 @@
 package Creature.Actions;
 
-public class Actions {
+import java.io.Serializable;
+
+public class Actions implements Serializable {
     /**
      * Actions encompass all of the "things" creatures can do in combat. Casting spells, attacking,wielding weapons etc.
-     * Anything that uses an action or a bonus action are contained in this class.
+     * Anything that uses an action or a bonus action are contained in this class. As such, creatures need to be
+     * a monster or a player character to have actions
      */
     public enum ActionType{MELEE_ATTACK, RANGED_ATTACK,OTHER,LEGENDARY}
     private final String name, description;
