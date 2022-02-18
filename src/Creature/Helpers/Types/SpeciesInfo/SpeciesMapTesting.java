@@ -63,6 +63,12 @@ public class SpeciesMapTesting {
     }
 
     @Test
+    void readUndead(){
+        Species undead = handler.localSpecies.getSpeciesHashMap().get("Undead");
+        System.out.println(undead.getDescription());
+    }
+
+    @Test
     void updateANonExistentSpecies() throws IOException,ClassNotFoundException{
         String speciesName = "Aardvark", newDescription = "Some animal, I don't know";
         Species.Role newRole = Species.Role.MONSTER;

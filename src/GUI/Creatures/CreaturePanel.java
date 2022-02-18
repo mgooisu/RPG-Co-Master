@@ -1,79 +1,96 @@
 package GUI.Creatures;
 
 import Creature.Actions.Actions;
-import Creature.Actions.Attack;
-import Creature.Actions.MonsterAction;
-import Creature.Actions.Range;
+import Creature.Features;
 import Creature.Creature;
-import Creature.Helpers.Alignment;
-import Creature.Helpers.Enums.Condition;
-import Creature.Helpers.Enums.Damage;
-import Creature.Helpers.Enums.Size;
 import Creature.Helpers.Stats;
-import Creature.Helpers.Types.SpeciesInfo.Species;
-import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Creature.Monster;
-import Exceptions.CreatureException;
-import GUI.Elements.Panels.CreatureListPanel;
-import GUI.Helpers.ComponentHelpers;
-import Helpers.DiceObject;
+import GUI.Encounter.CreatureListPanel;
 
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EventListener;
 
 import GUI.Helpers.JTextArea;
 
 /**
  * Panel that contains information and controls pertaining to a single creature
  */
-public class CreaturePanel extends JPanel  {
+public class CreaturePanel extends JPanel implements ActionListener  {
 
 CreatureListPanel creatureListPanel;
 Creature creature;
+JButton saveButton;
+InitiativePanel initiativePanel;
+CreatureInfoPanel creatureInfoPanel;
+HealthDisplay healthDisplay;
+
     public CreaturePanel(CreatureListPanel creatureListPanel){
         this.creatureListPanel = creatureListPanel;
         this.creature = creatureListPanel.getCreature();
         setLayout(new BorderLayout());
-        JPanel title = new JPanel();
-        //TODO rename creature interface
-        if(creature.getName() == null){
-            title.add(new JLabel("<html><h1 style='text-align:center'>"+creature.getCreatureClass()+"</h1></html> "));
-        }else {
-            title.add(new JLabel("<html><h1 style='text-align:center'>"+creature.getName()+":<br>"+creature.getCreatureClass()+"</h1></html> "));
-        }
-        ComponentHelpers.centerLabelsInPanel(title);
-        add(title, BorderLayout.PAGE_START);
 
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content,BoxLayout.Y_AXIS));
 
-        content.add(new InitiativePanel());
+        initiativePanel = new InitiativePanel();
+        creatureInfoPanel = new CreatureInfoPanel();
+        healthDisplay = new HealthDisplay();
 
-        content.add(new healthDisplay());
+        content.add(initiativePanel);
 
-        content.add(new creatureInfoPanel());
+        content.add(healthDisplay);
 
-
-
+        content.add(creatureInfoPanel);
         add(content,BorderLayout.CENTER);
-        add(new JSeparator(),BorderLayout.SOUTH);
+
+        saveButton = new JButton("Save Changes");
+        saveButton.addActionListener(this);
+        add(saveButton, BorderLayout.SOUTH);
     }
+
+    /**
+     * Commits changes made in this screen to the creature file and updates the interfaces
+     */
+    void saveChanges(){
+        //TODO - allow changing and re rolling of health
+        //HP
+
+        //Speed
+        creature.setSpeed((Integer) creatureInfoPanel.speedSpinner.getValue());
+
+        //AC
+        creature.setAC((Integer)creatureInfoPanel.armourSpinner.getValue());
+
+        //Initiative
+        creature.setInitiative((Integer) initiativePanel.initiativeSpinner.getValue());
+
+        creatureListPanel.updateState();
+
+    }
+
+
+
 
     public Creature getCreature(){
         return creature;
     }
 
-    class healthDisplay extends JPanel{
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if(source == saveButton){
+            saveChanges();
+        }
+    }
+
+    class HealthDisplay extends JPanel{
         JProgressBar healthBar;
         //Todo - health set context menu
-        healthDisplay(){
+        HealthDisplay(){
             setBorder(new TitledBorder("Health"));
             setLayout(new BorderLayout());
             healthBar = new JProgressBar();
@@ -174,19 +191,18 @@ Creature creature;
             Dimension initSetPanelSize = new Dimension(overallWidth,overallHeight);
             initiativeSetPanel.setSize(initSetPanelSize);
             initiativeSetPanel.setMaximumSize(initSetPanelSize);
-            initiativeSetPanel.add(setInitiative);
+            //initiativeSetPanel.add(setInitiative);
 
            initiativeSetPanel.setBorder(new EtchedBorder());
 
 
             Dimension elementSpacing = new Dimension(10,overallHeight);
 
-            add(initiativeValue);
+          //  add(initiativeValue);
             add(Box.createRigidArea(elementSpacing));
             add(initiativeSetPanel);
             add(Box.createRigidArea(elementSpacing));
             add(rollInitiative);
-
 
 
         }
@@ -198,24 +214,25 @@ Creature creature;
 
             if(source.equals(rollInitiative)){
                 creature.setInitiative(1+creature.getStats().getDexterityMod()+ (int)(Math.random()*20));
-                initiativeValue.setText(String.valueOf(creature.getInitiative()));
-                creatureListPanel.updateInitiative();
+               // initiativeValue.setText(String.valueOf(creature.getInitiative()));
+                initiativeSpinner.setValue(creature.getInitiative());
             }
 
             if(source.equals(setInitiative)){
                 creature.setInitiative((int) initiativeSpinner.getValue());
-                initiativeValue.setText(String.valueOf(creature.getInitiative()));
-                creatureListPanel.updateInitiative();
+               // initiativeValue.setText(String.valueOf(creature.getInitiative()));
+                initiativeSpinner.setValue(creature.getInitiative());
+
 
             }
 
         }
     }
 
-    class creatureInfoPanel extends JPanel {
+    class CreatureInfoPanel extends JPanel {
         JSpinner armourSpinner, speedSpinner;
 
-        creatureInfoPanel() {
+        CreatureInfoPanel() {
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             //TODO - Rework creature panel Numbers and Conditions
             /*
@@ -241,7 +258,7 @@ Creature creature;
             add(numberInfo);
 
             //Condition status
-            //Todo - Seperate into subpanels for easier manipulation
+            //Todo - Separate into sub panels for easier manipulation
             JPanel conditionInfoPanel = new JPanel();
             conditionInfoPanel.setBorder(new TitledBorder("Conditions"));
             conditionInfoPanel.setLayout(new GridLayout(3, 2));
@@ -250,7 +267,7 @@ Creature creature;
             JTextArea currentConditionPane = new JTextArea();
 
             conditionInfoPanel.add(currentConditionPane);
-            //How the creature reacts to certain conditions - eg. resists
+            //How the creature reacts to certain conditions - e.g. resists
             for (int i = 0; i < conditionInfoNames.length; i++) {
                 conditionInfoPanel.add(new JLabel(conditionInfoNames[i]));
                 JTextArea conditionPane = new JTextArea();
@@ -325,16 +342,30 @@ Creature creature;
             add(statPanel);
 
 
-            //Creature Actions - monsters only
-            if(creature.getClass().equals(Monster.class)){
+            //Creature Actions and Combat Features - monsters only
+            if(creature.getClass().equals(Monster.class)) {
                 JPanel monsterActionsPanel = new JPanel();
                 monsterActionsPanel.setBorder(new TitledBorder("Actions"));
-
-                for(Actions action: ((Monster)creature).getActions()){
-                    System.out.println(action.getName());
+                System.out.print("Actions [");
+                for(Actions action :  ((Monster)creature).getActions()){
+                    System.out.print(action.getName()+", ");
                 }
+                System.out.print("]\n");
+
+                //Features
+                JPanel monsterFeaturesPanel = new JPanel();
+                monsterFeaturesPanel.setBorder(new TitledBorder("Features"));
+                System.out.print("Features: [ ");
+                for(Features feature: ((Monster) creature).getFeatures()){
+                    System.out.print(feature.getName()+", ");
+                }
+                System.out.println("]");
 
             }
+
+
+
+
 
             //Miscellaneous information - stuff like description, language, behaviour, loot, user notes
 
@@ -408,6 +439,7 @@ Creature creature;
                     "window closing and when pressing enter");
             notes.setEditable(true);
             notes.setOpaque(true);
+
 
 
             misc.add(classification);

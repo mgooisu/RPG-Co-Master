@@ -1,4 +1,4 @@
-package GUI.Creatures;
+package GUI.Creatures.Generation;
 
 import Creature.Actions.Actions;
 import Creature.Actions.Attack;
@@ -44,13 +44,6 @@ public class CombatCreatureGenPanel extends JPanel implements ActionListener {
 
 
 
-        //Temporary data filling todo - remove
-        actions.add(new Actions("Multiattack","The Eagle makes two attacks, one with its beak, and one with its claws", Actions.ActionType.OTHER));
-        features.add(new Features("Keen Sight", "The eagle has advantage on wisdom(perception) checks that rely on sight"));
-        actions.add(new Attack("Beak","", Actions.ActionType.MELEE_ATTACK,new DiceObject(6,1,3),new Range(5),1,5, Damage.PIERCING));
-        actions.add(new Attack("Talons","", Actions.ActionType.MELEE_ATTACK,new DiceObject(6,2,3),new Range(5),1,5,Damage.SLASHING));
-        actions.add(new Attack("Spit","gross", Actions.ActionType.RANGED_ATTACK,new DiceObject(6,2,3),new Range(5,10),1,5,Damage.PSYCHIC));
-        legendaryActions.add(new Actions("Beeg Speen","The bird speens", Actions.ActionType.LEGENDARY));
 
         //Features Panel
         combatFeaturePanel = new JPanel();
@@ -108,9 +101,13 @@ public class CombatCreatureGenPanel extends JPanel implements ActionListener {
      * @return an array containing all the legendary or normal actions
      */
     public Actions[] getActionArray(){
-        Actions[] actionArray = new Actions[actions.size()];
+        Actions[] actionArray = new Actions[actions.size()+ legendaryActions.size()];
         int i = 0;
         for(Actions action: actions){
+            actionArray[i] = action;
+            i++;
+        }
+        for(Actions action: legendaryActions){
             actionArray[i] = action;
             i++;
         }
@@ -381,12 +378,12 @@ class CombatEditorPanel extends JPanel implements ActionListener {
             switch (targetList.getName()){
                 case "Features"->{
                     Features feature = new Features(combatNameText, descriptionText);
-                    combatCreatureGenPanel.features.add(feature);
+//                    combatCreatureGenPanel.features.add(feature);
                     targetList.addElement(feature);
                 }
                 case "Legendary Actions"->{
                     Actions legendaryAction = new Actions(combatNameText,descriptionText, Actions.ActionType.LEGENDARY);
-                    combatCreatureGenPanel.actions.add(legendaryAction);
+//                    combatCreatureGenPanel.actions.add(legendaryAction);
                     targetList.addElement(legendaryAction);
                 }
                 case "Actions"->{
@@ -403,12 +400,12 @@ class CombatEditorPanel extends JPanel implements ActionListener {
                                 dice, range, (Integer) targetCountSpinner.getValue(), (Integer) toHitSpinner.getValue(),
                                 (Damage) (damageType.getSelectedItem()));
                         targetList.addElement(attack);
-                        combatCreatureGenPanel.actions.add(attack);
+//                        combatCreatureGenPanel.actions.add(attack);
                     }
                     if(actionType.getSelectedItem() == Actions.ActionType.OTHER){
                         Actions actions = new Actions(combatNameText,descriptionText, Actions.ActionType.OTHER);
                         targetList.addElement(actions);
-                        combatCreatureGenPanel.actions.add(actions);
+//                        combatCreatureGenPanel.actions.add(actions);
                     }
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + targetList.getName());

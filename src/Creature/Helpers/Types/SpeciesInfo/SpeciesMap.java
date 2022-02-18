@@ -44,7 +44,7 @@ public class SpeciesMap implements Serializable {
             "To be greeted with stares and whispers, to suffer violence and insult on the street, to see mistrust and fear in every eye: this is the lot of the tiefling."
     };
     private final String[] baseMonsterSpecies = {"Abberation", "Beast", "Celestial", "Construct", "Dragon", "Elemental", "Fey", "Fiend", "Giant",
-            "Humanoid", "Ooze", "Plant", "Undead"};
+            "Humanoid","Monstrosities", "Ooze", "Plant", "Undead"};
     private final String[] baseMonsterDescriptions = {
             "Aberrations are alien entities, often with powers drawn from their minds. Examples include aboleths, beholders, mind flayers, and slaadi.",
             "Beasts are nonhumanoid creatures that are part of the natural world. Some beasts have magical powers, but are generally low in intelligence. Ordinary animals, dinosaurs, and giant animals are included in this type. Other examples include quippers and stirges.",

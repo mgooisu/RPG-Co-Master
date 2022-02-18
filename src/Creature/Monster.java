@@ -20,6 +20,7 @@ import java.util.ArrayList;
  */
 public class Monster extends BaseCreature{
 //todo - add skills like deception and acrobatics
+    //Todo - Implement spells - Action.OTHER will do in the meantime
 
 
     public Monster(String name, Alignment alignment, String description,

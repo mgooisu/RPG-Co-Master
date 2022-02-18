@@ -1,4 +1,4 @@
-package GUI.Creatures;
+package GUI.Creatures.Generation;
 
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;

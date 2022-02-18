@@ -12,9 +12,7 @@ import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Creature.Monster;
 import Exceptions.CreatureException;
-import GUI.Creatures.CreatureGenFrame;
-import GUI.Creatures.CreaturePanel;
-import GUI.Elements.Panels.CreatureListPanel;
+import GUI.Encounter.EncounterFrame;
 import Helpers.DiceObject;
 
 import javax.swing.*;

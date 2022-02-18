@@ -1,21 +1,15 @@
-package GUI;
+package GUI.Encounter;
 
 import Creature.Creature;
 import Creature.CreatureListHandler;
-import Creature.CreatureMap;
 import Exceptions.CreatureException;
-import GUI.Creatures.BaseCreatureGenPanel;
-import GUI.Creatures.CreatureGenFrame;
-import GUI.Creatures.CreaturePanel;
-import GUI.Elements.Panels.CreatureListPanel;
-import GUI.Encounter.EncounterCreatureList;
+import GUI.Creatures.Generation.CreatureGenFrame;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -38,7 +32,7 @@ public class EncounterFrame extends JFrame implements ActionListener {
     //todo remove test button
     JButton testButton = new JButton("Print info");
 
-    EncounterFrame(){
+    public EncounterFrame(){
 
         // Menu Bar
         encounterMenuBar = new JMenuBar();
@@ -70,8 +64,6 @@ public class EncounterFrame extends JFrame implements ActionListener {
 
 
         //Todo - Adding Creatures
-        // Todo - Removing Creatures
-        //Todo - Inititative Implies sort
         creatureList = new EncounterCreatureList();
         creatureList.setLayout(new BoxLayout(creatureList,BoxLayout.Y_AXIS));
 
@@ -118,7 +110,8 @@ public class EncounterFrame extends JFrame implements ActionListener {
         Component source = (Component) actionEvent.getSource();
 
         if(source.equals(addCreature)){
-            System.out.println("wa");
+            System.out.println("Need to create a new Interface here to add a creature from the database");
+            printCreaturesInDatabase();
         }
         if(source.equals(createCreature)){
             CreatureGenFrame creatureGenFrame = null;
@@ -161,9 +154,10 @@ public class EncounterFrame extends JFrame implements ActionListener {
                 System.out.println("No Saved Creatures :(");
             }
             for(Creature creature : creatureHashMap.values()){
-                System.out.println(creature.getCreatureClass());
-                System.out.println(creature.getDescription());
-                System.out.println(creature.getSpecies().getName());
+                System.out.print(creature.getCreatureClass()+": ");
+                System.out.print(creature.getDescription()+", Of the Species: ");
+                System.out.print(creature.getSpecies().getName());
+                System.out.println(", named : "+creature.getName());
             }
 
 

@@ -1,16 +1,14 @@
-package GUI.Elements.Panels;
+package GUI.Encounter;
 
-import Creature.Actions.Actions;
 import Creature.Actions.MonsterAction;
 import Creature.Creature;
 import Creature.Monster;
 import GUI.Creatures.CreaturePanel;
-import GUI.Encounter.EncounterCreatureList;
+import GUI.Creatures.RenameFrame;
 import GUI.Helpers.JTextArea;
 import GUI.Helpers.PopClickListener;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -34,8 +32,9 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
     JButton deletionButton, damageHealButton;
     JSpinner initiativeSpinner, acSpinner, damageHealSpinner;
     public JProgressBar healthBar;
-    JMenuItem fullPanel;
-    JFrame expandedCreatureMenu;
+    JMenuItem fullPanel, rename;
+    CreaturePanel expandedCreatureMenu;
+    JFrame expandedCreatureMenuFrame;
 
     public CreatureListPanel(Creature creature){
         this.creature = creature;
@@ -45,7 +44,7 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
             idName = creature.getCreatureClass();
         }
         else {
-            idName = creature.getName();
+            idName = creature.getName() +" - " + creature.getCreatureClass();
         }
 
 
@@ -122,8 +121,12 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
 
         //Right click menu setup
         fullPanel = new JMenuItem("Show Full Creature Panel");
-        fullPanel.addActionListener(this);
-        JMenuItem[] jMenuItems = new JMenuItem[]{fullPanel,new JMenuItem("aw")};
+        rename = new JMenuItem("Rename");
+
+        JMenuItem[] jMenuItems = new JMenuItem[]{fullPanel,rename};
+        for(JMenuItem jMenuItem: jMenuItems){
+            jMenuItem.addActionListener(this);
+        }
         //Setup
         addMouseListener(new PopClickListener(jMenuItems));
         setBorder(new TitledBorder(idName));
@@ -164,10 +167,23 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
 
     }
 
-    public void updateInitiative(){
+    public void updateState(){
         initiativeSpinner.setValue(creature.getInitiative());
-        System.out.println(creature.getInitiative());
-        initiativeSpinner.repaint();
+        acLabel.setText(String.valueOf(creature.getAC()));
+        if(creature.getName() == null){
+            idName = creature.getCreatureClass();
+        }
+        else {
+            idName = creature.getName()+" - " + creature.getCreatureClass();
+        }
+        ((TitledBorder)getBorder()).setTitle(idName);
+        repaint();
+        revalidate();
+    }
+
+    public JFrame getExpandedCreatureMenuFrame(){
+        return expandedCreatureMenuFrame;
+
     }
 
 
@@ -176,13 +192,28 @@ public class CreatureListPanel extends JPanel implements ActionListener, ChangeL
     @Override
     public void actionPerformed(ActionEvent e) {
         Component sourceComp = (Component) e.getSource();
-
+        //Popup Menu
         if (sourceComp == fullPanel) {
-            expandedCreatureMenu = new JFrame();
-            expandedCreatureMenu.add(new CreaturePanel(this));
-            expandedCreatureMenu.setVisible(true);
-            expandedCreatureMenu.pack();
+            expandedCreatureMenu = new CreaturePanel(this);
+
+            expandedCreatureMenuFrame = new JFrame();
+            String name = creature.getCreatureClass();
+            if(creature.getName() != null){
+                name =  creature.getName() + " - " + name;
+            }
+
+            expandedCreatureMenuFrame.setTitle(name);
+            expandedCreatureMenuFrame.add(new CreaturePanel(this));
+            expandedCreatureMenuFrame.setVisible(true);
+            expandedCreatureMenuFrame.pack();
         }
+        if(sourceComp == rename){
+            RenameFrame renameFrame = new RenameFrame(this);
+            renameFrame.setLocationRelativeTo(this);
+            renameFrame.pack();
+            renameFrame.setVisible(true);
+        }
+
 
             if (sourceComp == damageHealButton) {
                 int damageVal = (int) damageHealSpinner.getValue();
@@ -255,7 +286,7 @@ class ActionsPanel extends JPanel{
         if(creature.getClass() == Monster.class){
             Monster monster = (Monster) creature;
             //generateActionPanes(monster.getActions());
-           // System.out.println(monster.getCreatureClass()+monster.getActions().length);
+           //  .out.println(monster.getCreatureClass()+monster.getActions().length);
         }
         // Player Class type actions
         /*

@@ -1,12 +1,7 @@
 package GUI.Encounter;
 
-import GUI.Elements.Panels.CreatureListPanel;
-
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EncounterCreatureList extends JPanel{
     //Data

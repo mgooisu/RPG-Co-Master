@@ -205,7 +205,6 @@ public class DeletableList extends JPanel implements ActionListener {
             repaint();
             //Add to underlying Data
             creatureElArrayList.addElement(input);
-
         }
     }
 

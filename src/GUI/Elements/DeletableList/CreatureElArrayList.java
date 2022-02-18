@@ -1,6 +1,7 @@
 package GUI.Elements.DeletableList;
 
 import Creature.Actions.Actions;
+import Creature.Actions.Attack;
 import Creature.Features;
 import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Damage;
@@ -77,9 +78,22 @@ public class CreatureElArrayList {
             stringArrayList.add((String) input);
             return;
         }
+        //Action Case
+        if(input.getClass() == Actions.class && dummy.getClass() == Actions.class){
+            actionsArrayList.add((Actions) input);
+
+            return;
+        }
+        //Attack Case
+        if(input.getClass() == Attack.class && dummy.getClass() == Actions.class){
+            actionsArrayList.add((Attack) input);
+
+
+            return;
+        }
 
         try {
-            throw new CreatureException("Tried to add an object of a different type to arraylist");
+            throw new CreatureException("Tried to add an object of a different type to arraylist: "+input.getClass().getName());
         } catch (CreatureException e) {
             e.printStackTrace();
         }

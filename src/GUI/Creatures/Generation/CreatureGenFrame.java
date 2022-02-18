@@ -1,8 +1,7 @@
-package GUI.Creatures;
+package GUI.Creatures.Generation;
 
 import Creature.BaseCreature;
 import Creature.Creature;
-import Creature.Helpers.Alignment;
 import Creature.Monster;
 import Creature.CreatureListHandler;
 import Exceptions.CreatureException;
@@ -93,7 +92,6 @@ public class CreatureGenFrame extends JFrame implements ActionListener, ChangeLi
 
     }
 
-    //TODO - Up until now, actions and features have not been added to the creature. They need to be made serializable
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().getClass() == JButton.class){
