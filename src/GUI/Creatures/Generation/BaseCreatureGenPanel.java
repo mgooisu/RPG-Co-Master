@@ -1,5 +1,6 @@
 package GUI.Creatures.Generation;
 
+import Creature.BaseCreature;
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Damage;
@@ -16,6 +17,8 @@ import Helpers.DiceObject;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,7 +34,8 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
     FocusTextField textName;
     FocusTextArea description;
     JSpinner acSpinner,integerHP, diceNumHP, diceValHP, diceModHP, speedSpinner,
-            strSpinner, dexSpinner,conSpinner,intSpinner,wisSpinner,chaSpinner;
+            strSpinner, dexSpinner,conSpinner,intSpinner,wisSpinner,chaSpinner,
+            passivePerceptionSpinner;
 
     JComboBox<String> speciesBox;
     SpeciesMapObjectHandler speciesMapObjectHandler;
@@ -204,6 +208,9 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
         statPanel.add(wisSpinner);
         statPanel.add(chaSpinner);
         statPanel.setBorder(new TitledBorder("Default Stats"));
+
+        wisSpinner.addChangeListener(e -> updatePassivePerception());
+
         add(statPanel);
 
         //Description
@@ -240,6 +247,12 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
 
         senseGui = new ArraySetGui(this, "Senses");
         add(senseGui);
+
+        //Passive Perception GUI
+        passivePerceptionSpinner = new JSpinner(new SpinnerNumberModel(10,0,30,1));
+        passivePerceptionSpinner.setBorder(new TitledBorder("Passive Perception"));
+        add(passivePerceptionSpinner);
+
     }
     //Getters
     public Alignment getAlignment(){
@@ -361,8 +374,9 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
     }
 
     public String[] getSenses(){
-        String[] strings = new String[sensesArray.size()];
-        int i = 0;
+        String[] strings = new String[sensesArray.size()+1];
+        strings[0] = "Passive Perception " + passivePerceptionSpinner.getValue();
+        int i = 1;
         for(String language: sensesArray){
             strings[i] = language;
             i++;
@@ -373,6 +387,16 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
 
     public Boolean getCombatCheck(){
         return combatCheck.isSelected();
+    }
+
+    //Internal Functions
+
+    /**
+     * Calculates a suggested passive perception value from the creature's wisdom and perception skill
+     */
+    void updatePassivePerception(){
+        int passivePerception = Stats.getMod((Integer) wisSpinner.getValue()) + 10;
+        passivePerceptionSpinner.setValue(passivePerception);
     }
 
 
