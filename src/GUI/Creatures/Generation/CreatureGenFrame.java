@@ -83,8 +83,14 @@ public class CreatureGenFrame extends JFrame implements ActionListener, ChangeLi
 
         //shared elements
         creature.setLanguages(baseCreatureGenPanel.getLanguages());
-        System.out.println(Arrays.toString(baseCreatureGenPanel.getSenses()));
-        creature.setSenses(baseCreatureGenPanel.getSenses());
+        String[] oldSenses = baseCreatureGenPanel.getSenses();
+
+        String[] newSenses = new String[oldSenses.length+1];
+        newSenses[0] = "Passive Perception " + (creature.getStats().getWisdomMod()+10);
+        System.arraycopy(oldSenses, 0, newSenses, 1, oldSenses.length);
+
+        creature.setSenses(newSenses);
+
 
         return creature;
 

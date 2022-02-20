@@ -17,7 +17,6 @@ public class RenameFrame extends JFrame implements ActionListener {
     JButton submit;
     Creature creature;
     CreatureListPanel creatureListPanel;
-    //TODO Update Creature panels after rename
     public RenameFrame(CreatureListPanel creatureListPanel){
         setLayout(new BorderLayout());
         this.creatureListPanel = creatureListPanel;

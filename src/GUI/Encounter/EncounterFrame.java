@@ -110,7 +110,12 @@ public class EncounterFrame extends JFrame implements ActionListener {
         Component source = (Component) actionEvent.getSource();
 
         if(source.equals(addCreature)){
-            System.out.println("Need to create a new Interface here to add a creature from the database");
+            JFrame nag = new JFrame();
+            nag.add(new JLabel("Need to create a new Interface here to add a creature from the database"));
+            nag.setTitle("In Development :)");
+            nag.setLocationRelativeTo(null);
+            nag.pack();
+            nag.setVisible(true);
             printCreaturesInDatabase();
         }
         if(source.equals(createCreature)){
