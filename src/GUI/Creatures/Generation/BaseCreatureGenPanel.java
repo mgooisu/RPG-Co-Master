@@ -9,6 +9,7 @@ import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Exceptions.CreatureException;
+import GUI.Creatures.SkillFrame;
 import GUI.Elements.DeletableList.DeletableList;
 import GUI.Elements.Fields.FocusTextArea;
 import GUI.Elements.Fields.FocusTextField;
@@ -47,6 +48,8 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
     // Condition/ Damage parameter lists
     ArraySetGui languageGui, senseGui, damageImmunitiesGui,damageResistancesGui,damageVulnerabilitiesGui,
     conditionImmunitiesGui,conditionResistancesGui;
+
+    JButton skillSummonButton;
 
     //Data
     public ArrayList<String> languageArray, sensesArray;
@@ -253,6 +256,11 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
         passivePerceptionSpinner.setBorder(new TitledBorder("Passive Perception"));
         add(passivePerceptionSpinner);
 
+        //Skills button - brings up skills gui
+        skillSummonButton = new JButton("Skills");
+        add(skillSummonButton);
+        skillSummonButton.addActionListener(this);
+
     }
     //Getters
     public Alignment getAlignment(){
@@ -417,6 +425,11 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
                 parentPane.setEnabledAt(1,combatCheck.isSelected());
 
             }
+        }
+        if(event.getSource() == skillSummonButton){
+            SkillFrame skillFrame = new SkillFrame();
+            skillFrame.setLocationRelativeTo(skillSummonButton);
+
         }
     }
 }
