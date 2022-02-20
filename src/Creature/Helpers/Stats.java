@@ -73,7 +73,7 @@ public class Stats implements Serializable {
 
 
     //Modifier Values
-    private int getMod(int inputStat){
+    public static int getMod(int inputStat){
         if(inputStat == 1){
             return -5;
         }
