@@ -17,10 +17,9 @@ public class SkillFrame extends JFrame implements ActionListener {
     int HEIGHT = 950;
     JPanel skillsPanel;
     JSpinner[] statSpinners;
-    JCheckBox[] enabled;
     JCheckBox enableAll;
     JButton saveButton;
-    int[] skillArray;
+    int[] skillValueArray;
     Skills[] skillEnumArray;
     //Constructors
     public SkillFrame(){
@@ -35,14 +34,9 @@ public class SkillFrame extends JFrame implements ActionListener {
     private void generateSkillPanels(){
         skillsPanel = new JPanel();
         statSpinners = new JSpinner[Skills.values().length];
-        enabled = new JCheckBox[Skills.values().length];
 
         enableAll = new JCheckBox("Enable all");
         enableAll.addActionListener(this);
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(enableAll, BorderLayout.EAST);
-        skillsPanel.add(topPanel);
-        topPanel.setPreferredSize(new Dimension(WIDTH,20));
 
         int counter = 0;
         for(Skills skill : Skills.values()){
@@ -70,12 +64,9 @@ public class SkillFrame extends JFrame implements ActionListener {
             ComponentHelpers.hideSpinnerArrow(jspinner,30);
             jspinner.setName(skillName +" spinner");
             statSpinners[counter] = jspinner;
-            enabled[counter] = new JCheckBox("Enabled");
-            enabled[counter].setName(skillName + " enabled");
 
 
             newPanel.add(statSpinners[counter],BorderLayout.WEST);
-            newPanel.add(enabled[counter],BorderLayout.EAST);
             newPanel.setPreferredSize(new Dimension(WIDTH,40));
 
 
@@ -95,67 +86,39 @@ public class SkillFrame extends JFrame implements ActionListener {
     }
 
     private void applySkills(){
-        Skills[] allSkills = Skills.values();
-        int[] allValues = new int[allSkills.length];
-        int skillArrayLength = 0;
-        //Iterates through all the spinners to get a list of values
-        for(int i = 0; i< allValues.length; i++){
-            int value;
-            //Sets deselected spinner values to 0
-            if(enabled[i].isSelected()){
-                value = (int) statSpinners[i].getValue();
-                //counts the non-zero values for the output array
-                if(value != 0){
-                    skillArrayLength++;
-                }
-            }else{
-                value = 0;
-                allSkills[i] = null;
-            }
-            allValues[i] = value;
-        }
-        // Iterates through the list of values from the spinners and populates an array with the non-zero values
-        int[] outputArray = new int[skillArrayLength];
-        int o  = 0;
-        for (int allValue : allValues) {
-            if (allValue != 0) {
-                outputArray[o] = allValue;
-                o++;
+        // count the non zero value spinners
+        int nonZeroCount =0;
+        for (JSpinner statSpinner : statSpinners) {
+            if ((int) statSpinner.getValue() != 0) {
+                nonZeroCount++;
             }
         }
-        skillArray = outputArray;
+        // Initialize non-zero value sized arrays for output
+        skillValueArray = new int[nonZeroCount];
+        skillEnumArray = new Skills[nonZeroCount];
+
+        //populate arrays with the values and their corresponding skills
+        int j = 0;
+        for(int i = 0; i < statSpinners.length;i++){
+            if((int) statSpinners[i].getValue() != 0){
+                skillValueArray[j] = (int) statSpinners[i].getValue();
+                skillEnumArray[j] = Skills.values()[i];
+                j++;
+            }
+        }
+
+        //debugging output
+        for(int i = 0 ; i < skillValueArray.length;i++){
+            System.out.println("Skill " + skillEnumArray[i].name() + " = " + skillValueArray[i]);
+        }
 
 
-        //Iterates through the new skill array and creates a new one, omitting the null values
-        o = 0;
-        for (Skills allSkill : allSkills) {
-            if (allSkill != null) {
-                o++;
-            }
-        }
-        skillEnumArray = new Skills[o];
-        o = 0;
-        for (Skills allSkill : allSkills) {
-            if (allSkill != null) {
-                skillEnumArray[o] = allSkill;
-                o++;
-            }
-        }
-        //output testing preview TODO remove
-        for(int i = 0; i < skillArray.length; i++){
-            System.out.println(skillEnumArray[i].name() + ": " + skillArray[i]);
-        }
+
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == enableAll){
-            for(JCheckBox enable : enabled){
-                enable.setSelected(enableAll.isSelected());
-            }
-        }
-
         if(e.getSource() == saveButton){
             applySkills();
         }
