@@ -1,6 +1,5 @@
 package GUI.Creatures.Generation;
 
-import Creature.BaseCreature;
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Damage;
@@ -9,7 +8,7 @@ import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Exceptions.CreatureException;
-import GUI.Creatures.SkillFrame;
+import GUI.Creatures.SkillsPanel;
 import GUI.Elements.DeletableList.DeletableList;
 import GUI.Elements.Fields.FocusTextArea;
 import GUI.Elements.Fields.FocusTextField;
@@ -18,11 +17,11 @@ import Helpers.DiceObject;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -427,8 +426,31 @@ public class BaseCreatureGenPanel extends JPanel implements ActionListener {
             }
         }
         if(event.getSource() == skillSummonButton){
-            SkillFrame skillFrame = new SkillFrame();
+            SkillsPanel skillsPanel = new SkillsPanel(getStats());
+            JFrame skillFrame = new JFrame();
+            skillFrame.add(skillsPanel);
             skillFrame.setLocationRelativeTo(skillSummonButton);
+            skillFrame.pack();
+            skillFrame.setVisible(true);
+            skillFrame.setTitle(getCreatureClass()+ " Default Skills");
+
+            //Disables and enables the stat panel
+            skillFrame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowOpened(WindowEvent e) {
+                    super.windowOpened(e);
+                    for(Component component: statPanel.getComponents()){
+                        component.setEnabled(false);
+                    }
+                }
+                @Override
+                public void windowClosing(WindowEvent e){
+                    super.windowClosing(e);
+                    for(Component component: statPanel.getComponents()){
+                        component.setEnabled(true);
+                    }
+                }
+            });
 
         }
     }
