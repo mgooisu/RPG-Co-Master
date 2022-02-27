@@ -1,5 +1,5 @@
-# TableTop_Counter_Edit
-An applet for creating and managing arrays of encounters organized at different scopes.
+# RPG Co-Master
+An applet to help game masters to manage encounters and the creatures therein 
 <h1> The aim </h1>
 
 This application seeks to simplify the process of creating and managing combat encounters in dungeons and dragon's 5th edition. It will allow for management of encounters at several scopes.
