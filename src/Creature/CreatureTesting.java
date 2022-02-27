@@ -217,6 +217,13 @@ public class CreatureTesting {
         Assertions.assertTrue(creatureHashMap.containsKey(skeleton.getCreatureClass()));
         Assertions.assertEquals(creatureHashMap.get(skeleton.getCreatureClass()).getDescription(),skeleton.getDescription());
 
+
+    }
+    @Test
+    void removeCreatureFromFile() throws IOException, ClassNotFoundException {
+        creatureListHandler.removeCreature(skeleton);
+        HashMap<String, Creature> creatureHashMap = creatureListHandler.readObject().getCreatureHashMap();
+        Assertions.assertFalse(creatureHashMap.containsKey(skeleton.getCreatureClass()));
     }
 
 

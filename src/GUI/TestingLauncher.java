@@ -3,6 +3,7 @@ package GUI;
 import Creature.Actions.Actions;
 import Creature.Actions.MonsterAction;
 import Creature.Actions.Range;
+import Creature.CreatureListHandler;
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
 import Creature.Helpers.Enums.Damage;
@@ -11,6 +12,7 @@ import Creature.Helpers.Stats;
 import Creature.Helpers.Types.SpeciesInfo.Species;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Creature.Monster;
+import Encounter.Encounter;
 import Exceptions.CreatureException;
 import GUI.Encounter.EncounterFrame;
 import Helpers.DiceObject;
@@ -53,14 +55,12 @@ public class TestingLauncher {
         skeleton.setActions(actions);
         skeleton.setSenses(new String[]{"Darkvision 60ft", "Passive Perception 9"});
         skeleton.setLanguages(new String[]{"Understands all languages they knew in life, but cannot speak", "Common", "Dwarfish"});
-        EncounterFrame encounterFrame = new EncounterFrame();
-        encounterFrame.pack();
-        encounterFrame.setLocationRelativeTo(null);
+        //Adding test monster to Encounter
+//        CreatureListHandler creatureListHandler = new CreatureListHandler();
+//        creatureListHandler.addCreature(skeleton);
 
-        encounterFrame.setSize(400,400);
-        encounterFrame.setVisible(true);
-
-        encounterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Encounter encounter = new Encounter("Testing Encounter");
+        encounter.summonFrame();
 
 
 //        //Creature Full Interface

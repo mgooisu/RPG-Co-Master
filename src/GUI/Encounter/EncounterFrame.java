@@ -2,6 +2,7 @@ package GUI.Encounter;
 
 import Creature.Creature;
 import Creature.CreatureListHandler;
+import Encounter.Encounter;
 import Exceptions.CreatureException;
 import GUI.Creatures.Generation.CreatureGenFrame;
 
@@ -16,6 +17,7 @@ import java.util.HashMap;
  * Lowest scope panel for creating creatures and managing them in an encounter
  */
 public class EncounterFrame extends JFrame implements ActionListener {
+    Encounter encounter;
     JMenuBar encounterMenuBar;
 
     JMenuItem createCreature, addCreature;
@@ -26,14 +28,16 @@ public class EncounterFrame extends JFrame implements ActionListener {
 
     JScrollPane creatureScrollPane;
 
-    JButton creatureInitRollsButton;
+    JButton creatureInitRollsButton, addCreatureButton;
+
 
 
     //todo remove test button
     JButton testButton = new JButton("Print info");
 
-    public EncounterFrame(){
-
+    public EncounterFrame(Encounter encounter){
+        this.encounter = encounter;
+        setTitle(encounter.getEncounterName());
         // Menu Bar
         encounterMenuBar = new JMenuBar();
         JMenu encounterFileMenu = new JMenu("File");
@@ -76,24 +80,40 @@ public class EncounterFrame extends JFrame implements ActionListener {
         topPanel.setMaximumSize(new Dimension(200,50));
         creatureInitRollsButton = new JButton("Roll Initiatives");
         creatureInitRollsButton.addActionListener(this);
+        addCreatureButton = new JButton("Add");
+        addCreatureButton.addActionListener(this);
 
         topPanel.add(creatureInitRollsButton,BorderLayout.PAGE_START);
+        topPanel.add(addCreatureButton,BorderLayout.CENTER);
 
         creatureList.add(topPanel);
 
         //TODO test structure - to be deleted when adding creatures implemented
-        try {
-            CreatureListHandler creatureListHandler = new CreatureListHandler();
-            HashMap<String,Creature> creatureHashMap = creatureListHandler.readObject().getCreatureHashMap();
-            creatureList.initOrderLocked = true;
-            for(Creature creature: creatureHashMap.values()){
+//        try {
+//            CreatureListHandler creatureListHandler = new CreatureListHandler();
+//            HashMap<String,Creature> creatureHashMap = creatureListHandler.readObject().getCreatureHashMap();
+//            creatureList.initOrderLocked = true;
+//            for(Creature creature: creatureHashMap.values()){
+//                creatureList.addToCreatureList(new CreatureListPanel(creature));
+//            }
+//            creatureList.initOrderLocked = false;
+//            creatureList.initArrange();
+//        } catch (IOException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+
+        //Reads the creatures on file for this encounter and renders panels for each
+        if(encounter.getCreatures() != null){
+            for(Creature creature: encounter.getCreatures()){
+                creatureList.initOrderLocked = true;
                 creatureList.addToCreatureList(new CreatureListPanel(creature));
             }
             creatureList.initOrderLocked = false;
             creatureList.initArrange();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
         }
+
+
+
 
 
 
@@ -109,13 +129,8 @@ public class EncounterFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         Component source = (Component) actionEvent.getSource();
 
-        if(source.equals(addCreature)){
-            JFrame nag = new JFrame();
-            nag.add(new JLabel("Need to create a new Interface here to add a creature from the database"));
-            nag.setTitle("In Development :)");
-            nag.setLocationRelativeTo(null);
-            nag.pack();
-            nag.setVisible(true);
+        if(source.equals(addCreature)||source.equals(addCreatureButton)){
+            summonCreatureAddGui();
             printCreaturesInDatabase();
         }
         if(source.equals(createCreature)){
@@ -130,8 +145,6 @@ public class EncounterFrame extends JFrame implements ActionListener {
                 creatureGenFrame.pack();
                 creatureGenFrame.setLocationRelativeTo(this);
             }
-
-
         }
         if(source.equals(creatureInitRollsButton)){
             creatureList.rollInitiatives();
@@ -140,6 +153,24 @@ public class EncounterFrame extends JFrame implements ActionListener {
         if(source.equals(testButton)){
            printCreaturesInDatabase();
         }
+    }
+
+    /**
+     * Brings forth the gui that allows users to add instances of the base creatures saved on file to the encounter
+     */
+    void summonCreatureAddGui(){
+        JFrame creatureAddFrame = new JFrame();
+        creatureAddFrame.setTitle("Add Creatures to "+encounter.getEncounterName());
+        EncounterCreatureGui encounterCreatureGui = null;
+        try {
+            encounterCreatureGui = new EncounterCreatureGui(encounter);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        creatureAddFrame.add(encounterCreatureGui);
+        creatureAddFrame.pack();
+        creatureAddFrame.setLocationRelativeTo(this);
+        creatureAddFrame.setVisible(true);
     }
 
 

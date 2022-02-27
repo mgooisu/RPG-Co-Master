@@ -38,7 +38,6 @@ public class CreatureListHandler implements SerializedObjectHandler {
         else{
             localCreatures = readObject();
         }
-        System.out.println(localCreatures.getCreatureHashMap().keySet());
         HashMap<String, Creature> tempMap = localCreatures.getCreatureHashMap();
         if(tempMap.containsKey(creature.getCreatureClass())){
             throw new IOException("Creature File already exists");
@@ -46,16 +45,24 @@ public class CreatureListHandler implements SerializedObjectHandler {
         tempMap.put(creature.getCreatureClass(),creature);
         localCreatures.setCreatureHashMap(tempMap);
         writeObject();
+    }
 
-        System.out.println(readObject().getCreatureHashMap().keySet());
-        for(Creature mappedCreature : readObject().getCreatureHashMap().values()){
-            if(mappedCreature.getClass() == Monster.class){
-                System.out.println(mappedCreature.getCreatureClass()+" is a monster");
-            }
+    /**
+     * Grabs the current version of the creature list and removes a creature from it
+     * @param creature the creature to be removed
+     */
+    public void removeCreature(Creature creature) throws  IOException, ClassNotFoundException{
+        if(!fileExists()){
+            throw new IOException("Nothing to Delete from!");
         }
-
-
-
+        localCreatures = readObject();
+        HashMap<String, Creature> tempMap = localCreatures.getCreatureHashMap();
+        if(!tempMap.containsKey(creature.getCreatureClass())){
+            throw new IOException("Creature file does not Exist!");
+        }
+        tempMap.remove(creature.getCreatureClass());
+        localCreatures.setCreatureHashMap(tempMap);
+        writeObject();
     }
 
     @Override
