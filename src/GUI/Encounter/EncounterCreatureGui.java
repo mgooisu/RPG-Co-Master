@@ -9,10 +9,15 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
+/**
+ * Class for importing, creating and deleting creatures from the creature file
+ */
 public class EncounterCreatureGui extends JPanel implements ActionListener {
     //TODO species filtering and searchbar
     CreatureListHandler creatureListHandler;
@@ -46,6 +51,10 @@ public class EncounterCreatureGui extends JPanel implements ActionListener {
             AddButton addButton = new AddButton("Add",rootCreatures.get(key));
             addButton.addActionListener(this);
             rootCreaturePanel.add(addButton);
+
+            DeleteButton deleteButton = new DeleteButton("Delete", rootCreatures.get(key));
+            rootCreaturePanel.add(deleteButton);
+
             rootCreaturePanels.add(rootCreaturePanel);
         }
 
@@ -83,4 +92,77 @@ public class EncounterCreatureGui extends JPanel implements ActionListener {
             return creature;
         }
     }
+    private class DeleteButton extends JButton implements ActionListener{
+        Creature creature;
+        DeleteButton(String text, Creature creature){
+            super(text);
+            this.creature = creature;
+            addActionListener(this);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            DeleteDialogue deleteDialogue = new DeleteDialogue(creature);
+            deleteDialogue.setLocationRelativeTo(this);
+            deleteDialogue.setVisible(true);
+        }
+
+    }
+
+    private class DeleteDialogue extends JDialog implements ActionListener{
+        JButton yes, no;
+        JLabel text;
+        Creature creature;
+        DeleteDialogue(Creature creature){
+            this.creature = creature;
+            setAlwaysOnTop(true);
+            text = new JLabel(("Are you sure you want to delete this creature? \n " +
+                    "The creature will be removed from all encounters and files permanently"));
+            text.setBackground(new Color(0,true));
+            yes = new JButton("Yes");
+            no = new JButton("No");
+            yes.addActionListener(this);
+            no.addActionListener(this);
+
+            setLayout(new BorderLayout());
+            add(text,BorderLayout.CENTER);
+
+            JPanel ynPanel = new JPanel();
+            ynPanel.add(yes);
+            ynPanel.add(no);
+
+            add(ynPanel, BorderLayout.SOUTH);
+            pack();
+        }
+        public void removeCreatureFromFile() throws IOException, ClassNotFoundException {
+            creatureListHandler.removeCreature(creature);
+
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(e.getSource() == yes){
+                try {
+                    removeCreatureFromFile();
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                //Remove instance from creature list
+                rootCreaturePanels.removeIf(rootCreaturePanel -> Objects.equals(rootCreaturePanel.getName(), creature.getCreatureClass()));
+
+                for(Component component : scrollablePanel.getComponents()){
+                    if(component.getClass() == JPanel.class){
+                        JPanel jPanel = (JPanel) component;
+                        if(jPanel.getName().equals(creature.getCreatureClass())){
+                            scrollablePanel.remove(jPanel);
+                        }
+                    }
+                }
+                scrollablePanel.repaint();
+                scrollablePanel.revalidate();
+
+            }
+                setVisible(false);
+            }
+        }
+
 }
