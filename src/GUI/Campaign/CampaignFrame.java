@@ -125,7 +125,6 @@ public class CampaignFrame extends JFrame {
         public void actionPerformed(ActionEvent e) {
             if(e.getSource().getClass() == DeleteButton.class){
                 encounterScrollPanePanel.removeEncounter(encounter);
-                System.out.println(encounters);
             }
         }
 

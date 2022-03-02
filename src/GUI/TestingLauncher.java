@@ -17,6 +17,7 @@ import Creature.Monster;
 import Encounter.Encounter;
 import Exceptions.CreatureException;
 import GUI.Encounter.EncounterFrame;
+import GUI.Home.HomeFrame;
 import Helpers.DiceObject;
 
 import javax.swing.*;
@@ -66,8 +67,9 @@ public class TestingLauncher {
 //        CreatureListHandler creatureListHandler = new CreatureListHandler();
 //        creatureListHandler.addCreature(skeleton);
 
-        Campaign campaign = new Campaign("Test Campaign");
-        campaign.summonFrame();
+        HomeFrame homeFrame = new HomeFrame();
+        homeFrame.setLocationRelativeTo(null);
+        homeFrame.setVisible(true);
 
 //        /**
 //         * Periodic task operation  - Prints out all the creatures in the encounter every 5 seconds
