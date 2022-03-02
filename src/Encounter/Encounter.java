@@ -5,6 +5,9 @@ import Creature.Creature;
 import GUI.Encounter.EncounterFrame;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * An encounter object will contain instances of creatures, which can be altered individually or as a group
@@ -57,4 +60,6 @@ public class Encounter {
         encounterFrame.setSize(400,400);
         encounterFrame.setVisible(true);
     }
+
+
 }

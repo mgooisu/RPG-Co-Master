@@ -20,7 +20,7 @@ public class EncounterFrame extends JFrame implements ActionListener {
     Encounter encounter;
     JMenuBar encounterMenuBar;
 
-    JMenuItem createCreature, addCreature;
+    JMenuItem createCreature, addCreature,debugButton;
 
     JPanel topPanel;
 
@@ -44,6 +44,9 @@ public class EncounterFrame extends JFrame implements ActionListener {
         JMenu encounterAddMenu = new JMenu("Add");
         JMenu encounterOptionsMenu = new JMenu("Options");
 
+        debugButton = new JMenuItem("Thread Debug");
+
+
         encounterMenuBar.add(encounterFileMenu);
         encounterMenuBar.add(encounterAddMenu);
         encounterMenuBar.add(encounterOptionsMenu);
@@ -52,6 +55,9 @@ public class EncounterFrame extends JFrame implements ActionListener {
         createCreature.addActionListener(this);
         addCreature = new JMenuItem("Add Creature to Encounter");
         addCreature.addActionListener(this);
+
+        encounterOptionsMenu.add(debugButton);
+        debugButton.addActionListener(this);
 
 
 
@@ -152,6 +158,14 @@ public class EncounterFrame extends JFrame implements ActionListener {
         }
         if(source.equals(testButton)){
            printCreaturesInDatabase();
+
+        }
+
+        if(source.equals(debugButton)){
+            System.out.println("Thread");
+            System.out.println(
+                    Thread.currentThread()
+            );
         }
     }
 

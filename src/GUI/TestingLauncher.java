@@ -1,8 +1,10 @@
 package GUI;
 
+import Campaign.Campaign;
 import Creature.Actions.Actions;
 import Creature.Actions.MonsterAction;
 import Creature.Actions.Range;
+import Creature.Creature;
 import Creature.CreatureListHandler;
 import Creature.Helpers.Alignment;
 import Creature.Helpers.Enums.Condition;
@@ -19,6 +21,11 @@ import Helpers.DiceObject;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class for launching the gui classes
@@ -59,8 +66,26 @@ public class TestingLauncher {
 //        CreatureListHandler creatureListHandler = new CreatureListHandler();
 //        creatureListHandler.addCreature(skeleton);
 
-        Encounter encounter = new Encounter("Testing Encounter");
-        encounter.summonFrame();
+        Campaign campaign = new Campaign("Test Campaign");
+        campaign.summonFrame();
+
+//        /**
+//         * Periodic task operation  - Prints out all the creatures in the encounter every 5 seconds
+//         * https://stackoverflow.com/questions/12908412/print-hello-world-every-x-seconds/12908467#12908467
+//         */
+//        Runnable timeSecondsRunnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                StringBuilder creatureListString = new StringBuilder("Encounter creatures: ");
+//                for(Creature creature : encounter.getCreatures()){
+//                    creatureListString.append(creature.getCreatureClass());
+//                }
+//                System.out.println(creatureListString);
+//            }
+//        };
+//
+//        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        //executor.scheduleAtFixedRate(timeSecondsRunnable,1,5, TimeUnit.SECONDS);
 
 
 //        //Creature Full Interface
