@@ -8,5 +8,6 @@ public class Launcher {
         HomeFrame homeFrame = new HomeFrame();
         homeFrame.setLocationRelativeTo(null);
         homeFrame.setVisible(true);
+        System.out.println("wa");
     }
 }
