@@ -113,6 +113,7 @@ public class EncounterCreatureGui extends JPanel implements ActionListener {
         JButton yes, no;
         JLabel text;
         Creature creature;
+        //TODO replace with generified NagDialogue
         DeleteDialogue(Creature creature){
             this.creature = creature;
             setAlwaysOnTop(true);

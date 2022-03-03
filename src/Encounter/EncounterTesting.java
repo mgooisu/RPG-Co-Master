@@ -11,6 +11,8 @@ import Creature.Helpers.Types.SpeciesInfo.SpeciesMap;
 import Creature.Helpers.Types.SpeciesInfo.SpeciesMapObjectHandler;
 import Exceptions.CreatureException;
 import Helpers.DiceObject;
+import Helpers.FileReadWrite;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -57,5 +59,11 @@ public class EncounterTesting {
             Creature creature = creatureMap.getCreatureHashMap().get(key);
             System.out.println(creature.getDescription());
         }
+    }
+
+    @AfterAll
+    static void cleanup() throws IOException {
+        FileReadWrite.deleteObjectFile("./CreatureListFile.dnd");
+        FileReadWrite.deleteObjectFile("./SpeciesListFile.dnd");
     }
 }

@@ -1,16 +1,20 @@
 package GUI.Campaign;
 
+import Campaign.CampaignListHandler;
 import Campaign.Campaign;
 import Encounter.Encounter;
 import Exceptions.EncounterException;
 import GUI.Elements.Buttons.DeleteButton;
+import GUI.Elements.Panels.NagDialogue;
 import GUI.Encounter.EncounterFrame;
+import GUI.Home.HomeFrame;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -19,28 +23,37 @@ import java.util.ArrayList;
  */
 public class CampaignFrame extends JFrame {
     //Data
-    ArrayList<Encounter> encounters = new ArrayList<Encounter>();
+    Campaign campaign;
+    CampaignListHandler campaignListHandler;
 
     //Gui
     JScrollPane encounterScrollPane;
     EncounterScrollPanePanel encounterScrollPanePanel;
+    CampaignMenuBar campaignMenuBar;
 
     //Constructor
-    public CampaignFrame(Campaign campaign){
+    public CampaignFrame(Campaign campaign, HomeFrame homeFrame){
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        try {
+            campaignListHandler = new CampaignListHandler();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        this.campaign = campaign;
         setLayout(new BorderLayout());
         setTitle(campaign.getCampaignName());
 
-
-        //Todo pull encounters from a file to populate the campaign
-        encounters.add(new Encounter("Test Encounter"));
         encounterScrollPanePanel= new EncounterScrollPanePanel();
 
         encounterScrollPane = new JScrollPane(encounterScrollPanePanel);
         encounterScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-
         //Build frame
         add(encounterScrollPane,BorderLayout.WEST);
+
+        //Add Menu
+        campaignMenuBar = new CampaignMenuBar(homeFrame);
+        setJMenuBar(campaignMenuBar);
 
         repaint();
         revalidate();
@@ -62,7 +75,7 @@ public class CampaignFrame extends JFrame {
             topPanel.add(addEncounterButton);
             topPanel.setMaximumSize(new Dimension(400,40));
             add(topPanel);
-            for(Encounter encounter: encounters){
+            for(Encounter encounter: campaign.getEncounters()){
                 addEncounter(encounter);
             }
         }
@@ -74,7 +87,6 @@ public class CampaignFrame extends JFrame {
         }
 
         void removeEncounter(Encounter encounter){
-            encounters.remove(encounter);
             for(Component component : getComponents()){
                 if(component.getClass() == EncounterPanel.class){
                     EncounterPanel encounterPanel = ((EncounterPanel) component);
@@ -107,6 +119,7 @@ public class CampaignFrame extends JFrame {
     private class EncounterPanel extends JPanel implements ActionListener {
         Encounter encounter;
         DeleteButton deleteButton = new DeleteButton();
+        NagDialogue deleteDialogue;
         final int WIDTH = 500, HEIGHT = 60;
         EncounterPanel(Encounter encounter){
             deleteButton.addActionListener(this);
@@ -124,8 +137,19 @@ public class CampaignFrame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource().getClass() == DeleteButton.class){
-                encounterScrollPanePanel.removeEncounter(encounter);
+                deleteDialogue = new NagDialogue(this,
+                        "Are you sure about deleting"+encounter.getEncounterName()+"?");
+                deleteDialogue.setLocationRelativeTo(this);
+                deleteDialogue.setVisible(true);
             }
+            if(e.getSource().getClass() == NagDialogue.NoButton.class){
+                deleteDialogue.setVisible(false);
+            }
+            if(e.getSource().getClass() == NagDialogue.YesButton.class){
+                removeEncounter(encounter);
+                deleteDialogue.setVisible(false);
+            }
+
         }
 
         /**
@@ -140,10 +164,12 @@ public class CampaignFrame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 encounter.summonFrame();
             }
         }
     }
+
 
     private class AddEncounterPopup extends JDialog implements ActionListener {
         JTextField encounterNameField;
@@ -187,19 +213,81 @@ public class CampaignFrame extends JFrame {
 
                 Encounter encounter = new Encounter(encounterNameField.getText());
                 addEncounter(encounter);
+
             }
             setVisible(false);
         }
     }
 
-    //Public Methods
-    public void addEncounter(Encounter encounter){
-        encounters.add(encounter);
-        encounterScrollPanePanel.addEncounter(encounter);
+    private class CampaignMenuBar extends JMenuBar implements ActionListener{
+        HomeFrame homeFrame;
+        JMenuItem homeButton;
+        CampaignMenuBar(HomeFrame homeFrame){
+            this.homeFrame = homeFrame;
+
+            homeButton= new JMenuItem("Go Home" );
+            homeButton.addActionListener(this);
+
+            JMenu fileMenu = new JMenu("File");
+
+            fileMenu.add(homeButton);
+
+
+
+            add(fileMenu);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(e.getSource() == homeButton){
+                homeFrame.summonFrame();
+                banishFrame();
+            }
+        }
     }
+    //Private Methods
+    private void banishFrame(){
+        setVisible(false);
+    }
+
+    //Public Methods
+
+    /**
+     * Calls the add method for the panel
+     * @param encounter for the panel
+     */
+    public void addEncounter(Encounter encounter)  {
+        encounterScrollPanePanel.addEncounter(encounter);
+        campaign.addEncounter(encounter);
+        try {
+            campaignListHandler.updateCampaign(campaign);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Calls the deletion method for the panel
+     * @param encounter for the panel
+     */
     public void removeEncounter(Encounter encounter){
-        encounters.remove(encounter);
         encounterScrollPanePanel.removeEncounter(encounter);
+        campaign.removeEncounter(encounter);
+        try {
+            campaignListHandler.updateCampaign(campaign);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void summonFrame(){
+        pack();
+        setLocationRelativeTo(null);
+        setSize(400,400);
+        setVisible(true);
+
+        //Band-aid fix for the frame dropping to the background
+        setAlwaysOnTop(true);
+        setAlwaysOnTop(false);
     }
 
 

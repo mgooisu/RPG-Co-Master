@@ -30,7 +30,7 @@ public class CreatureListHandler implements SerializedObjectHandler {
      * @param creature The creature to be added
      */
     public void addCreature(Creature creature) throws IOException, ClassNotFoundException {
-        // creates the file if it doesn't yet exist. This should never run under normal circumstances
+        // creates the file if it doesn't yet exist.
         if(!fileExists()){
             localCreatures = new CreatureMap();
             writeObject();

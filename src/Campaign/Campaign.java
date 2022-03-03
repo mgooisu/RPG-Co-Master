@@ -1,23 +1,24 @@
 package Campaign;
 
+import Creature.Creature;
 import Encounter.Encounter;
 import GUI.Campaign.CampaignFrame;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Campaign object containing encounters. Also campaign is one of those words that no longer looks like a word
  * after a while
  */
-public class Campaign {
-    private String campaignName;
+public class Campaign implements Serializable {
+    private String campaignName, description;
+    private ArrayList<Creature> characters;
     private ArrayList<Encounter> encounters;
-    private final CampaignFrame campaignFrame;
 
     public Campaign(String campaignName) {
         this.campaignName = campaignName;
         this.encounters = new ArrayList<Encounter>();
-        this.campaignFrame = new CampaignFrame(this);
     }
 
     public String getCampaignName(){
@@ -29,23 +30,38 @@ public class Campaign {
     public void setEncounters(ArrayList<Encounter> encounters){
         this.encounters = encounters;
     }
+    public ArrayList<Encounter> getEncounters(){return encounters;}
     public void addEncounter(Encounter encounter){
         encounters.add(encounter);
-        campaignFrame.addEncounter(encounter);
+
     }
     public void removeEncounter(Encounter encounter){
         this.encounters.remove(encounter);
-        campaignFrame.removeEncounter(encounter);
     }
 
-    public CampaignFrame getCampaignFrame(){
-        return campaignFrame;
+
+
+
+
+    public ArrayList<Creature> getCharacters() {
+        return characters;
     }
 
-    public void summonFrame(){
-        campaignFrame.pack();
-        campaignFrame.setLocationRelativeTo(null);
-        campaignFrame.setSize(400,400);
-        campaignFrame.setVisible(true);
+    public void setCharacters(ArrayList<Creature> characters) {
+        this.characters = characters;
     }
+
+    public void addToCharacters(Creature creature){
+        characters.add(creature);
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
 }

@@ -4,6 +4,7 @@ import Creature.BaseCreature;
 import Creature.Creature;
 import GUI.Encounter.EncounterFrame;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * An encounter object will contain instances of creatures, which can be altered individually or as a group
  */
-public class Encounter {
+public class Encounter implements Serializable {
     private String encounterName;
     private ArrayList<Creature> creatures;
     private final EncounterFrame encounterFrame;

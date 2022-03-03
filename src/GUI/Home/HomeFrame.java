@@ -6,34 +6,43 @@ import Exceptions.CampaignException;
 import Exceptions.EncounterException;
 import GUI.Campaign.CampaignFrame;
 import GUI.Elements.Buttons.DeleteButton;
+import GUI.Elements.Panels.NagDialogue;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Very similar interface to Campaign frame. Future versions could create a generified class for both of them
  */
 public class HomeFrame extends JFrame {
     //Data
-    ArrayList<Campaign> campaigns = new ArrayList<Campaign>();
+    HashMap<String,Campaign> campaigns;
 
+    //Interfaces
+    CampaignListHandler campaignListHandler;
     //Gui
     JScrollPane campaignScrollPane;
     CampaignScrollPanePanel campaignScrollPanePanel;
     final int WIDTH = 600, HEIGHT = 750;
     final Dimension dimension = new Dimension(WIDTH,HEIGHT);
     //Constructor
-    public HomeFrame(){
+    public HomeFrame() throws IOException, ClassNotFoundException {
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(dimension);
         setLayout(new BorderLayout());
         setTitle("RPG Co-Master");
 
-        //Todo pull campaigns from file
-        campaigns.add(new Campaign("Test Campaign"));
+
+        //grabs the campaign list from the saved campaign file, if one exists
+        campaignListHandler = new CampaignListHandler();
+        campaigns = campaignListHandler.readObject().getCampaignHashMap();
+
         campaignScrollPanePanel = new CampaignScrollPanePanel();
 
         campaignScrollPane = new JScrollPane(campaignScrollPanePanel);
@@ -55,7 +64,7 @@ public class HomeFrame extends JFrame {
             topPanel.add(addCampaignButton);
             topPanel.setMaximumSize(new Dimension(400,40));
             add(topPanel);
-            for(Campaign campaign: campaigns){
+            for(Campaign campaign: campaigns.values()){
                 addCampaign(campaign);
             }
 
@@ -69,7 +78,7 @@ public class HomeFrame extends JFrame {
         }
 
         public void removeCampaign(Campaign campaign) {
-            campaigns.remove(campaign);
+            campaigns.remove(campaign.getCampaignName());
             for(Component component : getComponents()){
                 if(component.getClass() == CampaignPanel.class){
                     CampaignPanel campaignPanel = ((CampaignPanel) component);
@@ -102,7 +111,9 @@ public class HomeFrame extends JFrame {
     private class CampaignPanel extends JPanel implements ActionListener{
         Campaign  campaign;
         DeleteButton deleteButton = new DeleteButton();
+        NagDialogue deleteDialogue;
         final int WIDTH = 500, HEIGHT = 60;
+        String nag;
 
         CampaignPanel(Campaign campaign){
             deleteButton.addActionListener(this);
@@ -115,12 +126,31 @@ public class HomeFrame extends JFrame {
             add(deleteButton,BorderLayout.EAST);
             add(new GoToCampaignButton(), BorderLayout.CENTER);
         }
+
+
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource().getClass() == DeleteButton.class){
-                campaignScrollPanePanel.removeCampaign(campaign);
+                deleteDialogue = new NagDialogue(this,
+                        "Are you sure? This will *permanently* delete all of "+campaign.getCampaignName()+
+                                "'s characters, encounters etc.");
+                deleteDialogue.setLocationRelativeTo(this);
+                deleteDialogue.setVisible(true);
+            }
+            if(e.getSource().getClass() == NagDialogue.YesButton.class){
+                try {
+                    removeCampaign(campaign);
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                deleteDialogue.setVisible(false);
+            }
+            if(e.getSource().getClass() == NagDialogue.NoButton.class){
+                deleteDialogue.setVisible(false);
             }
         }
+
 
         /**
          * For opening a new frame for the campaign
@@ -133,9 +163,21 @@ public class HomeFrame extends JFrame {
             }
             @Override
             public void actionPerformed(ActionEvent e) {
-                campaign.summonFrame();
+                summonCampaignFrame(campaign);
             }
         }
+
+
+    }
+
+    private void summonCampaignFrame(Campaign campaign) {
+        CampaignFrame campaignFrame = new CampaignFrame(campaign, this);
+        campaignFrame.summonFrame();
+        banishFrame();
+    }
+
+    private void banishFrame() {
+        setVisible(false);
     }
 
     private class AddCampaignPopup extends JDialog implements ActionListener{
@@ -171,27 +213,52 @@ public class HomeFrame extends JFrame {
                         ex.printStackTrace();
                     }
                 }
-                //Todo check encounter name is unique in this campaign
+
+                //Checks that the campaign name is unique
+                for(String campaignName : campaigns.keySet()){
+                    if(campaignNameTextField.getText().equals(campaignName)){
+                        errorThrown = true;
+                        try {
+                            throw new CampaignException("Campaign name already taken. Please choose another");
+                        } catch (CampaignException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
 
                 if(errorThrown){
                     return;
                 }
 
                 Campaign campaign = new Campaign(campaignNameTextField.getText());
-                addCampaign(campaign);
+                try {
+                    addCampaign(campaign);
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
             }
             setVisible(false);
         }
     }
 
     //Public Methods
-    public void addCampaign(Campaign campaign){
-        campaigns.add(campaign);
+    public void addCampaign(Campaign campaign) throws IOException, ClassNotFoundException {
+        campaigns.put(campaign.getCampaignName(),campaign);
         campaignScrollPanePanel.addCampaign(campaign);
+        campaignListHandler.addCampaign(campaign);
+
     }
 
-    public void removeCampaign(Campaign campaign){
-        campaigns.remove(campaign);
+    public void removeCampaign(Campaign campaign) throws IOException, ClassNotFoundException {
+        campaigns.remove(campaign.getCampaignName());
         campaignScrollPanePanel.removeCampaign(campaign);
+        campaignListHandler.removeCampaign(campaign);
+    }
+
+    public void summonFrame(){
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 }
+
+
