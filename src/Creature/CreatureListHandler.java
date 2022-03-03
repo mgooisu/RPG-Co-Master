@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class CreatureListHandler implements SerializedObjectHandler {
-    private final String path = "src/Creature/CreatureListFile.dnd";
+    private final String path = "./CreatureListFile.dnd";
 
     CreatureMap localCreatures,storedCreatures;
 

@@ -11,8 +11,7 @@ import java.util.HashMap;
 public class SpeciesMapObjectHandler implements SerializedObjectHandler {
     private SpeciesMap  storedSpecies;
     public SpeciesMap localSpecies;
-    private final String path = "src/Creature/Helpers/Types/SpeciesListFile.dnd";
-
+    private final String path = "./SpeciesListFile.dnd";
     public SpeciesMapObjectHandler() throws IOException, ClassNotFoundException {
         if(fileExists()){
             storedSpecies = readObject();
